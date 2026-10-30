@@ -20,6 +20,10 @@ DEPLOY_PATH="/var/www/cheatsheet"
 DEPLOY_BRANCH="main"
 DEPLOY_URL="https://s30s.ru"
 [ -f deploy.conf ] && . ./deploy.conf
+# deploy.conf, сохранённый в Windows (CRLF), оставляет \r в значениях: срезаем
+for _v in DEPLOY_HOST DEPLOY_USER DEPLOY_PATH DEPLOY_BRANCH DEPLOY_URL; do printf -v "$_v" '%s' "${!_v//$'\r'/}"; done
+# скрипт предназначен для запуска на вашем компьютере, а не на сервере
+if [ -d /var/www ] && [ "$(pwd)" = "$DEPLOY_PATH" ]; then echo "Это сервер ($DEPLOY_PATH). Запускайте deploy.sh на своём компьютере; на сервере достаточно: git pull --ff-only" >&2; exit 1; fi
 
 MSG=""; DRY=0; BUILD=1
 while [ $# -gt 0 ]; do
