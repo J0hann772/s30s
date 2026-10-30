@@ -17,9 +17,9 @@ function flag(k) { if (!PROGRESS && PKEY.test(k)) return false; return lsGet(key
 function setFlag(k, on) { if (!PROGRESS && PKEY.test(k)) return; lsSet(key(k), on ? "1" : null); }
 
 /* ===== Масштаб текста ===== */
-var ZOOMS = [0.85, 0.92, 1, 1.1, 1.2, 1.32];
+var ZOOMS = [0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.4, 1.6, 1.8, 2];
 function applyZoom() { var z = +lsGet("s30s:zoom"); if (ZOOMS.indexOf(z) < 0) z = 1; document.getElementById("view").style.zoom = z; }
-function stepZoom(d) { var z = +lsGet("s30s:zoom") || 1, i = ZOOMS.indexOf(z); if (i < 0) i = 2; i = Math.max(0, Math.min(ZOOMS.length - 1, i + d)); lsSet("s30s:zoom", String(ZOOMS[i])); applyZoom(); }
+function stepZoom(d) { var z = +lsGet("s30s:zoom") || 1, i = ZOOMS.indexOf(z); if (i < 0) i = ZOOMS.indexOf(1); i = Math.max(0, Math.min(ZOOMS.length - 1, i + d)); lsSet("s30s:zoom", String(ZOOMS[i])); applyZoom(); }
 document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".zoom"); if (b) { e.stopPropagation(); stepZoom(+b.getAttribute("data-z")); } }, true);
 
 /* ===== Кнопки управления: масштаб и тема ===== */
@@ -161,6 +161,20 @@ function figure(k) { var s = EXAM.figures && EXAM.figures[k]; return s ? '<div c
 /* ===== Вспомогательное ===== */
 var $view = document.getElementById("view"), $side = document.getElementById("side");
 applyZoom();
+/* ширина левой колонки (ПК) */
+var SW_MIN = 220, SW_MAX = 640;
+function setSideWidth(w, save) { w = Math.max(SW_MIN, Math.min(Math.min(SW_MAX, innerWidth - 320), Math.round(w))); document.documentElement.style.setProperty("--sw", w + "px"); if (save) lsSet("s30s:sw", String(w)); }
+(function () { var w = +lsGet("s30s:sw"); if (w) setSideWidth(w); })();
+document.addEventListener("pointerdown", function (e) {
+  var r = e.target.closest && e.target.closest("#resizer"); if (!r) return;
+  e.preventDefault(); r.setPointerCapture(e.pointerId); document.body.classList.add("resizing");
+  var mv = function (ev) { setSideWidth(ev.clientX, false); };
+  var up = function (ev) { r.removeEventListener("pointermove", mv); r.removeEventListener("pointerup", up); r.removeEventListener("pointercancel", up); document.body.classList.remove("resizing"); setSideWidth(ev.clientX, true); };
+  r.addEventListener("pointermove", mv); r.addEventListener("pointerup", up); r.addEventListener("pointercancel", up);
+});
+document.addEventListener("dblclick", function (e) { if (e.target.closest && e.target.closest("#resizer")) { document.documentElement.style.removeProperty("--sw"); lsSet("s30s:sw", null); } });
+var $q = document.getElementById("q");
+$q.onkeydown = function (e) { if (e.key === "Enter") location.hash = "#/search/" + encodeURIComponent($q.value.trim()); };
 document.getElementById("topCtrls").innerHTML = '<span class="ctrls">' + ctrlsHtml() + "</span>";
 function topicById(id) { return EXAM.topics.filter(function (t) { return t.id === id; })[0]; }
 function topicForNum(n) {
@@ -176,7 +190,13 @@ function daysLeft() {
   var d = Math.ceil((new Date(EXAM_META.date + "T09:00:00") - new Date()) / 864e5);
   return d > 0 ? "через " + d + " дн." : d === 0 ? "сегодня" : "";
 }
-function setTitle(t) { document.getElementById("topTitle").textContent = t; document.title = t + " — s30s"; }
+function setTitle(t, label) {
+  var box = document.getElementById("topTitle"), ex = EXAM_META ? String(EXAM_META.title).split(":")[0] : "";
+  box.textContent = "";
+  if (ex) { var a = document.createElement("a"); a.href = "#/rk"; a.textContent = ex; box.appendChild(a); var s = document.createElement("span"); s.className = "sep"; s.textContent = "\u203A"; box.appendChild(s); }
+  var c = document.createElement("span"); c.className = "cur"; c.textContent = label || t; box.appendChild(c);
+  document.title = t + " \u2014 s30s";
+}
 
 function logoHtml(big) {
   return '<a class="logo' + (big ? " big" : "") + '" href="#/" aria-label="s30s, все контрольные" title="s30s: study of the \'30 students"><span class="logo-mark" aria-hidden="true">30</span><span class="logo-word"><b>s<i>30</i>s</b><small>ИУ7 МГТУ · выпуск 2030</small></span></a>';
@@ -203,9 +223,7 @@ function renderSide(route) {
   }
   function body(name, html) { return '<div class="secbody" id="sb-' + name + '"' + (flag("side:sec:" + name) ? " hidden" : "") + ">" + html + "</div>"; }
   var h = '<div class="side-head"><div class="brand">' + logoHtml() + '<span class="blinks"><button class="cbtn ibtn" id="hideSide" title="Скрыть колонку" aria-label="Скрыть колонку">'+ '<svg class="ico" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="13" rx="3"/><path d="M8 3.5v13"/></svg>' + '</button></span></div>' +
-    '<div class="ctrls">' + ctrlsHtml() + "</div>" +
-    '<div class="exam-title">' + esc(EXAM_META.title) + (daysLeft() ? ", " + daysLeft() : "") + "</div>" +
-    '<input class="search" id="q" type="search" placeholder="Поиск по конспектам…" style="margin:0" value="' + esc(dec((route.match(/^#\/search\/(.*)$/) || [, ""])[1])) + '"></div>' +
+    '<div class="exam-title">' + esc(EXAM_META.title) + (daysLeft() ? ", " + daysLeft() : "") + "</div></div>" +
     '<div class="side-scroll" id="sideScroll"><nav>' +
     link("#/", "Все контрольные") +
     link("#/rk", "РК: вопросы, задачи, вариант") +
@@ -222,20 +240,18 @@ function renderSide(route) {
     sec("refs", "Справочники, " + refs.filter(function (t) { return t.id !== "t97"; }).length) +
     body("refs", refs.filter(function (t) { return t.id !== "t97"; }).map(function (t) { return link("#/t/" + t.id, mdInline(t.title)); }).join("")) +
     "</nav></div>";
-  $side.innerHTML = h;
+  $side.innerHTML = h + '<div class="resizer" id="resizer" role="separator" aria-orientation="vertical" aria-label="Изменить ширину колонки" title="Потяните, чтобы изменить ширину; двойной клик — сбросить"></div>';
   var sc = document.getElementById("sideScroll"), act = sc.querySelector("a.active");
   sc.scrollTop = st;
   if (act && (act.offsetTop < st || act.offsetTop + act.offsetHeight > st + sc.clientHeight)) sc.scrollTop = Math.max(0, act.offsetTop - sc.clientHeight / 2);
   document.getElementById("hideSide").onclick = function () { setSideHidden(true); };
-  var q = document.getElementById("q");
-  q.onkeydown = function (e) { if (e.key === "Enter") location.hash = "#/search/" + encodeURIComponent(q.value.trim()); };
 }
 
 /* ===== Страница: тема ===== */
 function pageTopic(id) {
   var t = topicById(id);
   if (!t) return '<p class="empty">Тема не найдена.</p>';
-  setTitle(t.title);
+  setTitle(t.title, (t.kind === "ref" ? "" : "Тема " + t.num + ". ") + plain(t.title));
   var refs = (t.examRefs || []).map(function (r) { return '<a href="#/rk/theory/' + r + '">' + r + "</a>"; }).join(", ");
   var head = "<h1>" + (t.kind === "ref" ? "" : esc(t.num) + ". ") + mdInline(t.title) + '</h1><div class="meta">' + [t.lecture ? esc(t.lecture) : "", refs ? "вопросы РК: " + refs : ""].filter(Boolean).join(" · ") + "</div>";
   if (t.status !== "done") return head + '<p class="empty">Конспект этой темы ещё не написан. Формулировки, нужные для РК, — на странице «РК».</p>';
@@ -519,7 +535,7 @@ function blockText(b) { return [b.text, b.title, b.task, b.solution, (b.head || 
 function pageSearch(q) {
   setTitle("Поиск");
   q = (q || "").trim();
-  if (q.length < 2) return '<h1>Поиск</h1><p class="empty">Введите хотя бы 2 символа в поле слева и нажмите Enter.</p>';
+  if (q.length < 2) return '<h1>Поиск</h1><p class="empty">Введите хотя бы 2 символа в поле поиска вверху и нажмите Enter.</p>';
   var ql = q.toLowerCase(), res = [];
   function add(href, title, raw) {
     var p = plain(raw), i = p.toLowerCase().indexOf(ql);
@@ -569,6 +585,7 @@ function route() {
     return;
   }
   document.body.classList.toggle("side-hidden", flag("side:hidden"));
+  var sm = hash.match(/^#\/search\/(.*)$/); if (sm) $q.value = dec(sm[1]); else if (document.activeElement !== $q) $q.value = "";
   var html, sideRoute = hash, anchor = null;
   if ((m = hash.match(/^#\/t\/([\w-]+)$/))) html = pageTopic(m[1]);
   else if ((m = hash.match(/^#\/rk(?:\/(theory|tasks|variant))?(?:\/([\w.]+))?$/))) {
@@ -601,7 +618,7 @@ function bindCommon() {
   if (om) om.onchange = function () { lsSet(key("disc:onlyMajor"), om.checked ? "1" : null); route(); };
 }
 document.getElementById("menuBtn").onclick = function () {
-  if (matchMedia("(min-width:861px)").matches) setSideHidden(false); else document.body.classList.toggle("nav-open");
+  if (matchMedia("(min-width:861px)").matches) setSideHidden(!document.body.classList.contains("side-hidden")); else document.body.classList.toggle("nav-open");
 };
 document.addEventListener("click", function (e) { if (document.body.classList.contains("nav-open") && !$side.contains(e.target) && !(e.target.closest && e.target.closest(".topbar"))) document.body.classList.remove("nav-open"); });
 window.addEventListener("hashchange", route);
