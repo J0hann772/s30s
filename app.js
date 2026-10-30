@@ -27,12 +27,18 @@ function isDark() { var cur = lsGet("s30s:theme"); return cur ? cur === "dark" :
 function ctrlsHtml() {
   return '<span class="seg" role="group" aria-label="Размер текста"><button class="cbtn zoom" data-z="-1" aria-label="Уменьшить текст">А−</button>' +
     '<button class="cbtn zoom" data-z="1" aria-label="Увеличить текст">А+</button></span>' +
-    '<button class="cbtn theme-btn" aria-label="Переключить светлую и тёмную тему" aria-pressed="' + isDark() + '">Тема</button>';
+    themeBtnHtml();
+}
+var ICO_MOON = '<svg class="ico" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 11.8A6.8 6.8 0 0 1 8.2 3.5a6.8 6.8 0 1 0 8.3 8.3z"/></svg>';
+var ICO_BULB = '<svg class="ico" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.2 14.2c0-1.3-1.7-2.2-1.7-4.4a4.5 4.5 0 0 1 9 0c0 2.2-1.7 3.1-1.7 4.4z"/><path d="M7.8 16.5h4.4M8.6 18.3h2.8"/></svg>';
+function themeBtnHtml() {
+  // тёмная тема: лампа (включить свет), светлая: месяц (включить тёмную)
+  return '<button class="cbtn ibtn theme-btn" title="' + (isDark() ? "Светлая тема" : "Тёмная тема") + '" aria-label="Переключить светлую и тёмную тему" aria-pressed="' + isDark() + '">' + (isDark() ? ICO_BULB : ICO_MOON) + "</button>";
 }
 document.addEventListener("click", function (e) {
   var b = e.target.closest && e.target.closest(".theme-btn"); if (!b) return;
   lsSet("s30s:theme", isDark() ? "light" : "dark"); applyTheme();
-  [].forEach.call(document.querySelectorAll(".theme-btn"), function (x) { x.setAttribute("aria-pressed", String(isDark())); });
+  [].forEach.call(document.querySelectorAll(".theme-btn"), function (x) { x.setAttribute("aria-pressed", String(isDark())); x.title = isDark() ? "Светлая тема" : "Тёмная тема"; x.innerHTML = isDark() ? ICO_BULB : ICO_MOON; });
 });
 
 /* ===== Тема ===== */
@@ -226,7 +232,7 @@ function renderSide(route) {
     return '<button class="sec" data-sec="' + name + '" aria-expanded="' + !closed + '"><span>' + title + "</span></button>";
   }
   function body(name, html) { return '<div class="secbody" id="sb-' + name + '"' + (secClosed(name) ? " hidden" : "") + ">" + html + "</div>"; }
-  var h = '<div class="side-head"><div class="brand">' + logoHtml() + '</div>' +
+  var h = '<div class="side-head"><div class="brand">' + logoHtml() + '<span class="blinks">' + themeBtnHtml() + '</span></div>' +
     '<div class="exam-title">' + esc(EXAM_META.title) + (daysLeft() ? ", " + daysLeft() : "") + "</div></div>" +
     '<div class="side-scroll" id="sideScroll"><nav>' +
     link("#/rkq", "Список вопросов РК") +
@@ -238,8 +244,8 @@ function renderSide(route) {
       return link("#/t/" + t.id, '<span class="num">' + esc(t.num) + "</span>" + mdInline(t.title) + mark, t.status !== "done" ? "todo" : "");
     }).join("")) +
     sec("refs", "Справочники") +
-    body("refs", link("#/disc", "Расхождения со слайдами") + link("#/t/t97", "Дан предел: с чего начать") +
-      refs.filter(function (t) { return t.id !== "t97"; }).map(function (t) { return link("#/t/" + t.id, mdInline(t.title)); }).join("")) +
+    body("refs", link("#/disc", "Расхождения со слайдами") +
+      refs.filter(function (t) { return t.id !== "t97" && t.id !== "t99"; }).map(function (t) { return link("#/t/" + t.id, mdInline(t.title)); }).join("")) +
     "</nav></div>";
   $side.innerHTML = h + '<div class="resizer" id="resizer" role="separator" aria-orientation="vertical" aria-label="Изменить ширину колонки" title="Потяните, чтобы изменить ширину; двойной клик — сбросить"></div>';
   var sc = document.getElementById("sideScroll"), act = sc.querySelector("a.active");
@@ -310,8 +316,8 @@ function pageRkq() {
   return h + "</div>";
 }
 
-/* ===== Карточки: блоки A и C ===== */
-var CARDS = { mode: null, queue: [], i: 0, shown: false, ok: 0, bad: 0, shuffle: false, resetAsk: false };
+/* ===== Карточки: блоки A и C (в духе Quizlet: переворот, свайп, круги) ===== */
+var CARDS = { mode: null, queue: [], i: 0, round: 1, flipped: false, got: 0, miss: [], total: 0, resetAsk: false, busy: false, between: false };
 function cardPool() { return EXAM.exam.theory.filter(function (q) { return q.block === "A" || q.block === "C"; }); }
 function cardText(id) {
   var out = null;
@@ -324,65 +330,129 @@ function cardCounts() {
   cardPool().forEach(function (q) { c[cardState(q.id)]++; });
   return c;
 }
+function shuffled(arr) { var q = arr.slice(); for (var i = q.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = q[i]; q[i] = q[j]; q[j] = t; } return q; }
 function startCards(mode) {
-  var pool = cardPool();
-  var q = pool.filter(function (x) { return mode === "all" || (mode === "bad" && cardState(x.id) === "bad") || (mode === "new" && cardState(x.id) === "new"); });
-  if (CARDS.shuffle) for (var i = q.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = q[i]; q[i] = q[j]; q[j] = t; }
-  CARDS.mode = mode; CARDS.queue = q.map(function (x) { return x.id; }); CARDS.i = 0; CARDS.shown = false; CARDS.ok = 0; CARDS.bad = 0;
+  var q = cardPool().filter(function (x) { var s = cardState(x.id); return mode === "all" || (mode === "ok" && s === "ok") || (mode === "new" && s !== "ok"); });
+  CARDS.mode = mode; CARDS.queue = q.map(function (x) { return x.id; }); CARDS.i = 0; CARDS.round = 1; CARDS.flipped = false;
+  CARDS.got = 0; CARDS.miss = []; CARDS.total = CARDS.queue.length; CARDS.between = false; CARDS.busy = false;
+  renderCards();
+}
+function nextRound() {
+  CARDS.queue = shuffled(CARDS.miss); CARDS.miss = []; CARDS.i = 0; CARDS.round++; CARDS.flipped = false; CARDS.got = 0; CARDS.between = false;
+  renderCards();
+}
+function answerCard(known) {
+  var id = CARDS.queue[CARDS.i];
+  if (PROGRESS) lsSet(key("cards:" + id), known ? "1" : "0");
+  if (known) CARDS.got++; else CARDS.miss.push(id);
+  CARDS.i++; CARDS.flipped = false; CARDS.busy = false;
+  if (CARDS.i >= CARDS.queue.length) CARDS.between = true;
   renderCards();
 }
 function renderCards() {
   var box = document.getElementById("cards"); if (!box) return;
   var c = cardCounts(), tot = c.ok + c.bad + c.new, h = "";
-  var stats = '<p class="stats">Вспомнил: ' + c.ok + ". Не вспомнил: " + c.bad + ". Не пройдено: " + c.new + ". Всего: " + tot + ".</p>";
+  var stats = '<p class="stats">Знаю: ' + c.ok + ". Ещё не знаю: " + (c.bad + c.new) + ". Всего: " + tot + ".</p>";
   if (CARDS.mode === null) {
     h = stats + '<div class="row">' +
-      '<button class="btn" data-act="start" data-m="all">Все карточки (' + tot + ")</button>" +
-      '<button class="btn" data-act="start" data-m="bad"' + (c.bad ? "" : " disabled") + ">Только проваленные (" + c.bad + ")</button>" +
-      '<button class="btn" data-act="start" data-m="new"' + (c.new ? "" : " disabled") + ">Только непройденные (" + c.new + ")</button></div>" +
-      '<div class="row"><label class="chk"><input type="checkbox" data-act="shuffle"' + (CARDS.shuffle ? " checked" : "") + "> в случайном порядке</label>" +
-      '<button class="btn" data-act="reset">' + (CARDS.resetAsk ? "Точно сбросить все отметки?" : "Сбросить отметки") + "</button>" +
-      (CARDS.resetAsk ? '<button class="btn" data-act="resetno">Отмена</button>' : "") + "</div>";
-  } else if (CARDS.i >= CARDS.queue.length) {
-    h = stats + '<div class="card"><p class="cq">' + (CARDS.queue.length ? "Круг закончен." : "В этом режиме карточек нет.") + "</p>" +
-      (CARDS.queue.length ? "<p>В этом круге: вспомнил " + CARDS.ok + ", не вспомнил " + CARDS.bad + ".</p>" : "") +
-      '<div class="row">' + (c.bad ? '<button class="btn" data-act="start" data-m="bad">Прогнать проваленные (' + c.bad + ")</button>" : "") +
+      '<button class="btn" data-act="start" data-m="all">Начать с нуля (' + tot + ")</button>" +
+      '<button class="btn" data-act="start" data-m="new"' + (c.bad + c.new ? "" : " disabled") + ">Только непройденные (" + (c.bad + c.new) + ")</button>" +
+      '<button class="btn" data-act="start" data-m="ok"' + (c.ok ? "" : " disabled") + ">Только пройденные (" + c.ok + ")</button></div>" +
+      '<div class="row"><button class="btn" data-act="reset">' + (CARDS.resetAsk ? "Точно сбросить весь прогресс?" : "Сбросить прогресс") + "</button>" +
+      (CARDS.resetAsk ? '<button class="btn" data-act="resetno">Отмена</button>' : "") + "</div>" +
+      '<p class="meta">Карточку можно перевернуть нажатием или пробелом. Свайп влево (клавиша ←) — знаю, вправо (→) — не знаю. Карточки, которые вы не знали, повторяются в следующем круге в случайном порядке, пока не останется ни одной.</p>';
+  } else if (CARDS.between || !CARDS.queue.length) {
+    var m = CARDS.miss.length;
+    h = '<div class="card done">' + (!CARDS.queue.length ? '<p class="cq">В этом режиме карточек нет.</p>' :
+      '<p class="cq">' + (m ? "Круг " + CARDS.round + " закончен" : "Всё пройдено") + "</p><p>Знаю: " + CARDS.got + ", не знаю: " + m + ".</p>") +
+      '<div class="row">' + (m ? '<button class="btn" data-act="round">Следующий круг (' + m + ")</button>" : "") +
       '<button class="btn" data-act="menu">К выбору режима</button></div></div>';
   } else {
     var q = theoryById(CARDS.queue[CARDS.i]), t = cardText(q.id), st = cardState(q.id);
     var refs = (q.refs || []).map(function (r) { var tp = topicById(r); return tp ? '<a href="#/t/' + r + '">конспект: ' + mdInline(tp.title) + "</a>" : ""; }).filter(Boolean).join(" · ");
-    h = stats + '<div class="card"><div class="cid">Карточка ' + (CARDS.i + 1) + " из " + CARDS.queue.length + " · " + q.id + " · " + q.points + " б." +
-      (st === "bad" ? " · в прошлый раз: не вспомнил" : st === "ok" ? " · в прошлый раз: вспомнил" : "") + "</div>" +
-      '<p class="cq">' + (t ? mdInline(t.text) : mdInline(q.q)) + "</p>";
-    if (!CARDS.shown) h += '<div class="row"><button class="btn" data-act="show">Показать ответ</button><button class="btn" data-act="menu">Закончить</button></div>';
-    else h += '<div class="ans md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + (refs ? '<p class="stat">' + refs + "</p>" : "") + "</div>" +
-      '<div class="row"><button class="btn" data-act="ok">Вспомнил</button><button class="btn" data-act="bad">Не вспомнил</button><button class="btn" data-act="menu">Закончить</button></div>';
-    h += "</div>";
+    var pct = Math.round(CARDS.i / CARDS.queue.length * 100);
+    h = '<div class="deckhead"><span>Круг ' + CARDS.round + " · " + (CARDS.i + 1) + " из " + CARDS.queue.length + " · " + esc(q.id) + '</span><button class="lnk" data-act="menu">Закончить</button></div>' +
+      '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="deck"><div class="cardwrap enter" id="cardwrap"><span class="hint hl">Знаю</span><span class="hint hr">Не знаю</span>' +
+      '<div class="flip' + (CARDS.flipped ? " flipped" : "") + '" id="flip">' +
+      '<div class="face front"><div class="cid">' + q.points + " б." + (st === "ok" ? " · раньше: знаю" : st === "bad" ? " · раньше: не знаю" : "") + '</div><p class="cq">' + (t ? mdInline(t.text) : mdInline(q.q)) + '</p><div class="tap">Нажмите, чтобы перевернуть</div></div>' +
+      '<div class="face back"><div class="cid">Ответ</div><div class="ans md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div>" + (refs ? '<p class="stat">' + refs + "</p>" : "") + "</div>" +
+      "</div></div></div>" +
+      '<div class="row sw"><button class="btn" data-act="know">&larr; Знаю</button><button class="btn" data-act="flip">Перевернуть</button><button class="btn" data-act="dont">Не знаю &rarr;</button></div>';
   }
   box.innerHTML = h;
 }
+function flipCard() {
+  var f = document.getElementById("flip"); if (!f || CARDS.busy) return;
+  CARDS.flipped = !CARDS.flipped; f.classList.toggle("flipped", CARDS.flipped);
+}
+function flyCard(known) {
+  var w = document.getElementById("cardwrap"); if (!w || CARDS.busy) return;
+  CARDS.busy = true;
+  var dir = known ? -1 : 1, reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  w.classList.remove("enter"); w.classList.remove("drag");
+  w.style.transition = reduce ? "opacity .15s" : "transform .26s ease-in, opacity .26s ease-in";
+  w.style.transform = reduce ? "none" : "translateX(" + dir * Math.max(innerWidth, 600) + "px) rotate(" + dir * 18 + "deg)";
+  w.style.opacity = "0";
+  setTimeout(function () { answerCard(known); }, reduce ? 160 : 270);
+}
+var cardsKeysBound = false;
 function bindCards() {
-  CARDS.mode = null; CARDS.resetAsk = false; renderCards();
-  var box = document.getElementById("cards");
+  CARDS.mode = null; CARDS.resetAsk = false; CARDS.busy = false; renderCards();
+  var box = document.getElementById("cards"), drag = null;
   box.onclick = function (e) {
     var b = e.target.closest && e.target.closest("[data-act]"); if (!b || b.disabled) return;
     var a = b.getAttribute("data-act");
     if (a === "start") startCards(b.getAttribute("data-m"));
-    else if (a === "shuffle") { CARDS.shuffle = b.checked; return; }
     else if (a === "reset") { if (CARDS.resetAsk) { cardPool().forEach(function (q) { lsSet(key("cards:" + q.id), null); }); CARDS.resetAsk = false; } else CARDS.resetAsk = true; renderCards(); }
     else if (a === "resetno") { CARDS.resetAsk = false; renderCards(); }
-    else if (a === "menu") { CARDS.mode = null; renderCards(); renderSide("#/cards"); }
-    else if (a === "show") { CARDS.shown = true; renderCards(); }
-    else if (a === "ok" || a === "bad") {
-      var id = CARDS.queue[CARDS.i]; if (PROGRESS) lsSet(key("cards:" + id), a === "ok" ? "1" : "0");
-      if (a === "ok") CARDS.ok++; else CARDS.bad++;
-      CARDS.i++; CARDS.shown = false; renderCards();
-    }
+    else if (a === "menu") { CARDS.mode = null; CARDS.between = false; renderCards(); renderSide("#/cards"); }
+    else if (a === "round") nextRound();
+    else if (a === "flip") flipCard();
+    else if (a === "know") flyCard(true);
+    else if (a === "dont") flyCard(false);
   };
+  box.onpointerdown = function (e) {
+    var w = e.target.closest && e.target.closest("#cardwrap");
+    if (!w || CARDS.busy || (e.pointerType === "mouse" && e.button !== 0) || (e.target.closest && e.target.closest("a"))) return;
+    drag = { x: e.clientX, y: e.clientY, id: e.pointerId, on: false, dx: 0, w: w };
+  };
+  box.onpointermove = function (e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.on) { if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { drag.on = true; try { drag.w.setPointerCapture(e.pointerId); } catch (x) {} drag.w.classList.remove("enter"); drag.w.style.transition = "none"; } else return; }
+    drag.dx = dx;
+    drag.w.style.transform = "translateX(" + dx + "px) rotate(" + (dx / 25) + "deg)";
+    var k = Math.min(1, Math.abs(dx) / 110);
+    drag.w.querySelector(".hl").style.opacity = dx < 0 ? k : 0;
+    drag.w.querySelector(".hr").style.opacity = dx > 0 ? k : 0;
+    drag.w.classList.toggle("drag", Math.abs(dx) > 30);
+  };
+  var end = function (e, cancel) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var d = drag; drag = null;
+    if (d.on) {
+      if (!cancel && d.dx <= -90) flyCard(true);
+      else if (!cancel && d.dx >= 90) flyCard(false);
+      else { d.w.style.transition = "transform .2s ease-out"; d.w.style.transform = "none"; d.w.classList.remove("drag"); d.w.querySelectorAll(".hint").forEach(function (h) { h.style.opacity = 0; }); }
+    } else if (!cancel && Math.abs(e.clientX - d.x) < 8 && Math.abs(e.clientY - d.y) < 8) flipCard();
+  };
+  box.onpointerup = function (e) { end(e, false); };
+  box.onpointercancel = function (e) { end(e, true); };
+  if (!cardsKeysBound) {
+    cardsKeysBound = true;
+    document.addEventListener("keydown", function (e) {
+      if (location.hash !== "#/cards" || CARDS.mode === null || CARDS.between || e.ctrlKey || e.metaKey || e.altKey) return;
+      var tg = e.target && e.target.tagName; if (tg === "INPUT" || tg === "TEXTAREA" || tg === "BUTTON" || tg === "A") return;
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flipCard(); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); flyCard(true); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); flyCard(false); }
+    });
+  }
 }
 function pageCards() {
   setTitle("Карточки");
-  return '<div class="cards"><h1>Карточки</h1><div class="meta">Определения (блок A, 30) и формулировки теорем (блок C, 7). Вспомните формулировку, затем откройте ответ и отметьте результат. Отметки хранятся в браузере.</div><div id="cards"></div></div>';
+  return '<div class="cards"><h1>Карточки</h1><div class="meta">Определения (блок A, 30) и формулировки теорем (блок C, 7). Прогресс хранится в браузере.</div><div id="cards"></div></div>';
 }
 
 /* ===== Страница: РК ===== */

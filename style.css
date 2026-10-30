@@ -58,7 +58,7 @@ main{flex:1;min-width:0;padding:calc(var(--u)*5) calc(var(--u)*4) calc(var(--u)*
 body.home aside{display:none!important}
 body.home .topbar{justify-content:flex-end}
 body.home .topbar :is(#menuBtn,.t,.tsearch){display:none}
-.no-progress .pg,.no-progress .chk,.no-progress .cards .stats,.no-progress [data-m="bad"],.no-progress [data-m="new"],.no-progress [data-act="reset"]{display:none!important}
+.no-progress .pg,.no-progress .chk,.no-progress .cards .stats,.no-progress [data-m="ok"],.no-progress [data-m="new"],.no-progress [data-act="reset"]{display:none!important}
 .logo-word small{font-size:11px;color:var(--muted);white-space:nowrap}
 .textbtn{background:none;border:0;padding:0;color:var(--muted);font-size:13px}
 .textbtn:hover{color:var(--accent);text-decoration:underline}
@@ -72,7 +72,9 @@ body.home .topbar :is(#menuBtn,.t,.tsearch){display:none}
 .seg .cbtn{border-radius:0}
 .seg .cbtn:first-child{border-radius:var(--radius) 0 0 var(--radius)}
 .seg .cbtn:last-child{border-radius:0 var(--radius) var(--radius) 0;border-left:0}
-.theme-btn{width:64px}
+.theme-btn{width:36px;padding:0}
+.topbar .theme-btn{display:none}
+body.home .topbar .theme-btn{display:inline-flex}
 .exam-title{font-size:13px;color:var(--muted);margin:0 0 calc(var(--u)*2);line-height:1.5}
 .search{width:100%;padding:var(--u) calc(var(--u)*1.5);border:1px solid var(--line);border-radius:var(--radius);background:var(--bg);color:var(--text);margin-bottom:calc(var(--u)*2);font:inherit;font-size:14px}
 .search:focus{outline:none;border-color:var(--line-strong)}
@@ -187,7 +189,7 @@ mark{background:none;color:inherit;font-weight:700}
   .topbar .t{display:none}
   .topbar .tsearch{flex:1 1 auto}
   .cbtn{height:40px;min-width:44px}
-  .theme-btn{width:72px}
+  .theme-btn{width:44px}
   h1{font-size:22px}
 }
 
@@ -196,3 +198,32 @@ mark{background:none;color:inherit;font-weight:700}
 .resizer:hover::after,body.resizing .resizer::after{opacity:1}
 body.resizing{cursor:col-resize;user-select:none}
 @media (max-width:860px){ .resizer{display:none} }
+
+#menuBtn{width:36px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+@media (max-width:860px){ #menuBtn{width:44px} }
+
+.cards .deck{perspective:1400px;margin:calc(var(--u)*2) 0;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.cards .cardwrap{position:relative;cursor:pointer;will-change:transform}
+.cards .cardwrap.enter{animation:cardin .22s ease-out}
+@keyframes cardin{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+.cards .flip{display:grid;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,.2,.2,1)}
+.cards .flip.flipped{transform:rotateY(180deg)}
+.cards .face{grid-area:1/1;min-height:260px;box-sizing:border-box;border:1px solid var(--line-strong);border-radius:var(--radius);background:var(--bg);padding:calc(var(--u)*3);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column}
+.cards .face.back{transform:rotateY(180deg);pointer-events:none;overflow-wrap:anywhere}
+.cards .flip.flipped .face.back{pointer-events:auto}
+.cards .flip.flipped .face.front{pointer-events:none}
+.cards .face .cq{flex:1;display:flex;align-items:center;margin:0}
+.cards .face.back .ans{border:0;margin:0;padding:0;overflow-x:auto}
+.cards .tap{font-size:13px;color:var(--faint);margin-top:calc(var(--u)*2)}
+.cards .cardwrap.drag .face{border-color:var(--text)}
+.cards .hint{position:absolute;top:calc(var(--u)*1.5);z-index:3;font-size:14px;font-weight:650;letter-spacing:.02em;opacity:0;pointer-events:none;border:1.5px solid var(--text);border-radius:var(--radius);padding:2px calc(var(--u)*1.25);background:var(--bg)}
+.cards .hint.hl{right:calc(var(--u)*2)}
+.cards .hint.hr{left:calc(var(--u)*2)}
+.cards .deckhead{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted);margin:calc(var(--u)*2) 0 var(--u)}
+.cards .lnk{background:none;border:0;padding:0;color:var(--accent);font-size:14px}
+.cards .bar{height:2px;background:var(--line)}
+.cards .bar i{display:block;height:100%;background:var(--text);transition:width .25s}
+.cards .row.sw{justify-content:space-between}
+.cards .card.done{text-align:center}
+.cards .card.done .row{justify-content:center}
+@media (prefers-reduced-motion: reduce){ .cards .flip{transition:none} .cards .cardwrap.enter{animation:none} }
