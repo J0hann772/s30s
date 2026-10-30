@@ -186,6 +186,7 @@ function topicForNum(n) {
 }
 function theoryById(id) { return EXAM.exam.theory.filter(function (q) { return q.id === id; })[0]; }
 function daysLeft() {
+  if (EXAM_META && EXAM_META.when) return EXAM_META.when;
   if (!EXAM_META || !EXAM_META.date) return "";
   var d = Math.ceil((new Date(EXAM_META.date + "T09:00:00") - new Date()) / 864e5);
   return d > 0 ? "через " + d + " дн." : d === 0 ? "сегодня" : "";
@@ -198,6 +199,8 @@ function setTitle(t, label) {
   document.title = t + " \u2014 s30s";
 }
 
+function goHome(replace) { history[replace ? "replaceState" : "pushState"](null, "", location.pathname + location.search); route(); }
+document.addEventListener("click", function (e) { var l = e.target.closest && e.target.closest("a.logo"); if (l && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) { e.preventDefault(); goHome(false); } });
 function logoHtml(big) {
   return '<a class="logo' + (big ? " big" : "") + '" href="#/" aria-label="s30s, все контрольные" title="s30s: study of the \'30 students"><span class="logo-mark" aria-hidden="true">30</span><span class="logo-word"><b>s<i>30</i>s</b><small>ИУ7 МГТУ · выпуск 2030</small></span></a>';
 }
@@ -207,7 +210,7 @@ function setSideHidden(on) { setFlag("side:hidden", on); document.body.classList
 document.addEventListener("click", function (e) {
   var b = e.target.closest && e.target.closest(".sec[data-sec]"); if (!b) return;
   var n = b.getAttribute("data-sec"), box = document.getElementById("sb-" + n), closed = !box.hidden;
-  box.hidden = closed; setFlag("side:sec:" + n, closed);
+  box.hidden = closed; lsSet(key("side:sec:" + n), closed ? "1" : "0");
   b.setAttribute("aria-expanded", String(!closed));
 });
 function renderSide(route) {
@@ -217,34 +220,31 @@ function renderSide(route) {
   var done = core.filter(function (t) { return t.status === "done"; }).length;
   function link(href, html, cls) { return '<a href="' + href + '" class="' + (cls || "") + (route === href ? " active" : "") + '">' + html + "</a>"; }
   var oldSc = document.getElementById("sideScroll"), st = oldSc ? oldSc.scrollTop : 0;
+  function secClosed(name) { var v = lsGet(key("side:sec:" + name)); return v === null ? name === "refs" : v === "1"; }
   function sec(name, title) {
-    var closed = flag("side:sec:" + name);
+    var closed = secClosed(name);
     return '<button class="sec" data-sec="' + name + '" aria-expanded="' + !closed + '"><span>' + title + "</span></button>";
   }
-  function body(name, html) { return '<div class="secbody" id="sb-' + name + '"' + (flag("side:sec:" + name) ? " hidden" : "") + ">" + html + "</div>"; }
-  var h = '<div class="side-head"><div class="brand">' + logoHtml() + '<span class="blinks"><button class="cbtn ibtn" id="hideSide" title="Скрыть колонку" aria-label="Скрыть колонку">'+ '<svg class="ico" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="13" rx="3"/><path d="M8 3.5v13"/></svg>' + '</button></span></div>' +
+  function body(name, html) { return '<div class="secbody" id="sb-' + name + '"' + (secClosed(name) ? " hidden" : "") + ">" + html + "</div>"; }
+  var h = '<div class="side-head"><div class="brand">' + logoHtml() + '</div>' +
     '<div class="exam-title">' + esc(EXAM_META.title) + (daysLeft() ? ", " + daysLeft() : "") + "</div></div>" +
     '<div class="side-scroll" id="sideScroll"><nav>' +
-    link("#/", "Все контрольные") +
-    link("#/rk", "РК: вопросы, задачи, вариант") +
     link("#/rkq", "Список вопросов РК") +
+    link("#/rk", "РК: вопросы, задачи, вариант") +
     link("#/cards", "Карточки: определения и теоремы") +
-    link("#/disc", "Расхождения со слайдами") +
-    link("#/traps", "На чём валятся") +
-    link("#/t/t97", "Дан предел: с чего начать") +
     sec("notes", "Конспекты" + (PROGRESS ? ", прочитано " + read + " из " + done : "")) +
     body("notes", core.map(function (t) {
       var mark = t.status !== "done" ? '<span class="mark">не написано</span>' : flag("topic:" + t.id + ":read") ? '<span class="mark">прочитано</span>' : "";
       return link("#/t/" + t.id, '<span class="num">' + esc(t.num) + "</span>" + mdInline(t.title) + mark, t.status !== "done" ? "todo" : "");
     }).join("")) +
-    sec("refs", "Справочники, " + refs.filter(function (t) { return t.id !== "t97"; }).length) +
-    body("refs", refs.filter(function (t) { return t.id !== "t97"; }).map(function (t) { return link("#/t/" + t.id, mdInline(t.title)); }).join("")) +
+    sec("refs", "Справочники") +
+    body("refs", link("#/disc", "Расхождения со слайдами") + link("#/t/t97", "Дан предел: с чего начать") +
+      refs.filter(function (t) { return t.id !== "t97"; }).map(function (t) { return link("#/t/" + t.id, mdInline(t.title)); }).join("")) +
     "</nav></div>";
   $side.innerHTML = h + '<div class="resizer" id="resizer" role="separator" aria-orientation="vertical" aria-label="Изменить ширину колонки" title="Потяните, чтобы изменить ширину; двойной клик — сбросить"></div>';
   var sc = document.getElementById("sideScroll"), act = sc.querySelector("a.active");
   sc.scrollTop = st;
   if (act && (act.offsetTop < st || act.offsetTop + act.offsetHeight > st + sc.clientHeight)) sc.scrollTop = Math.max(0, act.offsetTop - sc.clientHeight / 2);
-  document.getElementById("hideSide").onclick = function () { setSideHidden(true); };
 }
 
 /* ===== Страница: тема ===== */
@@ -556,12 +556,12 @@ function fmtDate(d) { try { return new Date(d + "T12:00:00").toLocaleDateString(
 function daysTo(d) { if (!d) return ""; var n = Math.ceil((new Date(d + "T09:00:00") - new Date()) / 864e5); return n > 0 ? "через " + n + " дн." : n === 0 ? "сегодня" : "прошла"; }
 function pageHome() {
   setTitle("s30s");
-  var h = '<div class="homehead">' + logoHtml(true) + '<div class="ctrls">' + ctrlsHtml() + "</div></div>" +
+  var h = '<div class="homehead">' + logoHtml(true) + "</div>" +
     '<h1>Контрольные</h1><p class="meta">Выберите контрольную: откроются конспекты, вопросы, задачи и тренировка именно под неё.</p>';
   (window.S30S_MANIFEST || []).forEach(function (s) {
     h += "<h2>" + esc(s.title) + '</h2><div class="xgrid">' + s.exams.map(function (e) {
-      return '<a class="xcard" href="#/open/' + encodeURIComponent(e.id) + '"><b>' + esc(e.title) + '</b><span class="xd">' + esc(fmtDate(e.date)) +
-        (e.date ? " · " + esc(daysTo(e.date)) : "") + "</span>" + (e.description ? '<span class="xs">' + esc(e.description) + "</span>" : "") + "</a>";
+      return '<a class="xcard" href="#/open/' + encodeURIComponent(e.id) + '"><b>' + esc(e.title) + '</b><span class="xd">' + esc(e.when ? e.when : fmtDate(e.date)) +
+        (!e.when && e.date ? " · " + esc(daysTo(e.date)) : "") + "</span>" + (e.description ? '<span class="xs">' + esc(e.description) + "</span>" : "") + "</a>";
     }).join("") + "</div>";
   });
   return h;
@@ -581,7 +581,7 @@ function route() {
   }
   if (!EXAM) {
     var last = lsGet("s30s:lastExam");
-    if (allExams().some(function (e) { return e.id === last; })) openExam(last, hash); else location.hash = "#/";
+    if (allExams().some(function (e) { return e.id === last; })) openExam(last, hash); else goHome(true);
     return;
   }
   document.body.classList.toggle("side-hidden", flag("side:hidden"));
@@ -630,11 +630,12 @@ function loadScript(src) {
 }
 function openExam(id, then) {
   var meta = allExams().filter(function (e) { return e.id === id; })[0];
-  if (!meta) { location.hash = "#/"; return; }
+  if (!meta) { goHome(true); return; }
   var ready = window.S30S.data[id] ? Promise.resolve() : loadScript(meta.data);
   ready.then(function () {
     EXAM = window.S30S.data[id]; EXAM_META = meta; lsSet("s30s:lastExam", id);
-    if (then && location.hash !== then) location.hash = then; else route();
+    if (then && location.hash !== then) history.replaceState(null, "", location.pathname + location.search + then);
+    route();
   }).catch(function (e) { $view.innerHTML = '<p class="empty">Не удалось загрузить ' + esc(e.message) + "</p>"; });
 }
 function ensureKatex() { return Promise.resolve(); }  // KaTeX только локальный (vendor/katex); внешних скриптов нет
