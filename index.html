@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>s30s — подготовка к контрольным</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+:root{
+  --u:8px;
+  --bg:#ffffff; --side:#ffffff; --text:#1a1a1a; --muted:#6e6e6e; --faint:#9a9a9a;
+  --line:#e7e7e7; --line-strong:#cfcfcf; --accent:#3d5a80; --sel:#f4f5f7;
+  --radius:6px; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --bg:#161616; --side:#161616; --text:#e4e4e4; --muted:#a0a0a0; --faint:#7a7a7a;
+  --line:#2a2a2a; --line-strong:#444; --accent:#93add3; --sel:#202020;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#161616; --side:#161616; --text:#e4e4e4; --muted:#a0a0a0; --faint:#7a7a7a;
+  --line:#2a2a2a; --line-strong:#444; --accent:#93add3; --sel:#202020;
+}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+button{font:inherit;color:inherit;cursor:pointer}
+.layout{display:flex;min-height:100vh}
+aside{width:288px;flex:none;background:var(--side);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow:auto;padding:calc(var(--u)*3) calc(var(--u)*2) calc(var(--u)*6)}
+main{flex:1;min-width:0;padding:calc(var(--u)*5) calc(var(--u)*4) calc(var(--u)*10)}
+.wrap{max-width:70ch;margin:0 auto}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:var(--u);margin:0 0 var(--u)}
+.brand b{font-size:15px;letter-spacing:.01em}
+.textbtn{background:none;border:0;padding:0;color:var(--muted);font-size:13px}
+.textbtn:hover{color:var(--accent);text-decoration:underline}
+.exam-title{font-size:13px;color:var(--muted);margin:0 0 calc(var(--u)*2);line-height:1.5}
+.search{width:100%;padding:var(--u) calc(var(--u)*1.5);border:1px solid var(--line);border-radius:var(--radius);background:var(--bg);color:var(--text);margin-bottom:calc(var(--u)*2);font:inherit;font-size:14px}
+.search:focus{outline:none;border-color:var(--line-strong)}
+nav a{display:flex;gap:var(--u);padding:calc(var(--u)*.5) var(--u);border-radius:var(--radius);color:var(--text);font-size:14px;line-height:1.45}
+nav a:hover{background:var(--sel);text-decoration:none}
+nav a.active{color:var(--accent);font-weight:600;background:var(--sel)}
+nav a.todo{color:var(--faint)}
+nav .sec{font-size:12px;color:var(--muted);margin:calc(var(--u)*3) var(--u) var(--u)}
+nav .num{flex:none;min-width:36px;font-variant-numeric:tabular-nums;color:var(--faint);font-size:13px}
+nav .mark{margin-left:auto;font-size:12px;color:var(--muted)}
+.topbar{display:none}
+h1{font-size:26px;line-height:1.3;margin:0 0 var(--u);font-weight:650}
+h2{font-size:19px;line-height:1.35;margin:calc(var(--u)*5) 0 calc(var(--u)*1.5);font-weight:650}
+h3{font-size:17px;margin:calc(var(--u)*4) 0 var(--u);font-weight:650}
+h4{font-size:16px;margin:calc(var(--u)*3) 0 var(--u);font-weight:650}
+.meta{color:var(--muted);font-size:14px;margin:0 0 calc(var(--u)*3)}
+.meta a{color:var(--accent)}
+.md p{margin:calc(var(--u)*1.5) 0}
+.md ul,.md ol{padding-left:calc(var(--u)*3);margin:var(--u) 0} .md li{margin:calc(var(--u)*.5) 0}
+.md code{font-family:var(--mono);font-size:.88em;color:var(--muted)}
+.md hr,hr{border:0;border-top:1px solid var(--line);margin:calc(var(--u)*3) 0}
+strong{font-weight:650}
+.tbl{overflow-x:auto;margin:calc(var(--u)*2) 0}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{padding:var(--u) calc(var(--u)*1.5) var(--u) 0;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:600;border-bottom-color:var(--line-strong)}
+.warn{border-left:2px solid var(--line-strong);padding:0 0 0 calc(var(--u)*2);margin:calc(var(--u)*3) 0}
+.warn::before{content:"Расхождение со слайдами";display:block;font-size:12px;color:var(--muted);letter-spacing:.02em;margin-bottom:calc(var(--u)*.5)}
+.warn>p:first-child,.warn>.md>p:first-child{margin-top:0}
+.note{border-left:2px solid var(--line);padding:0 0 0 calc(var(--u)*2);margin:calc(var(--u)*3) 0;color:var(--muted)}
+.extra{font-size:12px;color:var(--faint);white-space:nowrap}
+details{margin:calc(var(--u)*2) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+details>summary{padding:var(--u) 0;cursor:pointer;font-weight:600;list-style:none;color:var(--text)}
+details>summary::-webkit-details-marker{display:none}
+details>summary::after{content:" — показать";font-weight:400;color:var(--faint);font-size:13px}
+details[open]>summary::after{content:" — скрыть"}
+details>.body{padding:0 0 var(--u)}
+.example{margin:calc(var(--u)*3) 0}
+.example details{margin:var(--u) 0 0}
+.figure{margin:calc(var(--u)*2) 0;color:var(--text)}
+.figure svg{width:100%;max-width:400px;height:auto;display:block;--bg:var(--bg);border:1px solid var(--line);border-radius:var(--radius)}
+.item{padding:calc(var(--u)*2) 0;border-bottom:1px solid var(--line)}
+.item .q{display:flex;gap:calc(var(--u)*1.5)}
+.item .qid{flex:none;font-weight:650;min-width:32px;font-variant-numeric:tabular-nums}
+.item .qtext{flex:1;min-width:0}
+.item details{margin:var(--u) 0 0;border:0}
+.item details>summary{padding:calc(var(--u)*.5) 0;font-weight:400;color:var(--accent);font-size:14px}
+.item details>summary::after{content:""}
+.item details>.body{border-left:2px solid var(--line);padding:0 0 0 calc(var(--u)*2)}
+.tools{display:flex;gap:calc(var(--u)*2);align-items:center;flex-wrap:wrap;margin-top:var(--u);font-size:13px;color:var(--muted)}
+label.chk{display:inline-flex;gap:calc(var(--u)*.75);align-items:center;cursor:pointer;user-select:none}
+.tabs{display:flex;gap:calc(var(--u)*3);flex-wrap:wrap;margin:calc(var(--u)*2) 0 calc(var(--u)*3);border-bottom:1px solid var(--line)}
+.tabs a{padding:var(--u) 0;color:var(--muted);font-size:15px;margin-bottom:-1px;border-bottom:2px solid transparent}
+.tabs a.on{color:var(--text);font-weight:600;border-bottom-color:var(--text)}
+.tabs a:hover{text-decoration:none;color:var(--text)}
+.stat{font-size:13px;color:var(--muted);font-weight:400}
+.btn{border:1px solid var(--line-strong);background:var(--bg);border-radius:var(--radius);padding:calc(var(--u)*.75) calc(var(--u)*2);font-size:14px}
+.btn:hover{border-color:var(--text)}
+.timer{font:600 24px/1 var(--mono);font-variant-numeric:tabular-nums}
+.timer.low{font-weight:800}
+.sev{font-size:12px;color:var(--muted);text-transform:lowercase}
+.sev.major{color:var(--text);font-weight:700}
+.empty{color:var(--muted);padding:calc(var(--u)*4) 0}
+.result{font-size:14px;color:var(--muted);margin:0 0 var(--u)}
+mark{background:none;color:inherit;font-weight:700}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:calc(var(--u)*.25) 0}
+.katex{font-size:1.05em}
+@media (max-width:860px){
+  aside{position:fixed;left:0;top:0;z-index:20;transform:translateX(-102%);transition:transform .2s}
+  body.nav-open aside{transform:none;box-shadow:0 0 24px rgba(0,0,0,.08)}
+  main{padding:var(--u) calc(var(--u)*2) calc(var(--u)*10)}
+  .topbar{display:flex;gap:calc(var(--u)*2);align-items:baseline;position:sticky;top:0;z-index:10;background:var(--bg);padding:var(--u) 0;margin-bottom:var(--u);border-bottom:1px solid var(--line)}
+  .topbar .zoom{font-size:15px;padding:0 4px}
+  .topbar .t{font-weight:600;font-size:14px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside id="side"></aside>
+  <main>
+    <div class="topbar"><button class="textbtn" id="menuBtn">Меню</button><span class="t" id="topTitle"></span><button class="textbtn zoom" data-z="-1">А−</button><button class="textbtn zoom" data-z="1">А+</button></div>
+    <div class="wrap" id="view"><p class="empty">Загрузка…</p></div>
+  </main>
+</div>
+
+<script>
+/* ===== Ядро: регистрация данных контрольных ===== */
+window.S30S = { data: {}, register: function (d) { this.data[d.id] = d; } };
+</script>
+<script src="vendor/katex/katex.min.js"></script>
+<script src="manifest.js"></script>
+<script>
+(function () {
+"use strict";
+
+/* ===== Хранилище: ключи с префиксом id контрольной ===== */
+var EXAM = null;            // данные текущей контрольной
+var EXAM_META = null;       // запись из manifest
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
+function key(k) { return EXAM.id + ":" + k; }
+function flag(k) { return lsGet(key(k)) === "1"; }
+function setFlag(k, on) { lsSet(key(k), on ? "1" : null); }
+
+/* ===== Масштаб текста ===== */
+var ZOOMS = [0.85, 0.92, 1, 1.1, 1.2, 1.32];
+function applyZoom() { var z = +lsGet("s30s:zoom"); if (ZOOMS.indexOf(z) < 0) z = 1; document.getElementById("view").style.zoom = z; }
+function stepZoom(d) { var z = +lsGet("s30s:zoom") || 1, i = ZOOMS.indexOf(z); if (i < 0) i = 2; i = Math.max(0, Math.min(ZOOMS.length - 1, i + d)); lsSet("s30s:zoom", String(ZOOMS[i])); applyZoom(); }
+document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".zoom"); if (b) { e.stopPropagation(); stepZoom(+b.getAttribute("data-z")); } }, true);
+
+/* ===== Тема ===== */
+function applyTheme() {
+  var t = lsGet("s30s:theme");
+  if (t) document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme");
+}
+applyTheme();
+
+/* ===== Мини-рендерер markdown + KaTeX ===== */
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function tex(src, display) {
+  if (window.katex) {
+    try { return katex.renderToString(src, { displayMode: display, throwOnError: false, strict: false }); }
+    catch (e) { /* падение рендера — показать исходник */ }
+  }
+  return '<code>' + esc(display ? "$$" + src + "$$" : "$" + src + "$") + '</code>';
+}
+// Выносим формулы в заглушки до разбора markdown
+function protect(src, store) {
+  return src
+    .replace(/\$\$([\s\S]+?)\$\$/g, function (_, t) { store.push(tex(t, true)); return "\u0000" + (store.length - 1) + "\u0000"; })
+    .replace(/\$([^$\n]+?)\$/g, function (_, t) { store.push(tex(t, false)); return "\u0000" + (store.length - 1) + "\u0000"; });
+}
+function restore(html, store) { return html.replace(/\u0000(\d+)\u0000/g, function (_, i) { return store[+i]; }); }
+function inline(s) {
+  s = esc(s);
+  s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+  s = s.replace(/\*\*([^*]+?)\*\*/g, "<strong>$1</strong>");
+  s = s.replace(/(^|[\s(«])\*([^*\s][^*]*?)\*(?=[\s).,:;»!?]|$)/g, "$1<em>$2</em>");
+  s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+  s = s.replace(/\[не из лекций(?:[^\]]*)\]/g, function (m) { return '<span class="extra">' + m.slice(1, -1) + '</span>'; });
+  return s;
+}
+function splitRow(r) {
+  r = r.trim(); if (r[0] === "|") r = r.slice(1); if (r.slice(-1) === "|") r = r.slice(0, -1);
+  return r.split("|").map(function (c) { return c.trim(); });
+}
+function slug(s) { return s.toLowerCase().replace(/<[^>]+>/g, "").replace(/[^a-zа-яё0-9]+/gi, "-").replace(/^-|-$/g, "").slice(0, 60); }
+function md(src) {
+  if (!src) return "";
+  var store = [];
+  return restore(mdBody(protect(src, store)), store);
+}
+// Разбор уже «защищённого» текста (формулы заменены заглушками) — можно вызывать рекурсивно
+function mdBody(text) {
+  var lines = text.split("\n"), out = [], i = 0;
+  function isTable(j) { return /^\s*\|/.test(lines[j] || "") && /^\s*\|[\s\-:|]+\|\s*$/.test(lines[j + 1] || ""); }
+  while (i < lines.length) {
+    var ln = lines[i];
+    if (!ln.trim()) { i++; continue; }
+    var h = ln.match(/^(#{1,4})\s+(.*)$/);
+    if (h) { var lvl = Math.min(h[1].length + 1, 4); var ht = inline(h[2]); out.push("<h" + lvl + ' id="' + slug(h[2]) + '">' + ht + "</h" + lvl + ">"); i++; continue; }
+    if (/^---+\s*$/.test(ln)) { out.push("<hr>"); i++; continue; }
+    if (isTable(i)) {
+      var head = splitRow(lines[i]); i += 2; var rows = [];
+      while (i < lines.length && /^\s*\|/.test(lines[i])) { rows.push(splitRow(lines[i])); i++; }
+      out.push(tableHtml(head, rows, true)); continue;
+    }
+    if (/^\s*>/.test(ln)) {
+      var q = []; while (i < lines.length && /^\s*>/.test(lines[i])) { q.push(lines[i].replace(/^\s*>\s?/, "")); i++; }
+      var qt = q.join("\n");
+      var W = "**Расхождение со слайдами.**", isW = qt.indexOf(W) === 0;
+      out.push('<div class="' + (isW ? "warn" : "note") + ' md">' + mdBody(isW ? qt.slice(W.length).trim() : qt) + "</div>"); continue;
+    }
+    if (/^\s*([-*]|\d+[.)])\s+/.test(ln)) { var r = listHtml(lines, i); out.push(r.html); i = r.next; continue; }
+    var p = [];
+    while (i < lines.length && lines[i].trim() && !/^(#{1,4})\s/.test(lines[i]) && !isTable(i) && !/^\s*>/.test(lines[i]) && !/^\s*([-*]|\d+[.)])\s+/.test(lines[i])) { p.push(lines[i]); i++; }
+    out.push("<p>" + p.map(inline).join("<br>") + "</p>");
+  }
+  return out.join("\n");
+}
+function listHtml(lines, i) {
+  var base = lines[i].match(/^(\s*)/)[1].length;
+  var ordered = /^\s*\d+[.)]\s/.test(lines[i]);
+  var items = [];
+  while (i < lines.length) {
+    var ln = lines[i];
+    if (!ln.trim()) { if (lines[i + 1] && /^\s*([-*]|\d+[.)])\s+/.test(lines[i + 1]) && lines[i + 1].match(/^(\s*)/)[1].length >= base) { i++; continue; } break; }
+    var ind = ln.match(/^(\s*)/)[1].length;
+    var m = ln.match(/^\s*([-*]|\d+[.)])\s+(.*)$/);
+    if (m && ind === base) { items.push({ text: m[2], sub: [] }); i++; continue; }
+    if (ind > base && items.length) { items[items.length - 1].sub.push(ln); i++; continue; }
+    if (!m && items.length && ind >= base) { items[items.length - 1].text += " " + ln.trim(); i++; continue; }
+    break;
+  }
+  var tag = ordered ? "ol" : "ul";
+  var html = "<" + tag + ">" + items.map(function (it) {
+    var sub = it.sub.length ? listHtml(it.sub, 0).html : "";
+    return "<li>" + inline(it.text) + sub + "</li>";
+  }).join("") + "</" + tag + ">";
+  return { html: html, next: i };
+}
+function tableHtml(head, rows, protectedAlready) {
+  var cell = protectedAlready ? inline : function (c) { return mdInline(c); };
+  return '<div class="tbl"><table><thead><tr>' + head.map(function (c) { return "<th>" + cell(c) + "</th>"; }).join("") +
+    "</tr></thead><tbody>" + rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + cell(c) + "</td>"; }).join("") + "</tr>"; }).join("") +
+    "</tbody></table></div>";
+}
+function mdInline(s) { var st = []; return restore(inline(protect(s, st)), st); }
+
+/* ===== Блоки контента ===== */
+function renderBlock(b) {
+  switch (b.type) {
+    case "md": return '<div class="md">' + md(b.text) + "</div>";
+    case "table": return tableHtml(b.head, b.rows, false);
+    case "warn": return '<div class="warn md">' + md(b.text) + "</div>";
+    case "note": return '<div class="note md">' + md(b.text) + "</div>";
+    case "extra": return '<div class="note md"><span class="extra">[не из лекций]</span> ' + md(b.text) + "</div>";
+    case "figure": return figure(b.key);
+    case "details":
+      return '<details class="' + (b.kind === "solution" ? "solution" : "proof") + (b.src === "extra" ? " src-extra" : "") + '"><summary>' + mdInline(b.title) +
+        '</summary><div class="body md">' + md(b.text) + "</div></details>";
+    case "example":
+      return '<div class="example md">' + md(b.task) + '<details class="solution"><summary>Решение</summary><div class="body md">' + md(b.solution) + "</div></details></div>";
+    default: return "";
+  }
+}
+function figure(k) { var s = EXAM.figures && EXAM.figures[k]; return s ? '<div class="figure">' + s + "</div>" : ""; }
+
+/* ===== Вспомогательное ===== */
+var $view = document.getElementById("view"), $side = document.getElementById("side");
+applyZoom();
+function topicById(id) { return EXAM.topics.filter(function (t) { return t.id === id; })[0]; }
+function topicForNum(n) {
+  n = parseInt(n, 10);
+  return EXAM.topics.filter(function (t) {
+    var m = String(t.num).match(/^(\d+)\D*(?:[–-](\d+))?/); if (!m) return false;
+    var a = +m[1], b = m[2] ? +m[2] : a; return n >= a && n <= b && t.status === "done";
+  })[0];
+}
+function theoryById(id) { return EXAM.exam.theory.filter(function (q) { return q.id === id; })[0]; }
+function daysLeft() {
+  if (!EXAM_META || !EXAM_META.date) return "";
+  var d = Math.ceil((new Date(EXAM_META.date + "T09:00:00") - new Date()) / 864e5);
+  return d > 0 ? "через " + d + " дн." : d === 0 ? "сегодня" : "";
+}
+function setTitle(t) { document.getElementById("topTitle").textContent = t; document.title = t + " — s30s"; }
+
+/* ===== Боковая навигация ===== */
+function renderSide(route) {
+  var core = EXAM.topics.filter(function (t) { return t.kind !== "ref"; });
+  var refs = EXAM.topics.filter(function (t) { return t.kind === "ref"; });
+  var read = core.filter(function (t) { return t.status === "done" && flag("topic:" + t.id + ":read"); }).length;
+  var done = core.filter(function (t) { return t.status === "done"; }).length;
+  function link(href, html, cls) { return '<a href="' + href + '" class="' + (cls || "") + (route === href ? " active" : "") + '">' + html + "</a>"; }
+  var h = '<div class="brand"><b>s30s</b><span><button class="textbtn zoom" data-z="-1">А−</button> <button class="textbtn zoom" data-z="1">А+</button> · <button class="textbtn" id="themeBtn">тема</button>' +
+    (window.S30S_MANIFEST_COUNT > 1 ? ' · <a class="textbtn" href="#/exams">контрольные</a>' : "") + "</span></div>" +
+    '<div class="exam-title">' + esc(EXAM_META.title) + (daysLeft() ? ", " + daysLeft() : "") + "</div>" +
+    '<input class="search" id="q" type="search" placeholder="Поиск по конспектам…" value="' + esc(decodeURIComponent((route.match(/^#\/search\/(.*)$/) || [, ""])[1])) + '">' +
+    "<nav>" +
+    link("#/rk", "РК: вопросы, задачи, вариант") +
+    link("#/disc", "Расхождения со слайдами") +
+    link("#/traps", "На чём валятся") +
+    link("#/t/t97", "Дан предел: с чего начать") +
+    '<div class="sec">Конспекты · прочитано ' + read + " из " + done + "</div>" +
+    core.map(function (t) {
+      var mark = t.status !== "done" ? '<span class="mark">не написано</span>' : flag("topic:" + t.id + ":read") ? '<span class="mark">прочитано</span>' : "";
+      return link("#/t/" + t.id, '<span class="num">' + esc(t.num) + "</span>" + mdInline(t.title) + mark, t.status !== "done" ? "todo" : "");
+    }).join("") +
+    '<div class="sec">Справочники</div>' +
+    refs.filter(function (t) { return t.id !== "t97"; }).map(function (t) { return link("#/t/" + t.id, mdInline(t.title)); }).join("") +
+    "</nav>";
+  $side.innerHTML = h;
+  document.getElementById("themeBtn").onclick = function () {
+    var cur = lsGet("s30s:theme"); var dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    lsSet("s30s:theme", dark ? "light" : "dark"); applyTheme();
+  };
+  var q = document.getElementById("q");
+  q.onkeydown = function (e) { if (e.key === "Enter") location.hash = "#/search/" + encodeURIComponent(q.value.trim()); };
+}
+
+/* ===== Страница: тема ===== */
+function pageTopic(id) {
+  var t = topicById(id);
+  if (!t) return '<p class="empty">Тема не найдена.</p>';
+  setTitle(t.title);
+  var refs = (t.examRefs || []).map(function (r) { return '<a href="#/rk/theory/' + r + '">' + r + "</a>"; }).join(", ");
+  var head = "<h1>" + (t.kind === "ref" ? "" : esc(t.num) + ". ") + mdInline(t.title) + '</h1><div class="meta">' + [t.lecture ? esc(t.lecture) : "", refs ? "вопросы РК: " + refs : ""].filter(Boolean).join(" · ") + "</div>";
+  if (t.status !== "done") return head + '<p class="empty">Конспект этой темы ещё не написан. Формулировки, нужные для РК, — на странице «РК».</p>';
+  var isRead = flag("topic:" + t.id + ":read");
+  var btn = t.kind === "ref" ? "" : '<p><label class="chk"><input type="checkbox" id="readChk"' + (isRead ? " checked" : "") + "> Прочитано</label></p>";
+  return head + btn + t.blocks.map(renderBlock).join("\n") + (t.kind === "ref" ? "" : '<hr><p><label class="chk"><input type="checkbox" id="readChk2"' + (isRead ? " checked" : "") + "> Прочитано</label></p>");
+}
+
+/* ===== Страница: РК ===== */
+function theoryCard(q) {
+  var refs = (q.refs || []).map(function (r) { var t = topicById(r); return t ? '<a href="#/t/' + r + '">конспект: ' + mdInline(t.title) + "</a>" : ""; }).join(" · ");
+  var known = flag("exam:" + q.id + ":known");
+  return '<div class="item" id="' + q.id + '"><div class="q"><span class="qid">' + q.id + '</span><div class="qtext">' + mdInline(q.q) +
+    ' <span class="stat">(' + q.points + " б.)</span></div></div>" +
+    '<details class="solution"><summary>ответ</summary><div class="body md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div></details>" +
+    '<div class="tools"><label class="chk"><input type="checkbox" data-k="exam:' + q.id + ':known"' + (known ? " checked" : "") + "> знаю</label>" + (refs ? "<span>" + refs + "</span>" : "") + "</div></div>";
+}
+function pageRK(tab, anchor) {
+  setTitle("РК");
+  tab = tab || "theory";
+  var ex = EXAM.exam;
+  var tabs = '<div class="tabs">' + [["theory", "Теория"], ["tasks", "Задачи"], ["variant", "Типовой вариант"]].map(function (x) {
+    return '<a href="#/rk/' + x[0] + '" class="' + (tab === x[0] ? "on" : "") + '">' + x[1] + "</a>";
+  }).join("") + "</div>";
+  var h = "<h1>" + esc(EXAM_META.title) + '</h1><div class="meta"><span>Главный экран: строго по файлу «Вопросы для подготовки»</span></div>' + tabs;
+  if (tab === "theory") {
+    ex.blocks.forEach(function (b) {
+      var qs = ex.theory.filter(function (q) { return q.block === b.id; });
+      var k = qs.filter(function (q) { return flag("exam:" + q.id + ":known"); }).length;
+      h += "<h2>" + b.id + ". " + esc(b.title) + ' <span class="stat">' + esc(b.points) + "</span></h2>" +
+        '<div class="stat">знаю ' + k + " из " + qs.length + "</div>" +
+        qs.map(theoryCard).join("");
+    });
+  } else if (tab === "tasks") {
+    ex.taskTypes.forEach(function (tt) {
+      var ts = ex.tasks.filter(function (t) { return t.type === tt.id; });
+      var d = ts.filter(function (t) { return flag("task:" + t.id + ":done"); }).length;
+      h += "<h2>" + esc(tt.title) + '</h2><div class="stat">решено ' + d + " из " + ts.length + "</div>";
+      h += ts.map(function (t) {
+        return '<div class="item" id="task-' + t.id + '"><div class="q"><span class="qid">' + t.id + '</span><div class="qtext">' + mdInline(t.q) + "</div></div>" +
+          (t.hint ? '<details><summary>подсказка</summary><div class="body md">' + md(t.hint) + "</div></details>" : "") +
+          '<details class="solution"><summary>решение</summary><div class="body md">' + md(t.solution) + "</div></details>" +
+          '<div class="tools"><label class="chk"><input type="checkbox" data-k="task:' + t.id + ':done"' + (flag("task:" + t.id + ":done") ? " checked" : "") + "> решил сам</label></div></div>";
+      }).join("");
+    });
+  } else {
+    h += pageVariant();
+  }
+  return h;
+}
+
+/* ===== Типовой вариант с таймером ===== */
+var timerId = null;
+function pageVariant() {
+  var v = EXAM.exam.variant;
+  var started = +lsGet(key("variant:startedAt")) || 0;
+  var finished = lsGet(key("variant:finished")) === "1";
+  var minutes = +lsGet(key("variant:minutes")) || v.minutes;
+  var th = v.theory.map(theoryById);
+  var h = '<div class="item"><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">' +
+    '<span class="timer" id="timer">' + fmt(minutes * 60) + "</span>" +
+    (!started ? '<label class="stat">минут: <input id="mins" type="number" min="10" max="240" value="' + minutes + '" style="width:64px"></label><button class="btn" id="vStart">Начать</button>'
+      : !finished ? '<button class="btn" id="vFinish">Закончить и сверить</button>' : "") +
+    (started ? '<button class="btn ghost" id="vReset">Сбросить</button>' : "") +
+    '</div><div class="stat" style="margin-top:6px">Решения скрыты до конца. Теория — 2–4 б., задачи — 10–16 б. Время реальной РК в файле не указано — ставь своё.</div></div>';
+  if (!started) return h + '<p class="empty">Нажми «Начать» — появятся вопросы.</p>';
+  h += "<h2>Теория</h2>" + th.map(function (q, i) {
+    return '<div class="item"><div class="q"><span class="qid">' + (i + 1) + '.</span><div class="qtext">' + mdInline(q.q) + ' <span class="stat">(' + q.points + " б.)</span></div></div>" +
+      (finished ? '<details class="solution" open><summary>Эталон</summary><div class="body md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div></details>" +
+        scoreBox("vt:" + i, q.points) : "") + "</div>";
+  }).join("");
+  h += "<h2>Задачи</h2>" + v.tasks.map(function (t, i) {
+    return '<div class="item"><div class="q"><span class="qid">' + t.n + '.</span><div class="qtext">' + md(t.q) + ' <span class="stat">(' + t.points + " б.)</span></div></div>" +
+      (finished ? '<details class="solution" open><summary>Эталонное решение</summary><div class="body md">' + md(t.solution) + "</div></details>" + scoreBox("vz:" + i, t.points) : "") + "</div>";
+  }).join("");
+  if (finished) {
+    var tot = 0, max = 0;
+    th.forEach(function (q, i) { max += q.points; tot += +(lsGet(key("variant:score:vt:" + i)) || 0); });
+    v.tasks.forEach(function (t, i) { max += t.points; tot += +(lsGet(key("variant:score:vz:" + i)) || 0); });
+    h += '<div class="item"><b>Итого: ' + tot + " из " + max + "</b> " + '<span class="stat">(теория min 2 из 4, задачи min 10 из 16)</span></div>';
+  }
+  return h;
+}
+function scoreBox(id, max) {
+  var cur = lsGet(key("variant:score:" + id)) || "0", h = '<div class="tools">Мой балл: ';
+  for (var s = 0; s <= max; s++) h += '<label class="chk"><input type="radio" name="sc-' + id + '" data-score="' + id + '" value="' + s + '"' + (String(s) === cur ? " checked" : "") + "> " + s + "</label>";
+  return h + "</div>";
+}
+function fmt(sec) { sec = Math.max(0, Math.floor(sec)); var m = Math.floor(sec / 60), s = sec % 60; return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s; }
+function bindVariant() {
+  var v = EXAM.exam.variant;
+  var b;
+  if ((b = document.getElementById("vStart"))) b.onclick = function () {
+    var m = +document.getElementById("mins").value || v.minutes;
+    lsSet(key("variant:minutes"), String(m)); lsSet(key("variant:startedAt"), String(Date.now())); lsSet(key("variant:finished"), null); route();
+  };
+  if ((b = document.getElementById("vFinish"))) b.onclick = function () { lsSet(key("variant:finished"), "1"); route(); };
+  if ((b = document.getElementById("vReset"))) b.onclick = function () {
+    ["variant:startedAt", "variant:finished"].forEach(function (k) { lsSet(key(k), null); });
+    for (var i = 0; i < 10; i++) { lsSet(key("variant:score:vt:" + i), null); lsSet(key("variant:score:vz:" + i), null); }
+    route();
+  };
+  [].forEach.call(document.querySelectorAll("input[data-score]"), function (r) { r.onchange = function () { lsSet(key("variant:score:" + r.getAttribute("data-score")), r.value); route(); }; });
+  var started = +lsGet(key("variant:startedAt")) || 0, finished = lsGet(key("variant:finished")) === "1";
+  var minutes = +lsGet(key("variant:minutes")) || v.minutes, el = document.getElementById("timer");
+  if (timerId) clearInterval(timerId);
+  if (started && el) {
+    var tick = function () {
+      var left = minutes * 60 - (Date.now() - started) / 1000;
+      el.textContent = finished ? "сверка" : fmt(left);
+      el.className = "timer" + (!finished && left < 300 ? " low" : "");
+    };
+    tick(); if (!finished) timerId = setInterval(tick, 1000);
+  }
+}
+
+/* ===== Расхождения ===== */
+function pageDisc(filter) {
+  setTitle("Расхождения со слайдами");
+  var only = lsGet(key("disc:onlyMajor")) === "1";
+  var nums = [];
+  EXAM.discrepancies.forEach(function (d) { d.topics.forEach(function (n) { if (nums.indexOf(n) < 0) nums.push(n); }); });
+  nums.sort(function (a, b) { return a - b; });
+  var list = EXAM.discrepancies.filter(function (d) { return (!filter || d.topics.indexOf(filter) >= 0) && (!only || d.severity === "major"); });
+  var h = "<h1>Расхождения со слайдами</h1>" +
+    '<div class="meta"><span>Как в слайдах → как правильно → что писать на РК.</span></div>' +
+    '<div class="tabs"><a href="#/disc" class="' + (!filter ? "on" : "") + '">все темы</a>' +
+    nums.map(function (n) { return '<a href="#/disc/' + n + '" class="' + (filter === n ? "on" : "") + '">тема ' + n + "</a>"; }).join("") + "</div>" +
+    '<p><label class="chk"><input type="checkbox" id="onlyMajor"' + (only ? " checked" : "") + "> только важные</label> <span class=stat>показано " + list.length + "</span></p>";
+  return h + list.map(function (d) {
+    var links = d.topics.map(function (n) { var t = topicForNum(n); return t ? '<a href="#/t/' + t.id + '">тема ' + n + "</a>" : ""; }).filter(Boolean).join(", ");
+    return '<div class="item"><div class="' + (d.severity === "major" ? "" : "") + '"><strong>' + mdInline(d.title) + '</strong></div><div class="stat">' +
+      [({ major: "<b>важно</b>", minor: "", ok: "не ошибка" })[d.severity], links].filter(Boolean).join(" · ") + '</div><div class="md">' + md(d.text) + "</div></div>";
+  }).join("");
+}
+
+/* ===== Ловушки ===== */
+function pageTraps() {
+  setTitle("На чём валятся");
+  function sec(g, t) {
+    return "<h2>" + t + "</h2>" + EXAM.traps.filter(function (x) { return x.group === g; }).map(function (x) {
+      return '<div class="item"><div class="q"><span class="qid">' + x.id + '</span><div class="qtext"><b>' + mdInline(x.title) + '</b><div class="md">' + md(x.text) + "</div></div></div></div>";
+    }).join("");
+  }
+  return '<h1>На чём валятся</h1><div class="meta"><span>Ловушки задач и формулировок. Ответы проверены вычислением.</span></div>' + sec("tasks", "Задачи") + sec("theory", "Формулировки");
+}
+
+/* ===== Поиск ===== */
+function plain(s) { return String(s || "").replace(/\$+/g, "").replace(/\\[a-zA-Z]+/g, " ").replace(/[{}*_#|`>]/g, " ").replace(/\s+/g, " "); }
+function blockText(b) { return [b.text, b.title, b.task, b.solution, (b.head || []).join(" "), (b.rows || []).map(function (r) { return r.join(" "); }).join(" ")].join(" "); }
+function pageSearch(q) {
+  setTitle("Поиск");
+  q = (q || "").trim();
+  if (q.length < 2) return '<h1>Поиск</h1><p class="empty">Введите хотя бы 2 символа в поле слева и нажмите Enter.</p>';
+  var ql = q.toLowerCase(), res = [];
+  function add(href, title, raw) {
+    var p = plain(raw), i = p.toLowerCase().indexOf(ql);
+    if (i < 0) return;
+    var snip = esc(p.slice(Math.max(0, i - 70), i)) + "<mark>" + esc(p.substr(i, q.length)) + "</mark>" + esc(p.slice(i + q.length, i + q.length + 90));
+    res.push('<div class="item"><a href="' + href + '"><b>' + title + '</b></a><div class="stat">…' + snip + "…</div></div>");
+  }
+  EXAM.exam.theory.forEach(function (x) { add("#/rk/theory/" + x.id, "РК " + x.id + ": " + mdInline(x.q), x.q + " " + x.answer); });
+  EXAM.exam.tasks.forEach(function (x) { add("#/rk/tasks/" + x.id, "Задача " + x.id, x.q + " " + x.hint + " " + x.solution); });
+  EXAM.traps.forEach(function (x) { add("#/traps", "Ловушка " + x.id + ": " + mdInline(x.title), x.title + " " + x.text); });
+  EXAM.discrepancies.forEach(function (x) { add("#/disc", "Расхождение: " + mdInline(x.title), x.title + " " + x.text); });
+  EXAM.topics.forEach(function (t) { add("#/t/" + t.id, "Тема " + esc(t.num) + ": " + mdInline(t.title), t.title + " " + (t.blocks || []).map(blockText).join(" ")); });
+  return "<h1>Поиск: «" + esc(q) + '»</h1><div class="result">Найдено: ' + res.length + "</div>" + (res.join("") || '<p class="empty">Ничего не найдено.</p>');
+}
+
+/* ===== Выбор контрольной ===== */
+function pageExams() {
+  setTitle("Контрольные");
+  return "<h1>Контрольные</h1>" + window.S30S_MANIFEST.map(function (s) {
+    return "<h2>" + esc(s.title) + "</h2>" + s.exams.map(function (e) {
+      return '<div class="item"><a href="#/open/' + e.id + '"><b>' + esc(e.title) + '</b></a> <span class="stat">' + esc(e.date || "") + "</span></div>";
+    }).join("");
+  }).join("");
+}
+
+/* ===== Роутер ===== */
+function route() {
+  var hash = location.hash || "#/rk";
+  if (hash === "#/" || hash === "#") hash = "#/rk";
+  document.body.classList.remove("nav-open");
+  var m;
+  if ((m = hash.match(/^#\/open\/(.+)$/))) { openExam(decodeURIComponent(m[1]), "#/rk"); return; }
+  if (hash === "#/exams" || !EXAM) { $view.innerHTML = pageExams(); $side.innerHTML = ""; return; }
+  var html, sideRoute = hash, anchor = null;
+  if ((m = hash.match(/^#\/t\/([\w-]+)$/))) html = pageTopic(m[1]);
+  else if ((m = hash.match(/^#\/rk(?:\/(theory|tasks|variant))?(?:\/([\w.]+))?$/))) {
+    html = pageRK(m[1], m[2]); sideRoute = "#/rk";
+    anchor = m[2] ? (m[1] === "tasks" ? "task-" + m[2] : m[2]) : null;
+  }
+  else if ((m = hash.match(/^#\/disc(?:\/(\d+))?$/))) { html = pageDisc(m[1]); sideRoute = "#/disc"; }
+  else if (hash === "#/traps") html = pageTraps();
+  else if ((m = hash.match(/^#\/search\/(.*)$/))) html = pageSearch(decodeURIComponent(m[1]));
+  else { location.hash = "#/rk"; return; }
+  renderSide(sideRoute);
+  $view.innerHTML = html;
+  bindCommon();
+  if (/^#\/rk\/variant/.test(hash)) bindVariant(); else if (timerId) { clearInterval(timerId); timerId = null; }
+  if (anchor) { var el = document.getElementById(anchor); if (el) { el.scrollIntoView(); var d = el.querySelector("details"); if (d) d.open = true; } }
+  else window.scrollTo(0, 0);
+}
+function bindCommon() {
+  [].forEach.call(document.querySelectorAll("input[data-k]"), function (c) {
+    c.onchange = function () { setFlag(c.getAttribute("data-k"), c.checked); var y = window.scrollY; route(); window.scrollTo(0, y); };
+  });
+  ["readChk", "readChk2"].forEach(function (id) {
+    var c = document.getElementById(id); if (!c) return;
+    c.onchange = function () { var t = location.hash.split("/")[2]; setFlag("topic:" + t + ":read", c.checked); var y = window.scrollY; route(); window.scrollTo(0, y); };
+  });
+  var om = document.getElementById("onlyMajor");
+  if (om) om.onchange = function () { lsSet(key("disc:onlyMajor"), om.checked ? "1" : null); route(); };
+}
+document.getElementById("menuBtn").onclick = function () { document.body.classList.toggle("nav-open"); };
+document.addEventListener("click", function (e) { if (document.body.classList.contains("nav-open") && !$side.contains(e.target) && e.target.id !== "menuBtn") document.body.classList.remove("nav-open"); });
+window.addEventListener("hashchange", route);
+
+/* ===== Загрузка контрольной ===== */
+function allExams() { var r = []; (window.S30S_MANIFEST || []).forEach(function (s) { s.exams.forEach(function (e) { r.push(e); }); }); return r; }
+function loadScript(src) {
+  return new Promise(function (ok, fail) { var s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = function () { fail(new Error(src)); }; document.head.appendChild(s); });
+}
+function openExam(id, then) {
+  var meta = allExams().filter(function (e) { return e.id === id; })[0];
+  if (!meta) { location.hash = "#/exams"; return; }
+  var ready = window.S30S.data[id] ? Promise.resolve() : loadScript(meta.data);
+  ready.then(function () {
+    EXAM = window.S30S.data[id]; EXAM_META = meta; lsSet("s30s:lastExam", id);
+    if (then) location.hash = then; route();
+  }).catch(function (e) { $view.innerHTML = '<p class="empty">Не удалось загрузить ' + esc(e.message) + "</p>"; });
+}
+function ensureKatex() {
+  if (window.katex) return Promise.resolve();
+  // Офлайн-копия не найдена — пробуем CDN (нужен интернет)
+  var l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"; document.head.appendChild(l);
+  return loadScript("https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js").catch(function () {});
+}
+(function start() {
+  var exams = allExams();
+  window.S30S_MANIFEST_COUNT = exams.length;
+  ensureKatex().then(function () {
+    if (!exams.length) { $view.innerHTML = '<p class="empty">manifest.js пуст.</p>'; return; }
+    var last = lsGet("s30s:lastExam");
+    var pick = exams.length === 1 ? exams[0].id : (exams.some(function (e) { return e.id === last; }) ? last : null);
+    if (pick) openExam(pick, null); else { location.hash = "#/exams"; route(); }
+  });
+})();
+})();
+</script>
+</body>
+</html>
