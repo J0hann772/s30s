@@ -1,0 +1,6 @@
+# Скопируйте в deploy.conf (файл в .gitignore) и поправьте под свой сервер.
+DEPLOY_HOST="s30s.ru"
+DEPLOY_USER="ubuntu"
+DEPLOY_PATH="/var/www/cheatsheet"
+DEPLOY_BRANCH="main"
+DEPLOY_URL="https://s30s.ru"
