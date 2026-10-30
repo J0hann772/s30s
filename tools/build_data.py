@@ -391,6 +391,7 @@ data = {
             {"id": "continuity", "title": "3. Исследуйте на непрерывность, график у разрывов"},
         ],
         "tasks": tasks,
+        "rkq": json.loads((NOTES / "96_rkq.json").read_text(encoding="utf-8")),
         "variant": {
             "minutes": 90,
             "theory": ["A7", "B5", "C3"],

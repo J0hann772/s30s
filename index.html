@@ -12,27 +12,54 @@
   --line:#e7e7e7; --line-strong:#cfcfcf; --accent:#3d5a80; --sel:#f4f5f7;
   --radius:6px; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
+:root{color-scheme:light}
+:root[data-theme="light"]{color-scheme:light}
 :root[data-theme="dark"]{
+  color-scheme:dark;
   --bg:#161616; --side:#161616; --text:#e4e4e4; --muted:#a0a0a0; --faint:#7a7a7a;
   --line:#2a2a2a; --line-strong:#444; --accent:#93add3; --sel:#202020;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  color-scheme:dark;
   --bg:#161616; --side:#161616; --text:#e4e4e4; --muted:#a0a0a0; --faint:#7a7a7a;
   --line:#2a2a2a; --line-strong:#444; --accent:#93add3; --sel:#202020;
 }}
 *{box-sizing:border-box}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--faint)}
+@supports not selector(::-webkit-scrollbar){ *{scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent} }
+[hidden]{display:none!important}
+html{scroll-padding-top:72px}
 html,body{margin:0;background:var(--bg);color:var(--text)}
 body{font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-text-size-adjust:100%}
 a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 button{font:inherit;color:inherit;cursor:pointer}
 .layout{display:flex;min-height:100vh}
-aside{width:288px;flex:none;background:var(--side);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow:auto;padding:calc(var(--u)*3) calc(var(--u)*2) calc(var(--u)*6)}
+aside{width:288px;flex:none;background:var(--side);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.side-head{flex:none;padding:calc(var(--u)*3) calc(var(--u)*2) var(--u);background:var(--side);border-bottom:1px solid var(--line)}
+.side-head .ctrls{margin:0 0 calc(var(--u)*2)}
+.side-scroll{flex:1;min-height:0;overflow-y:auto;position:relative;padding:0 calc(var(--u)*2) calc(var(--u)*6)}
 main{flex:1;min-width:0;padding:calc(var(--u)*5) calc(var(--u)*4) calc(var(--u)*10)}
-.wrap{max-width:70ch;margin:0 auto}
-.brand{display:flex;align-items:baseline;justify-content:space-between;gap:var(--u);margin:0 0 var(--u)}
+.wrap{--tw:53rem;max-width:1000px;margin:0 auto}
+.wrap :is(h1,h2,h3,h4,p,ul,ol,.meta,.warn,.note,details,.item,.tabs,.example,.tools,.result,.empty,hr){max-width:var(--tw);margin-left:auto;margin-right:auto}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:var(--u);margin:0 0 calc(var(--u)*1.5)}
+.brand .blinks{display:flex;gap:calc(var(--u)*1.5)}
 .brand b{font-size:15px;letter-spacing:.01em}
 .textbtn{background:none;border:0;padding:0;color:var(--muted);font-size:13px}
 .textbtn:hover{color:var(--accent);text-decoration:underline}
+.ctrls{display:flex;align-items:center;gap:var(--u);flex:none}
+.cbtn{height:32px;min-width:36px;padding:0 calc(var(--u)*1.25);display:inline-flex;align-items:center;justify-content:center;
+  background:transparent;border:1px solid var(--line);border-radius:var(--radius);color:var(--text);font-size:14px;line-height:1;white-space:nowrap}
+.cbtn:hover{background:var(--sel)}
+.cbtn:focus{outline:none}
+.cbtn:focus-visible{outline:2px solid var(--accent);outline-offset:1px;position:relative;z-index:1}
+.seg{display:inline-flex}
+.seg .cbtn{border-radius:0}
+.seg .cbtn:first-child{border-radius:var(--radius) 0 0 var(--radius)}
+.seg .cbtn:last-child{border-radius:0 var(--radius) var(--radius) 0;border-left:0}
+.theme-btn{width:64px}
 .exam-title{font-size:13px;color:var(--muted);margin:0 0 calc(var(--u)*2);line-height:1.5}
 .search{width:100%;padding:var(--u) calc(var(--u)*1.5);border:1px solid var(--line);border-radius:var(--radius);background:var(--bg);color:var(--text);margin-bottom:calc(var(--u)*2);font:inherit;font-size:14px}
 .search:focus{outline:none;border-color:var(--line-strong)}
@@ -40,10 +67,21 @@ nav a{display:flex;gap:var(--u);padding:calc(var(--u)*.5) var(--u);border-radius
 nav a:hover{background:var(--sel);text-decoration:none}
 nav a.active{color:var(--accent);font-weight:600;background:var(--sel)}
 nav a.todo{color:var(--faint)}
-nav .sec{font-size:12px;color:var(--muted);margin:calc(var(--u)*3) var(--u) var(--u)}
+nav .sec{display:flex;width:100%;justify-content:space-between;align-items:baseline;gap:var(--u);background:none;border:0;border-radius:var(--radius);padding:calc(var(--u)*.5) var(--u);margin:calc(var(--u)*2) 0 calc(var(--u)*.5);font-size:12px;line-height:1.4;color:var(--muted);text-align:left}
+nav .sec:hover{color:var(--text)}
+nav .sec:focus{outline:none}
+nav .sec:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+nav .sec .tg{flex:none;color:var(--faint)}
 nav .num{flex:none;min-width:36px;font-variant-numeric:tabular-nums;color:var(--faint);font-size:13px}
 nav .mark{margin-left:auto;font-size:12px;color:var(--muted)}
-.topbar{display:none}
+.topbar{display:none;gap:calc(var(--u)*1.5);align-items:center;position:sticky;top:0;z-index:10;background:var(--bg);padding:var(--u) calc(var(--u)*4);margin:calc(var(--u)*-5) calc(var(--u)*-4) calc(var(--u)*3);border-bottom:1px solid var(--line)}
+.topbar .t{font-weight:600;font-size:14px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.d-only{display:none}
+@media (min-width:861px){
+  .m-only{display:none} .d-only{display:inline}
+  body.side-hidden aside{display:none}
+  body.side-hidden .topbar{display:flex}
+}
 h1{font-size:26px;line-height:1.3;margin:0 0 var(--u);font-weight:650}
 h2{font-size:19px;line-height:1.35;margin:calc(var(--u)*5) 0 calc(var(--u)*1.5);font-weight:650}
 h3{font-size:17px;margin:calc(var(--u)*4) 0 var(--u);font-weight:650}
@@ -88,6 +126,31 @@ label.chk{display:inline-flex;gap:calc(var(--u)*.75);align-items:center;cursor:p
 .tabs a{padding:var(--u) 0;color:var(--muted);font-size:15px;margin-bottom:-1px;border-bottom:2px solid transparent}
 .tabs a.on{color:var(--text);font-weight:600;border-bottom-color:var(--text)}
 .tabs a:hover{text-decoration:none;color:var(--text)}
+.rkq .title{margin:0 0 calc(var(--u)*4);text-align:center;color:var(--muted);font-size:15px;line-height:1.5}
+.rkq .title b{display:block;color:var(--text);font-size:17px}
+.rkq h2{margin-top:calc(var(--u)*5)}
+.rkq h2 sup{font-size:.6em;font-weight:400;color:var(--muted)}
+.rkq ol{list-style:none;padding:0;margin:0}
+.rkq li{display:flex;gap:calc(var(--u)*1.5);padding:calc(var(--u)*.75) 0;border-bottom:1px solid var(--line);margin:0}
+.rkq .n{flex:none;min-width:34px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.rkq .tx{flex:1;min-width:0}
+.rkq li a{color:var(--accent)}
+.rkq li a:hover{text-decoration:underline}
+.rkq .tx .pts{color:var(--muted)}
+.rkq .fn{font-size:13px;color:var(--muted);margin:calc(var(--u)*1.5) 0 0}
+.rkq .fn sup{margin-right:4px}
+.rkq .grp{margin:calc(var(--u)*2) 0 0}
+.rkq .grp>p{margin:0 0 var(--u)}
+.rkq .after{color:var(--muted);font-size:14px;margin:var(--u) 0 0}
+.wrap .cards{max-width:var(--tw);margin-left:auto;margin-right:auto}
+.cards .card{border:1px solid var(--line);border-radius:var(--radius);padding:calc(var(--u)*3);margin:calc(var(--u)*2) 0}
+.cards .cid{font-size:13px;color:var(--muted);margin:0 0 var(--u)}
+.cards .cq{font-size:18px;line-height:1.5;margin:0 0 calc(var(--u)*2)}
+.cards .ans{border-top:1px solid var(--line);margin-top:calc(var(--u)*2);padding-top:calc(var(--u)*2)}
+.cards .row{display:flex;gap:var(--u);flex-wrap:wrap;align-items:center;margin:calc(var(--u)*2) 0 0}
+.cards .stats{font-size:14px;color:var(--muted);margin:0 0 calc(var(--u)*2)}
+.cards .btn{min-height:36px}
+@media (max-width:860px){ .cards .btn{min-height:44px} }
 .stat{font-size:13px;color:var(--muted);font-weight:400}
 .btn{border:1px solid var(--line-strong);background:var(--bg);border-radius:var(--radius);padding:calc(var(--u)*.75) calc(var(--u)*2);font-size:14px}
 .btn:hover{border-color:var(--text)}
@@ -101,12 +164,13 @@ mark{background:none;color:inherit;font-weight:700}
 .katex-display{overflow-x:auto;overflow-y:hidden;padding:calc(var(--u)*.25) 0}
 .katex{font-size:1.05em}
 @media (max-width:860px){
-  aside{position:fixed;left:0;top:0;z-index:20;transform:translateX(-102%);transition:transform .2s}
+  aside{position:fixed;left:0;top:0;z-index:20;width:min(288px,88vw);height:100vh;height:100dvh;transform:translateX(-102%);transition:transform .2s}
+  #hideSide{display:none}
   body.nav-open aside{transform:none;box-shadow:0 0 24px rgba(0,0,0,.08)}
   main{padding:var(--u) calc(var(--u)*2) calc(var(--u)*10)}
-  .topbar{display:flex;gap:calc(var(--u)*2);align-items:baseline;position:sticky;top:0;z-index:10;background:var(--bg);padding:var(--u) 0;margin-bottom:var(--u);border-bottom:1px solid var(--line)}
-  .topbar .zoom{font-size:15px;padding:0 4px}
-  .topbar .t{font-weight:600;font-size:14px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar{display:flex;padding:var(--u) calc(var(--u)*2);margin:calc(var(--u)*-1) calc(var(--u)*-2) var(--u)}
+  .cbtn{height:40px;min-width:44px}
+  .theme-btn{width:72px}
   h1{font-size:22px}
 }
 </style>
@@ -115,7 +179,7 @@ mark{background:none;color:inherit;font-weight:700}
 <div class="layout">
   <aside id="side"></aside>
   <main>
-    <div class="topbar"><button class="textbtn" id="menuBtn">Меню</button><span class="t" id="topTitle"></span><button class="textbtn zoom" data-z="-1">А−</button><button class="textbtn zoom" data-z="1">А+</button></div>
+    <div class="topbar"><button class="cbtn" id="menuBtn"><span class="m-only">Меню</span><span class="d-only">Колонка</span></button><span class="t" id="topTitle"></span><span id="topCtrls"></span></div>
     <div class="wrap" id="view"><p class="empty">Загрузка…</p></div>
   </main>
 </div>
@@ -144,6 +208,19 @@ var ZOOMS = [0.85, 0.92, 1, 1.1, 1.2, 1.32];
 function applyZoom() { var z = +lsGet("s30s:zoom"); if (ZOOMS.indexOf(z) < 0) z = 1; document.getElementById("view").style.zoom = z; }
 function stepZoom(d) { var z = +lsGet("s30s:zoom") || 1, i = ZOOMS.indexOf(z); if (i < 0) i = 2; i = Math.max(0, Math.min(ZOOMS.length - 1, i + d)); lsSet("s30s:zoom", String(ZOOMS[i])); applyZoom(); }
 document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".zoom"); if (b) { e.stopPropagation(); stepZoom(+b.getAttribute("data-z")); } }, true);
+
+/* ===== Кнопки управления: масштаб и тема ===== */
+function isDark() { var cur = lsGet("s30s:theme"); return cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; }
+function ctrlsHtml() {
+  return '<span class="seg" role="group" aria-label="Размер текста"><button class="cbtn zoom" data-z="-1" aria-label="Уменьшить текст">А−</button>' +
+    '<button class="cbtn zoom" data-z="1" aria-label="Увеличить текст">А+</button></span>' +
+    '<button class="cbtn theme-btn" aria-label="Переключить светлую и тёмную тему" aria-pressed="' + isDark() + '">Тема</button>';
+}
+document.addEventListener("click", function (e) {
+  var b = e.target.closest && e.target.closest(".theme-btn"); if (!b) return;
+  lsSet("s30s:theme", isDark() ? "light" : "dark"); applyTheme();
+  [].forEach.call(document.querySelectorAll(".theme-btn"), function (x) { x.setAttribute("aria-pressed", String(isDark())); });
+});
 
 /* ===== Тема ===== */
 function applyTheme() {
@@ -266,6 +343,7 @@ function figure(k) { var s = EXAM.figures && EXAM.figures[k]; return s ? '<div c
 /* ===== Вспомогательное ===== */
 var $view = document.getElementById("view"), $side = document.getElementById("side");
 applyZoom();
+document.getElementById("topCtrls").innerHTML = '<span class="ctrls">' + ctrlsHtml() + "</span>";
 function topicById(id) { return EXAM.topics.filter(function (t) { return t.id === id; })[0]; }
 function topicForNum(n) {
   n = parseInt(n, 10);
@@ -283,34 +361,50 @@ function daysLeft() {
 function setTitle(t) { document.getElementById("topTitle").textContent = t; document.title = t + " — s30s"; }
 
 /* ===== Боковая навигация ===== */
+function setSideHidden(on) { setFlag("side:hidden", on); document.body.classList.toggle("side-hidden", on); }
+document.addEventListener("click", function (e) {
+  var b = e.target.closest && e.target.closest(".sec[data-sec]"); if (!b) return;
+  var n = b.getAttribute("data-sec"), box = document.getElementById("sb-" + n), closed = !box.hidden;
+  box.hidden = closed; setFlag("side:sec:" + n, closed);
+  b.setAttribute("aria-expanded", String(!closed)); b.querySelector(".tg").textContent = closed ? "показать" : "скрыть";
+});
 function renderSide(route) {
   var core = EXAM.topics.filter(function (t) { return t.kind !== "ref"; });
   var refs = EXAM.topics.filter(function (t) { return t.kind === "ref"; });
   var read = core.filter(function (t) { return t.status === "done" && flag("topic:" + t.id + ":read"); }).length;
   var done = core.filter(function (t) { return t.status === "done"; }).length;
   function link(href, html, cls) { return '<a href="' + href + '" class="' + (cls || "") + (route === href ? " active" : "") + '">' + html + "</a>"; }
-  var h = '<div class="brand"><b>s30s</b><span><button class="textbtn zoom" data-z="-1">А−</button> <button class="textbtn zoom" data-z="1">А+</button> · <button class="textbtn" id="themeBtn">тема</button>' +
-    (window.S30S_MANIFEST_COUNT > 1 ? ' · <a class="textbtn" href="#/exams">контрольные</a>' : "") + "</span></div>" +
+  var oldSc = document.getElementById("sideScroll"), st = oldSc ? oldSc.scrollTop : 0;
+  function sec(name, title) {
+    var closed = flag("side:sec:" + name);
+    return '<button class="sec" data-sec="' + name + '" aria-expanded="' + !closed + '"><span>' + title + '</span><span class="tg">' + (closed ? "показать" : "скрыть") + "</span></button>";
+  }
+  function body(name, html) { return '<div class="secbody" id="sb-' + name + '"' + (flag("side:sec:" + name) ? " hidden" : "") + ">" + html + "</div>"; }
+  var exLink = window.S30S_MANIFEST_COUNT > 1 ? '<a class="textbtn" href="#/exams">контрольные</a>' : "";
+  var h = '<div class="side-head"><div class="brand"><b>s30s</b><span class="blinks">' + exLink + '<button class="textbtn" id="hideSide">скрыть колонку</button></span></div>' +
+    '<div class="ctrls">' + ctrlsHtml() + "</div>" +
     '<div class="exam-title">' + esc(EXAM_META.title) + (daysLeft() ? ", " + daysLeft() : "") + "</div>" +
-    '<input class="search" id="q" type="search" placeholder="Поиск по конспектам…" value="' + esc(decodeURIComponent((route.match(/^#\/search\/(.*)$/) || [, ""])[1])) + '">' +
-    "<nav>" +
+    '<input class="search" id="q" type="search" placeholder="Поиск по конспектам…" style="margin:0" value="' + esc(decodeURIComponent((route.match(/^#\/search\/(.*)$/) || [, ""])[1])) + '"></div>' +
+    '<div class="side-scroll" id="sideScroll"><nav>' +
     link("#/rk", "РК: вопросы, задачи, вариант") +
+    link("#/rkq", "Список вопросов РК") +
+    link("#/cards", "Карточки: определения и теоремы") +
     link("#/disc", "Расхождения со слайдами") +
     link("#/traps", "На чём валятся") +
     link("#/t/t97", "Дан предел: с чего начать") +
-    '<div class="sec">Конспекты · прочитано ' + read + " из " + done + "</div>" +
-    core.map(function (t) {
+    sec("notes", "Конспекты, прочитано " + read + " из " + done) +
+    body("notes", core.map(function (t) {
       var mark = t.status !== "done" ? '<span class="mark">не написано</span>' : flag("topic:" + t.id + ":read") ? '<span class="mark">прочитано</span>' : "";
       return link("#/t/" + t.id, '<span class="num">' + esc(t.num) + "</span>" + mdInline(t.title) + mark, t.status !== "done" ? "todo" : "");
-    }).join("") +
-    '<div class="sec">Справочники</div>' +
-    refs.filter(function (t) { return t.id !== "t97"; }).map(function (t) { return link("#/t/" + t.id, mdInline(t.title)); }).join("") +
-    "</nav>";
+    }).join("")) +
+    sec("refs", "Справочники, " + refs.filter(function (t) { return t.id !== "t97"; }).length) +
+    body("refs", refs.filter(function (t) { return t.id !== "t97"; }).map(function (t) { return link("#/t/" + t.id, mdInline(t.title)); }).join("")) +
+    "</nav></div>";
   $side.innerHTML = h;
-  document.getElementById("themeBtn").onclick = function () {
-    var cur = lsGet("s30s:theme"); var dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-    lsSet("s30s:theme", dark ? "light" : "dark"); applyTheme();
-  };
+  var sc = document.getElementById("sideScroll"), act = sc.querySelector("a.active");
+  sc.scrollTop = st;
+  if (act && (act.offsetTop < st || act.offsetTop + act.offsetHeight > st + sc.clientHeight)) sc.scrollTop = Math.max(0, act.offsetTop - sc.clientHeight / 2);
+  document.getElementById("hideSide").onclick = function () { setSideHidden(true); };
   var q = document.getElementById("q");
   q.onkeydown = function (e) { if (e.key === "Enter") location.hash = "#/search/" + encodeURIComponent(q.value.trim()); };
 }
@@ -326,6 +420,131 @@ function pageTopic(id) {
   var isRead = flag("topic:" + t.id + ":read");
   var btn = t.kind === "ref" ? "" : '<p><label class="chk"><input type="checkbox" id="readChk"' + (isRead ? " checked" : "") + "> Прочитано</label></p>";
   return head + btn + t.blocks.map(renderBlock).join("\n") + (t.kind === "ref" ? "" : '<hr><p><label class="chk"><input type="checkbox" id="readChk2"' + (isRead ? " checked" : "") + "> Прочитано</label></p>");
+}
+
+/* ===== Страница: Список вопросов РК (текст файла «Вопросы для подготовки») ===== */
+function rkqHref(to) {
+  var m = String(to || "").split(":");
+  if (m[0] === "theory" && theoryById(m[1])) return "#/rk/theory/" + m[1];
+  if (m[0] === "task" && EXAM.exam.tasks.filter(function (t) { return t.id === m[1]; })[0]) return "#/rk/tasks/" + m[1];
+  if (m[0] === "vtask") return "#/rk/tasks/v" + m[1];
+  return null;
+}
+function rkqCount() {
+  var total = 0, link = 0;
+  function add(to) { total++; if (rkqHref(to)) link++; }
+  EXAM.exam.rkq.sections.forEach(function (s) {
+    (s.items || []).forEach(function (it) { add(it.to); });
+    (s.taskgroups || []).forEach(function (g) { g.tasks.forEach(function (id) { add("task:" + id); }); });
+    (s.vartasks || []).forEach(function (n) { add("vtask:" + n); });
+  });
+  return [link, total];
+}
+function pageRkq() {
+  setTitle("Список вопросов РК");
+  var q = EXAM.exam.rkq, c = rkqCount();
+  function li(n, pts, html, href) {
+    var inner = (pts ? '<span class="pts">(' + esc(pts) + ")</span> " : "") + html;
+    return "<li><span class=\"n\">" + esc(n) + ".</span><span class=\"tx\">" + (href ? '<a href="' + href + '">' + inner + "</a>" : inner) + "</span></li>";
+  }
+  var h = '<div class="rkq"><h1>Список вопросов РК</h1>' +
+    '<div class="meta">Текст файла «Вопросы для подготовки». Кликабельны ' + c[0] + " пунктов из " + c[1] + ".</div>" +
+    '<div class="title"><b>' + mdInline(q.header[0] + " " + q.header[1]) + "</b>" + esc(q.header[2]) + "<br>" + esc(q.header[3]) + "</div>";
+  q.sections.forEach(function (s) {
+    h += "<h2>" + mdInline(s.title) + (s.sup ? "<sup>" + s.sup + "</sup>" : "") + "</h2>";
+    if (s.items) h += "<ol>" + s.items.map(function (it) { return li(it.n, it.pts, mdInline(it.text), rkqHref(it.to)); }).join("") + "</ol>";
+    if (s.taskgroups) s.taskgroups.forEach(function (g) {
+      h += '<div class="grp"><p><b>' + g.n + ".</b> " + mdInline(g.text) + "</p><ol>" + g.tasks.map(function (id) {
+        var t = EXAM.exam.tasks.filter(function (x) { return x.id === id; })[0];
+        return li(id, "", t ? mdInline(t.q) : esc(id), rkqHref("task:" + id));
+      }).join("") + "</ol></div>";
+    });
+    if (s.vartasks) h += "<ol>" + s.vartasks.map(function (n) {
+      var t = EXAM.exam.variant.tasks.filter(function (x) { return x.n === n; })[0];
+      return li(n, t.points + " балла", "Вычислите предел " + mdInline(t.q), rkqHref("vtask:" + n));
+    }).join("") + "</ol>";
+    if (s.after) h += '<p class="after">' + esc(s.after) + "</p>";
+    if (s.footnote) {
+      var f = s.footnote, href = f.to ? rkqHref(f.to) : null;
+      h += '<p class="fn"><sup>' + f.sup + "</sup>" + (href ? '<a href="' + href + '">' + esc(f.text) + "</a>" : esc(f.text)) + "</p>";
+    }
+  });
+  return h + "</div>";
+}
+
+/* ===== Карточки: блоки A и C ===== */
+var CARDS = { mode: null, queue: [], i: 0, shown: false, ok: 0, bad: 0, shuffle: false, resetAsk: false };
+function cardPool() { return EXAM.exam.theory.filter(function (q) { return q.block === "A" || q.block === "C"; }); }
+function cardText(id) {
+  var out = null;
+  EXAM.exam.rkq.sections.forEach(function (s) { (s.items || []).forEach(function (it) { if (!out && it.to === "theory:" + id) out = it; }); });
+  return out;
+}
+function cardState(id) { var v = lsGet(key("cards:" + id)); return v === "1" ? "ok" : v === "0" ? "bad" : "new"; }
+function cardCounts() {
+  var c = { ok: 0, bad: 0, new: 0 };
+  cardPool().forEach(function (q) { c[cardState(q.id)]++; });
+  return c;
+}
+function startCards(mode) {
+  var pool = cardPool();
+  var q = pool.filter(function (x) { return mode === "all" || (mode === "bad" && cardState(x.id) === "bad") || (mode === "new" && cardState(x.id) === "new"); });
+  if (CARDS.shuffle) for (var i = q.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = q[i]; q[i] = q[j]; q[j] = t; }
+  CARDS.mode = mode; CARDS.queue = q.map(function (x) { return x.id; }); CARDS.i = 0; CARDS.shown = false; CARDS.ok = 0; CARDS.bad = 0;
+  renderCards();
+}
+function renderCards() {
+  var box = document.getElementById("cards"); if (!box) return;
+  var c = cardCounts(), tot = c.ok + c.bad + c.new, h = "";
+  var stats = '<p class="stats">Вспомнил: ' + c.ok + ". Не вспомнил: " + c.bad + ". Не пройдено: " + c.new + ". Всего: " + tot + ".</p>";
+  if (CARDS.mode === null) {
+    h = stats + '<div class="row">' +
+      '<button class="btn" data-act="start" data-m="all">Все карточки (' + tot + ")</button>" +
+      '<button class="btn" data-act="start" data-m="bad"' + (c.bad ? "" : " disabled") + ">Только проваленные (" + c.bad + ")</button>" +
+      '<button class="btn" data-act="start" data-m="new"' + (c.new ? "" : " disabled") + ">Только непройденные (" + c.new + ")</button></div>" +
+      '<div class="row"><label class="chk"><input type="checkbox" data-act="shuffle"' + (CARDS.shuffle ? " checked" : "") + "> в случайном порядке</label>" +
+      '<button class="btn" data-act="reset">' + (CARDS.resetAsk ? "Точно сбросить все отметки?" : "Сбросить отметки") + "</button>" +
+      (CARDS.resetAsk ? '<button class="btn" data-act="resetno">Отмена</button>' : "") + "</div>";
+  } else if (CARDS.i >= CARDS.queue.length) {
+    h = stats + '<div class="card"><p class="cq">' + (CARDS.queue.length ? "Круг закончен." : "В этом режиме карточек нет.") + "</p>" +
+      (CARDS.queue.length ? "<p>В этом круге: вспомнил " + CARDS.ok + ", не вспомнил " + CARDS.bad + ".</p>" : "") +
+      '<div class="row">' + (c.bad ? '<button class="btn" data-act="start" data-m="bad">Прогнать проваленные (' + c.bad + ")</button>" : "") +
+      '<button class="btn" data-act="menu">К выбору режима</button></div></div>';
+  } else {
+    var q = theoryById(CARDS.queue[CARDS.i]), t = cardText(q.id), st = cardState(q.id);
+    var refs = (q.refs || []).map(function (r) { var tp = topicById(r); return tp ? '<a href="#/t/' + r + '">конспект: ' + mdInline(tp.title) + "</a>" : ""; }).filter(Boolean).join(" · ");
+    h = stats + '<div class="card"><div class="cid">Карточка ' + (CARDS.i + 1) + " из " + CARDS.queue.length + " · " + q.id + " · " + q.points + " б." +
+      (st === "bad" ? " · в прошлый раз: не вспомнил" : st === "ok" ? " · в прошлый раз: вспомнил" : "") + "</div>" +
+      '<p class="cq">' + (t ? mdInline(t.text) : mdInline(q.q)) + "</p>";
+    if (!CARDS.shown) h += '<div class="row"><button class="btn" data-act="show">Показать ответ</button><button class="btn" data-act="menu">Закончить</button></div>';
+    else h += '<div class="ans md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + (refs ? '<p class="stat">' + refs + "</p>" : "") + "</div>" +
+      '<div class="row"><button class="btn" data-act="ok">Вспомнил</button><button class="btn" data-act="bad">Не вспомнил</button><button class="btn" data-act="menu">Закончить</button></div>';
+    h += "</div>";
+  }
+  box.innerHTML = h;
+}
+function bindCards() {
+  CARDS.mode = null; CARDS.resetAsk = false; renderCards();
+  var box = document.getElementById("cards");
+  box.onclick = function (e) {
+    var b = e.target.closest && e.target.closest("[data-act]"); if (!b || b.disabled) return;
+    var a = b.getAttribute("data-act");
+    if (a === "start") startCards(b.getAttribute("data-m"));
+    else if (a === "shuffle") { CARDS.shuffle = b.checked; return; }
+    else if (a === "reset") { if (CARDS.resetAsk) { cardPool().forEach(function (q) { lsSet(key("cards:" + q.id), null); }); CARDS.resetAsk = false; } else CARDS.resetAsk = true; renderCards(); }
+    else if (a === "resetno") { CARDS.resetAsk = false; renderCards(); }
+    else if (a === "menu") { CARDS.mode = null; renderCards(); renderSide("#/cards"); }
+    else if (a === "show") { CARDS.shown = true; renderCards(); }
+    else if (a === "ok" || a === "bad") {
+      var id = CARDS.queue[CARDS.i]; lsSet(key("cards:" + id), a === "ok" ? "1" : "0");
+      if (a === "ok") CARDS.ok++; else CARDS.bad++;
+      CARDS.i++; CARDS.shown = false; renderCards();
+    }
+  };
+}
+function pageCards() {
+  setTitle("Карточки");
+  return '<div class="cards"><h1>Карточки</h1><div class="meta">Определения (блок A, 30) и формулировки теорем (блок C, 7). Вспомните формулировку, затем откройте ответ и отметьте результат. Отметки хранятся в браузере.</div><div id="cards"></div></div>';
 }
 
 /* ===== Страница: РК ===== */
@@ -365,6 +584,11 @@ function pageRK(tab, anchor) {
           '<div class="tools"><label class="chk"><input type="checkbox" data-k="task:' + t.id + ':done"' + (flag("task:" + t.id + ":done") ? " checked" : "") + "> решил сам</label></div></div>";
       }).join("");
     });
+    var vt = ex.variant.tasks;
+    h += "<h2>Типовой вариант билета по задачам</h2>" + vt.map(function (t) {
+      return '<div class="item" id="task-v' + t.n + '"><div class="q"><span class="qid">' + t.n + '.</span><div class="qtext">' + mdInline(t.q) + ' <span class="stat">(' + t.points + " б.)</span></div></div>" +
+        '<details class="solution"><summary>решение</summary><div class="body md">' + md(t.solution) + "</div></details></div>";
+    }).join("");
   } else {
     h += pageVariant();
   }
@@ -504,6 +728,7 @@ function route() {
   var hash = location.hash || "#/rk";
   if (hash === "#/" || hash === "#") hash = "#/rk";
   document.body.classList.remove("nav-open");
+  if (EXAM) document.body.classList.toggle("side-hidden", flag("side:hidden"));
   var m;
   if ((m = hash.match(/^#\/open\/(.+)$/))) { openExam(decodeURIComponent(m[1]), "#/rk"); return; }
   if (hash === "#/exams" || !EXAM) { $view.innerHTML = pageExams(); $side.innerHTML = ""; return; }
@@ -513,6 +738,8 @@ function route() {
     html = pageRK(m[1], m[2]); sideRoute = "#/rk";
     anchor = m[2] ? (m[1] === "tasks" ? "task-" + m[2] : m[2]) : null;
   }
+  else if (hash === "#/rkq") html = pageRkq();
+  else if (hash === "#/cards") html = pageCards();
   else if ((m = hash.match(/^#\/disc(?:\/(\d+))?$/))) { html = pageDisc(m[1]); sideRoute = "#/disc"; }
   else if (hash === "#/traps") html = pageTraps();
   else if ((m = hash.match(/^#\/search\/(.*)$/))) html = pageSearch(decodeURIComponent(m[1]));
@@ -520,6 +747,7 @@ function route() {
   renderSide(sideRoute);
   $view.innerHTML = html;
   bindCommon();
+  if (hash === "#/cards") bindCards();
   if (/^#\/rk\/variant/.test(hash)) bindVariant(); else if (timerId) { clearInterval(timerId); timerId = null; }
   if (anchor) { var el = document.getElementById(anchor); if (el) { el.scrollIntoView(); var d = el.querySelector("details"); if (d) d.open = true; } }
   else window.scrollTo(0, 0);
@@ -535,8 +763,10 @@ function bindCommon() {
   var om = document.getElementById("onlyMajor");
   if (om) om.onchange = function () { lsSet(key("disc:onlyMajor"), om.checked ? "1" : null); route(); };
 }
-document.getElementById("menuBtn").onclick = function () { document.body.classList.toggle("nav-open"); };
-document.addEventListener("click", function (e) { if (document.body.classList.contains("nav-open") && !$side.contains(e.target) && e.target.id !== "menuBtn") document.body.classList.remove("nav-open"); });
+document.getElementById("menuBtn").onclick = function () {
+  if (matchMedia("(min-width:861px)").matches) setSideHidden(false); else document.body.classList.toggle("nav-open");
+};
+document.addEventListener("click", function (e) { if (document.body.classList.contains("nav-open") && !$side.contains(e.target) && !(e.target.closest && e.target.closest(".topbar"))) document.body.classList.remove("nav-open"); });
 window.addEventListener("hashchange", route);
 
 /* ===== Загрузка контрольной ===== */
