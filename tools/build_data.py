@@ -63,6 +63,12 @@ def split_blocks(text):
     i = 0
     while i < len(lines):
         ln = lines[i]
+        mw = re.match(r"\s*\{\{widget:(\w+)\}\}\s*$", ln)
+        if mw:
+            flush()
+            blocks.append({"type": "widget", "key": mw.group(1)})
+            i += 1
+            continue
         m = re.match(r"\s*<details><summary>(.*?)</summary>", ln)
         if m:
             flush()
@@ -265,8 +271,11 @@ for m in re.finditer(r"\*\*(\d)\. \((\d) балл\w*\)\*\*\s*(.*?)\n\s*\n<detail
                       "solution": m.group(4).strip()})
 
 # ---------- теория РК ----------
-def A(i, q, ans, refs):
-    return {"id": f"A{i}", "block": "A", "n": i, "points": 1, "q": q, "answer": ans, "refs": refs}
+def A(i, q, ans, refs, widget=None):
+    d = {"id": f"A{i}", "block": "A", "n": i, "points": 1, "q": q, "answer": ans, "refs": refs}
+    if widget:
+        d["widget"] = widget   # интерактивная иллюстрация из widgets.js
+    return d
 
 
 SEQ = r"\lim_{n\to+\infty}x_n"
@@ -294,7 +303,7 @@ theoryA = [
     A(12, "Определение невозрастающей последовательности", "$x_n$ невозрастающая, если $x_{n+1}\\le x_n$ $\\forall n\\in\\mathbb N$.", ["t05"]),
     A(13, "Определение неубывающей последовательности", "$x_n$ неубывающая, если $x_{n+1}\\ge x_n$ $\\forall n\\in\\mathbb N$.", ["t05"]),
     A(14, "Определение фундаментальной последовательности",
-      "$x_n$ фундаментальная, если $\\forall\\varepsilon>0\\ \\exists n(\\varepsilon)\\in\\mathbb N:\\ \\forall n>n(\\varepsilon)\\ \\forall m>n(\\varepsilon)\\Rightarrow|x_n-x_m|<\\varepsilon$.", ["t06"]),
+      "$x_n$ фундаментальная, если $\\forall\\varepsilon>0\\ \\exists n(\\varepsilon)\\in\\mathbb N:\\ \\forall n>n(\\varepsilon)\\ \\forall m>n(\\varepsilon)\\Rightarrow|x_n-x_m|<\\varepsilon$.", ["t06"], widget="cauchy"),
     A(15, "Критерий Коши существования предела последовательности",
       "Для того чтобы последовательность была сходящейся, необходимо и достаточно, чтобы она была фундаментальной.", ["t06"]),
     A(16, "Определение по Гейне предела функции",

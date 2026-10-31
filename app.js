@@ -154,6 +154,7 @@ function renderBlock(b) {
     case "note": return '<div class="note md">' + md(b.text) + "</div>";
     case "extra": return '<div class="note md"><span class="extra">[не из лекций]</span> ' + md(b.text) + "</div>";
     case "figure": return figure(b.key);
+    case "widget": return widgetHtml(b.key);
     case "details":
       return '<details class="' + (b.kind === "solution" ? "solution" : "proof") + (b.src === "extra" ? " src-extra" : "") + '"><summary>' + mdInline(b.title) +
         '</summary><div class="body md">' + md(b.text) + "</div></details>";
@@ -162,6 +163,7 @@ function renderBlock(b) {
     default: return "";
   }
 }
+function widgetHtml(k) { return '<div class="widget" data-widget="' + esc(k) + '"></div>'; }
 function figure(k) { var s = EXAM.figures && EXAM.figures[k]; return s ? '<div class="figure">' + s + "</div>" : ""; }
 
 /* ===== Вспомогательное ===== */
@@ -649,7 +651,7 @@ function theoryCard(q) {
   var known = flag("exam:" + q.id + ":known");
   return '<div class="item" id="' + q.id + '"><div class="q"><span class="qid">' + q.id + '</span><div class="qtext">' + mdInline(q.q) +
     ' <span class="stat">(' + q.points + " б.)</span></div></div>" +
-    '<details class="solution"><summary>ответ</summary><div class="body md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div></details>" +
+    '<details class="solution"><summary>ответ</summary><div class="body md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + (q.widget ? widgetHtml(q.widget) : "") + "</div></details>" +
     '<div class="tools"><label class="chk"><input type="checkbox" data-k="exam:' + q.id + ':known"' + (known ? " checked" : "") + "> знаю</label>" + (refs ? "<span>" + refs + "</span>" : "") + "</div></div>";
 }
 function pageRK(tab, anchor) {
@@ -708,7 +710,7 @@ function pageVariant() {
   if (!started) return h + '<p class="empty">Нажми «Начать» — появятся вопросы.</p>';
   h += "<h2>Теория</h2>" + th.map(function (q, i) {
     return '<div class="item"><div class="q"><span class="qid">' + (i + 1) + '.</span><div class="qtext">' + mdInline(q.q) + ' <span class="stat">(' + q.points + " б.)</span></div></div>" +
-      (finished ? '<details class="solution" open><summary>Эталон</summary><div class="body md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div></details>" +
+      (finished ? '<details class="solution" open><summary>Эталон</summary><div class="body md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + (q.widget ? widgetHtml(q.widget) : "") + "</div></details>" +
         scoreBox("vt:" + i, q.points) : "") + "</div>";
   }).join("");
   h += "<h2>Задачи</h2>" + v.tasks.map(function (t, i) {
@@ -916,7 +918,7 @@ function warmOffline() {
   var conn = navigator.connection; if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) return;   // экономим трафик
   var seen = {}, media = {};
   var add = function (u, isMedia) { var a = new URL(u, location.href).href; seen[a] = 1; if (isMedia) media[a] = 1; };
-  ["index.html", "style.css", "app.js", "manifest.js", "vendor/katex/katex.min.css", "vendor/katex/katex.min.js"].forEach(function (u) { add(u); });
+  ["index.html", "style.css", "app.js", "manifest.js", "widgets.js", "vendor/katex/katex.min.css", "vendor/katex/katex.min.js"].forEach(function (u) { add(u); });
   var cssUrl = new URL("vendor/katex/katex.min.css", location.href).href;
   var jobs = [fetch(cssUrl).then(function (r) { return r.text(); }).then(function (t) {
     (t.match(/url\([^)]*\.woff2[^)]*\)/g) || []).forEach(function (m) { add(new URL(m.replace(/^url\(["']?|["']?\)$/g, ""), cssUrl).href, true); });

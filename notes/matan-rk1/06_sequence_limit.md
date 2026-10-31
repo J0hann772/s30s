@@ -14,6 +14,8 @@ $$\lim_{n\to+\infty}x_n=a\ \overset{def}{\iff}\ \forall\varepsilon>0\ \ \exists 
 **Определение 6.** Последовательность $x_n$ называется **фундаментальной**, если для любого сколь угодно малого положительного числа $\varepsilon$ найдётся свой порядковый номер $n(\varepsilon)$ такой, что при всех $n>n(\varepsilon)$, $m>n(\varepsilon)$ выполнено неравенство $|x_n-x_m|<\varepsilon$:
 $$x_n\ \text{— фундаментальная}\ \overset{def}{\iff}\ \forall\varepsilon>0\ \ \exists n(\varepsilon)\in\mathbb N:\ \forall n>n(\varepsilon)\ \ \forall m>n(\varepsilon)\ \Rightarrow\ |x_n-x_m|<\varepsilon.$$
 
+{{widget:cauchy}}
+
 (Определения 3–5 — ограниченность — см. тему 5.)
 
 ### Бесконечные пределы последовательности [не из лекций]
