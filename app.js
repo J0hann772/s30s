@@ -238,6 +238,7 @@ function renderSide(route) {
     link("#/rkq", "Список вопросов РК") +
     link("#/rk", "РК: вопросы, задачи, вариант") +
     link("#/cards", "Карточки: определения и теоремы") +
+    link("#/materials", "Материалы") +
     sec("notes", "Конспекты" + (PROGRESS ? ", прочитано " + read + " из " + done : "")) +
     body("notes", core.map(function (t) {
       var mark = t.status !== "done" ? '<span class="mark">не написано</span>' : flag("topic:" + t.id + ":read") ? '<span class="mark">прочитано</span>' : "";
@@ -352,45 +353,49 @@ function answerCard(known) {
 function renderCards() {
   var box = document.getElementById("cards"); if (!box) return;
   var c = cardCounts(), tot = c.ok + c.bad + c.new, h = "";
-  var stats = '<p class="stats">Знаю: ' + c.ok + ". Ещё не знаю: " + (c.bad + c.new) + ". Всего: " + tot + ".</p>";
+  var stats = '<p class="stats">Знаю: <b class="ok">' + c.ok + '</b>. Ещё не знаю: <b class="bad">' + (c.bad + c.new) + "</b>. Всего: " + tot + ".</p>";
   if (CARDS.mode === null) {
     h = stats + '<div class="row">' +
       '<button class="btn" data-act="start" data-m="all">Начать с нуля (' + tot + ")</button>" +
-      '<button class="btn" data-act="start" data-m="new"' + (c.bad + c.new ? "" : " disabled") + ">Только непройденные (" + (c.bad + c.new) + ")</button>" +
-      '<button class="btn" data-act="start" data-m="ok"' + (c.ok ? "" : " disabled") + ">Только пройденные (" + c.ok + ")</button></div>" +
+      '<button class="btn" data-act="start" data-m="new"' + (c.bad + c.new ? "" : " disabled") + ">Только непройденные (<span class=\"bad\">" + (c.bad + c.new) + "</span>)</button>" +
+      '<button class="btn" data-act="start" data-m="ok"' + (c.ok ? "" : " disabled") + ">Только пройденные (<span class=\"ok\">" + c.ok + "</span>)</button></div>" +
       '<div class="row"><button class="btn" data-act="reset">' + (CARDS.resetAsk ? "Точно сбросить весь прогресс?" : "Сбросить прогресс") + "</button>" +
       (CARDS.resetAsk ? '<button class="btn" data-act="resetno">Отмена</button>' : "") + "</div>" +
       '<p class="meta">Карточку можно перевернуть нажатием или пробелом. Свайп влево (клавиша ←) — знаю, вправо (→) — не знаю. Карточки, которые вы не знали, повторяются в следующем круге в случайном порядке, пока не останется ни одной.</p>';
   } else if (CARDS.between || !CARDS.queue.length) {
     var m = CARDS.miss.length;
     h = '<div class="card done">' + (!CARDS.queue.length ? '<p class="cq">В этом режиме карточек нет.</p>' :
-      '<p class="cq">' + (m ? "Круг " + CARDS.round + " закончен" : "Всё пройдено") + "</p><p>Знаю: " + CARDS.got + ", не знаю: " + m + ".</p>") +
+      '<p class="cq">' + (m ? "Круг " + CARDS.round + " закончен" : "Всё пройдено") + "</p><p>Знаю: <b class=\"ok\">" + CARDS.got + "</b>, не знаю: <b class=\"bad\">" + m + "</b>.</p>") +
       '<div class="row">' + (m ? '<button class="btn" data-act="round">Следующий круг (' + m + ")</button>" : "") +
       '<button class="btn" data-act="menu">К выбору режима</button></div></div>';
   } else {
     var q = theoryById(CARDS.queue[CARDS.i]), t = cardText(q.id), st = cardState(q.id);
     var refs = (q.refs || []).map(function (r) { var tp = topicById(r); return tp ? '<a href="#/t/' + r + '">конспект: ' + mdInline(tp.title) + "</a>" : ""; }).filter(Boolean).join(" · ");
     var pct = Math.round(CARDS.i / CARDS.queue.length * 100);
-    h = '<div class="deckhead"><span>Круг ' + CARDS.round + " · " + (CARDS.i + 1) + " из " + CARDS.queue.length + " · " + esc(q.id) + '</span><button class="lnk" data-act="menu">Закончить</button></div>' +
+    h = '<div class="deckhead"><span>Круг ' + CARDS.round + " · " + (CARDS.i + 1) + " из " + CARDS.queue.length + " · " + esc(q.id) + ' · <b class="ok">' + CARDS.got + '</b> / <b class="bad">' + CARDS.miss.length + '</b></span><button class="lnk" data-act="menu">Закончить</button></div>' +
       '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
       '<div class="deck"><div class="cardwrap enter" id="cardwrap"><span class="hint hl">Знаю</span><span class="hint hr">Не знаю</span>' +
-      '<div class="flip' + (CARDS.flipped ? " flipped" : "") + '" id="flip">' +
-      '<div class="face front"><div class="cid">' + q.points + " б." + (st === "ok" ? " · раньше: знаю" : st === "bad" ? " · раньше: не знаю" : "") + '</div><p class="cq">' + (t ? mdInline(t.text) : mdInline(q.q)) + '</p><div class="tap">Нажмите, чтобы перевернуть</div></div>' +
-      '<div class="face back"><div class="cid">Ответ</div><div class="ans md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div>" + (refs ? '<p class="stat">' + refs + "</p>" : "") + "</div>" +
+      '<div class="flip" id="flip">' +
+      '<div class="face front"' + (CARDS.flipped ? " hidden" : "") + '><div class="cid">' + q.points + " б." + (st === "ok" ? " · раньше: знаю" : st === "bad" ? " · раньше: не знаю" : "") + '</div><p class="cq">' + (t ? mdInline(t.text) : mdInline(q.q)) + '</p><div class="tap">Нажмите, чтобы перевернуть</div></div>' +
+      '<div class="face back"' + (CARDS.flipped ? "" : " hidden") + '><div class="cid">Ответ</div><div class="ans md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div>" + (refs ? '<p class="stat">' + refs + "</p>" : "") + "</div>" +
       "</div></div></div>" +
       '<div class="row sw"><button class="btn" data-act="know">&larr; Знаю</button><button class="btn" data-act="flip">Перевернуть</button><button class="btn" data-act="dont">Не знаю &rarr;</button></div>';
   }
   box.innerHTML = h;
 }
 function flipCard() {
-  var f = document.getElementById("flip"); if (!f || CARDS.busy) return;
-  CARDS.flipped = !CARDS.flipped; f.classList.toggle("flipped", CARDS.flipped);
+  var f = document.getElementById("flip"); if (!f || CARDS.busy || f.getAttribute("data-turning")) return;
+  var fr = f.querySelector(".front"), bk = f.querySelector(".back");
+  var swap = function () { CARDS.flipped = !CARDS.flipped; fr.hidden = CARDS.flipped; bk.hidden = !CARDS.flipped; };
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { swap(); return; }
+  f.setAttribute("data-turning", "1"); f.classList.add("turn");
+  setTimeout(function () { swap(); f.classList.remove("turn"); setTimeout(function () { f.removeAttribute("data-turning"); }, 170); }, 150);
 }
 function flyCard(known) {
   var w = document.getElementById("cardwrap"); if (!w || CARDS.busy) return;
   CARDS.busy = true;
   var dir = known ? -1 : 1, reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  w.classList.remove("enter"); w.classList.remove("drag");
+  w.classList.remove("enter"); w.classList.remove("drag-l"); w.classList.remove("drag-r"); w.classList.add(known ? "drag-l" : "drag-r"); w.style.setProperty("--k", "1");
   w.style.transition = reduce ? "opacity .15s" : "transform .26s ease-in, opacity .26s ease-in";
   w.style.transform = reduce ? "none" : "translateX(" + dir * Math.max(innerWidth, 600) + "px) rotate(" + dir * 18 + "deg)";
   w.style.opacity = "0";
@@ -426,7 +431,8 @@ function bindCards() {
     var k = Math.min(1, Math.abs(dx) / 110);
     drag.w.querySelector(".hl").style.opacity = dx < 0 ? k : 0;
     drag.w.querySelector(".hr").style.opacity = dx > 0 ? k : 0;
-    drag.w.classList.toggle("drag", Math.abs(dx) > 30);
+    drag.w.style.setProperty("--k", String(k));
+    drag.w.classList.toggle("drag-l", dx < -10); drag.w.classList.toggle("drag-r", dx > 10);
   };
   var end = function (e, cancel) {
     if (!drag || e.pointerId !== drag.id) return;
@@ -434,7 +440,7 @@ function bindCards() {
     if (d.on) {
       if (!cancel && d.dx <= -90) flyCard(true);
       else if (!cancel && d.dx >= 90) flyCard(false);
-      else { d.w.style.transition = "transform .2s ease-out"; d.w.style.transform = "none"; d.w.classList.remove("drag"); d.w.querySelectorAll(".hint").forEach(function (h) { h.style.opacity = 0; }); }
+      else { d.w.style.transition = "transform .2s ease-out"; d.w.style.transform = "none"; d.w.classList.remove("drag-l"); d.w.classList.remove("drag-r"); d.w.querySelectorAll(".hint").forEach(function (h) { h.style.opacity = 0; }); }
     } else if (!cancel && Math.abs(e.clientX - d.x) < 8 && Math.abs(e.clientY - d.y) < 8) flipCard();
   };
   box.onpointerup = function (e) { end(e, false); };
@@ -454,6 +460,117 @@ function pageCards() {
   setTitle("Карточки");
   return '<div class="cards"><h1>Карточки</h1><div class="meta">Определения (блок A, 30) и формулировки теорем (блок C, 7). Прогресс хранится в браузере.</div><div id="cards"></div></div>';
 }
+
+/* ===== Материалы: фото, PDF, Word, презентации + просмотр фото ===== */
+function fmtSize(n) { return n >= 1048576 ? (n / 1048576).toFixed(1).replace(".", ",") + " МБ" : Math.max(1, Math.round(n / 1024)) + " КБ"; }
+function plural(n, a, b, c) { var m = n % 100, k = n % 10; return n + " " + (m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c); }
+var KIND_LBL = { pdf: "PDF", doc: "Word", ppt: "Презентация", xls: "Таблица", txt: "Текст", file: "Файл" };
+var MAT = null;
+function pageMaterials() {
+  setTitle("Материалы");
+  return '<div class="mats"><h1>Материалы</h1><div class="meta">Презентации, слитые варианты и задачи. Фото открываются на сайте, всё можно скачать архивом.</div><div id="mat"><p class="empty">Загрузка…</p></div></div>';
+}
+function bindMaterials() {
+  var box = document.getElementById("mat"), id = EXAM.id;
+  var ready = (window.S30S.materials && window.S30S.materials[id]) ? Promise.resolve() : loadScript("materials/" + id + "/index.js");
+  ready.then(function () { MAT = window.S30S.materials[id]; renderMaterials(box); }).catch(function () { box.innerHTML = '<p class="empty">Материалов пока нет.</p>'; });
+}
+function renderMaterials(box) {
+  if (!MAT || !MAT.groups.length) { box.innerHTML = '<p class="empty">Материалов пока нет.</p>'; return; }
+  var h = MAT.all ? '<p><a class="btn" href="' + esc(MAT.all.url) + '" download>Скачать всё одним архивом (' + plural(MAT.all.count, "файл", "файла", "файлов") + ", " + fmtSize(MAT.all.size) + ")</a></p>" : "";
+  MAT.groups.forEach(function (g, gi) {
+    var imgs = g.items.filter(function (x) { return x.kind === "img"; }), files = g.items.filter(function (x) { return x.kind !== "img"; });
+    h += "<h2>" + esc(g.title) + '</h2><div class="mhead"><span class="stat">' + plural(g.items.length, "файл", "файла", "файлов") + " · " + fmtSize(g.zipSize) + '</span><a class="btn" href="' + esc(g.zip) + '" download>Скачать архив</a></div>';
+    if (files.length) h += '<ul class="mfiles">' + files.map(function (f) {
+      return "<li><span class=\"mname\">" + esc(f.name) + '</span><span class="stat">' + esc(KIND_LBL[f.kind] || "Файл") + " · " + fmtSize(f.size) + "</span>" +
+        (f.kind === "pdf" ? '<a href="' + esc(f.url) + '" target="_blank" rel="noopener">Открыть</a>' : "") + '<a href="' + esc(f.url) + '" download>Скачать</a></li>';
+    }).join("") + "</ul>";
+    if (imgs.length) h += '<div class="mgrid">' + imgs.map(function (f, i) {
+      return '<button class="mthumb" data-g="' + gi + '" data-i="' + i + '" title="' + esc(f.name) + '"><img loading="lazy" src="' + esc(f.thumb) + '" alt="' + esc(f.name) + '"' + (f.w ? ' width="' + f.w + '" height="' + f.h + '"' : "") + "><span>" + esc(f.name) + "</span></button>";
+    }).join("") + "</div>";
+  });
+  box.innerHTML = h;
+  box.onclick = function (e) {
+    var b = e.target.closest && e.target.closest(".mthumb"); if (!b) return;
+    var g = MAT.groups[+b.getAttribute("data-g")];
+    openLightbox(g.items.filter(function (x) { return x.kind === "img"; }), +b.getAttribute("data-i"));
+  };
+}
+/* просмотр фото: стрелки, свайп, зум колесом/щипком/двойным кликом, перетаскивание */
+var LB = null;
+function openLightbox(list, idx) {
+  if (!LB) {
+    var el = document.createElement("div"); el.className = "lb"; el.hidden = true; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", "Просмотр фото");
+    el.innerHTML = '<div class="lb-top"><span class="lb-cap"></span><span class="lb-cnt"></span><a class="lb-btn" id="lbDl" download>Скачать</a><button class="lb-btn" id="lbX" aria-label="Закрыть">Закрыть</button></div>' +
+      '<div class="lb-stage" id="lbStage"><img class="lb-img" id="lbImg" alt="" draggable="false"></div>' +
+      '<button class="lb-nav lb-prev" id="lbPrev" aria-label="Предыдущее">&#8249;</button><button class="lb-nav lb-next" id="lbNext" aria-label="Следующее">&#8250;</button>';
+    document.body.appendChild(el);
+    LB = { el: el, img: el.querySelector("#lbImg"), stage: el.querySelector("#lbStage"), list: [], i: 0, s: 1, x: 0, y: 0, ptr: {}, pinch: 0, moved: false, startX: 0, lastTap: 0 };
+    var L = LB;
+    var apply = function (anim) { L.img.style.transition = anim ? "transform .18s ease-out" : "none"; L.img.style.transform = "translate(" + L.x + "px," + L.y + "px) scale(" + L.s + ")"; };
+    var clamp = function () {
+      if (L.s <= 1) { L.x = 0; L.y = 0; return; }
+      var sw = L.stage.clientWidth, sh = L.stage.clientHeight, w = L.img.clientWidth * L.s, h = L.img.clientHeight * L.s;
+      var mx = Math.max(0, (w - sw) / 2), my = Math.max(0, (h - sh) / 2); L.x = Math.max(-mx, Math.min(mx, L.x)); L.y = Math.max(-my, Math.min(my, L.y));
+    };
+    var zoomAt = function (ns, cx, cy) {
+      ns = Math.max(1, Math.min(6, ns)); var r = L.stage.getBoundingClientRect(), px = cx - (r.left + r.width / 2), py = cy - (r.top + r.height / 2), k = ns / L.s;
+      L.x = px - (px - L.x) * k; L.y = py - (py - L.y) * k; L.s = ns; clamp(); apply(false);
+    };
+    L.show = function (i) {
+      L.i = (i + L.list.length) % L.list.length; var f = L.list[L.i];
+      L.s = 1; L.x = 0; L.y = 0; apply(false); L.img.src = f.url; L.img.alt = f.name;
+      el.querySelector(".lb-cap").textContent = f.name; el.querySelector(".lb-cnt").textContent = (L.i + 1) + " / " + L.list.length;
+      var d = el.querySelector("#lbDl"); d.href = f.url; d.setAttribute("download", f.name + ".jpg");
+      [1, -1].forEach(function (k) { var n = L.list[(L.i + k + L.list.length) % L.list.length]; if (n) { var im = new Image(); im.src = n.url; } });
+    };
+    L.close = function () { el.hidden = true; document.body.classList.remove("lb-open"); L.img.removeAttribute("src"); };
+    el.querySelector("#lbX").onclick = L.close;
+    el.querySelector("#lbPrev").onclick = function () { L.show(L.i - 1); };
+    el.querySelector("#lbNext").onclick = function () { L.show(L.i + 1); };
+    L.stage.addEventListener("wheel", function (e) { e.preventDefault(); zoomAt(L.s * (e.deltaY < 0 ? 1.15 : 1 / 1.15), e.clientX, e.clientY); }, { passive: false });
+    L.stage.onpointerdown = function (e) {
+      L.stage.setPointerCapture(e.pointerId); L.ptr[e.pointerId] = { x: e.clientX, y: e.clientY }; L.moved = false; L.startX = e.clientX; L.startY = e.clientY;
+      if (Object.keys(L.ptr).length === 2) { var p = Object.keys(L.ptr).map(function (k) { return L.ptr[k]; }); L.pinch = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); }
+    };
+    L.stage.onpointermove = function (e) {
+      var p = L.ptr[e.pointerId]; if (!p) return;
+      var keys = Object.keys(L.ptr);
+      if (keys.length === 2) {
+        L.ptr[e.pointerId] = { x: e.clientX, y: e.clientY };
+        var a = L.ptr[keys[0]], b = L.ptr[keys[1]], d = Math.hypot(a.x - b.x, a.y - b.y);
+        if (L.pinch) zoomAt(L.s * d / L.pinch, (a.x + b.x) / 2, (a.y + b.y) / 2); L.pinch = d; L.moved = true; return;
+      }
+      var dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+      if (Math.abs(e.clientX - L.startX) > 6 || Math.abs(e.clientY - L.startY) > 6) L.moved = true;
+      if (L.s > 1) { L.x += dx; L.y += dy; clamp(); apply(false); }
+    };
+    var up = function (e) {
+      if (!L.ptr[e.pointerId]) return; var n = Object.keys(L.ptr).length; delete L.ptr[e.pointerId]; L.pinch = 0;
+      if (n > 1) return;
+      var dx = e.clientX - L.startX, dy = e.clientY - L.startY;
+      if (L.s <= 1.02 && e.type === "pointerup" && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.4) { L.show(L.i + (dx < 0 ? 1 : -1)); return; }
+      if (!L.moved && e.type === "pointerup") {
+        var now = Date.now();
+        if (now - L.lastTap < 320) { L.lastTap = 0; if (L.s > 1) { L.s = 1; L.x = 0; L.y = 0; apply(true); } else zoomAt(2.5, e.clientX, e.clientY); }
+        else L.lastTap = now;
+      }
+    };
+    L.stage.onpointerup = up; L.stage.onpointercancel = up;
+    document.addEventListener("keydown", function (e) {
+      if (L.el.hidden) return;
+      if (e.key === "Escape") L.close();
+      else if (e.key === "ArrowLeft") L.show(L.i - 1);
+      else if (e.key === "ArrowRight") L.show(L.i + 1);
+      else if (e.key === "+" || e.key === "=") zoomAt(L.s * 1.3, innerWidth / 2, innerHeight / 2);
+      else if (e.key === "-") zoomAt(L.s / 1.3, innerWidth / 2, innerHeight / 2);
+      else if (e.key === "0") { L.s = 1; L.x = 0; L.y = 0; apply(true); }
+    });
+  }
+  LB.list = list; LB.el.hidden = false; document.body.classList.add("lb-open"); LB.show(idx);
+  LB.el.querySelector("#lbX").focus();
+}
+window.addEventListener("hashchange", function () { if (LB && !LB.el.hidden) LB.close(); });
 
 /* ===== Страница: РК ===== */
 function theoryCard(q) {
@@ -664,6 +781,7 @@ function route() {
   }
   else if (hash === "#/rkq") html = pageRkq();
   else if (hash === "#/cards") html = pageCards();
+  else if (hash === "#/materials") html = pageMaterials();
   else if ((m = hash.match(/^#\/disc(?:\/(\d+))?$/))) { html = pageDisc(m[1]); sideRoute = "#/disc"; }
   else if (hash === "#/traps") html = pageTraps();
   else if ((m = hash.match(/^#\/search\/(.*)$/))) html = pageSearch(dec(m[1]));
@@ -672,6 +790,7 @@ function route() {
   $view.innerHTML = html;
   bindCommon();
   if (hash === "#/cards") bindCards();
+  if (hash === "#/materials") bindMaterials();
   if (/^#\/rk\/variant/.test(hash)) bindVariant(); else if (timerId) { clearInterval(timerId); timerId = null; }
   if (anchor) { var el = document.getElementById(anchor); if (el) { el.scrollIntoView(); var d = el.querySelector("details"); if (d) d.open = true; } }
   else window.scrollTo(0, 0);

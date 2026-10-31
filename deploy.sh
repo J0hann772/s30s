@@ -11,6 +11,7 @@ cd "$(dirname "$0")"
 # ---- что собирать: по строке на контрольную (добавляйте новые сюда) ----
 BUILD_CMDS=(
   "tools/build_data.py notes/matan-rk1 notes/matan-rk1/93_block_b_figs.json data/matan-rk1.js"
+  "tools/build_materials.py matan-rk1"
 )
 
 # ---- настройки (значения по умолчанию, перекрываются deploy.conf) ----
