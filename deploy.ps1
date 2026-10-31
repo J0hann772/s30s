@@ -15,7 +15,8 @@ Set-Location $PSScriptRoot
 
 # что собирать: по строке на контрольную (добавляйте новые сюда)
 $BuildCmds = @(
-  @("tools/build_data.py", "notes/matan-rk1", "notes/matan-rk1/93_block_b_figs.json", "data/matan-rk1.js")
+  ,@("tools/build_data.py", "notes/matan-rk1", "notes/matan-rk1/93_block_b_figs.json", "data/matan-rk1.js")
+  ,@("tools/build_materials.py", "matan-rk1")
 )
 
 $conf = @{ DEPLOY_HOST = "s30s.ru"; DEPLOY_USER = ""; DEPLOY_PATH = "/var/www/cheatsheet"; DEPLOY_BRANCH = "main"; DEPLOY_URL = "https://s30s.ru" }
