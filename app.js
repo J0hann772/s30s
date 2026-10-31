@@ -469,6 +469,7 @@ function pageCards() {
 /* ===== Материалы: фото, PDF, Word, презентации + просмотр фото ===== */
 function fmtSize(n) { return n >= 1048576 ? (n / 1048576).toFixed(1).replace(".", ",") + " МБ" : Math.max(1, Math.round(n / 1024)) + " КБ"; }
 function plural(n, a, b, c) { var m = n % 100, k = n % 10; return n + " " + (m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c); }
+var ICO_DL = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>';
 var KIND_LBL = { pdf: "PDF", doc: "Word", ppt: "Презентация", xls: "Таблица", txt: "Текст", file: "Файл" };
 var MAT = null;
 function pageMaterials() {
@@ -507,7 +508,7 @@ function renderMaterials(box) {
     h += "<h2>" + esc(g.title) + '</h2><div class="mhead"><span class="stat">' + plural(g.items.length, "файл", "файла", "файлов") + " · " + fmtSize(g.zipSize) + '</span><a class="btn" href="' + esc(g.zip) + '" download>Скачать архив</a></div>';
     if (files.length) h += '<ul class="mfiles">' + files.map(function (f) {
       return "<li><span class=\"mname\">" + esc(f.name) + '</span><span class="stat">' + esc(KIND_LBL[f.kind] || "Файл") + " · " + fmtSize(f.size) + "</span>" +
-        (f.kind === "pdf" ? '<a href="' + esc(f.url) + '" target="_blank" rel="noopener">Открыть</a>' : "") + '<a href="' + esc(f.url) + '" download>Скачать</a></li>';
+        (f.kind === "pdf" ? '<a href="' + esc(f.url) + '" target="_blank" rel="noopener">Открыть</a>' : "") + '<a class="ico" href="' + esc(f.url) + '" download title="Скачать" aria-label="Скачать ' + esc(f.name) + '">' + ICO_DL + "</a></li>";
     }).join("") + "</ul>";
     if (imgs.length) h += '<div class="mgrid">' + imgs.map(function (f, i) {
       return '<button class="mthumb" data-g="' + gi + '" data-i="' + i + '" title="' + esc(f.name) + '"><img loading="lazy" src="' + esc(f.thumb) + '" alt="' + esc(f.name) + '"' + (f.w ? ' width="' + f.w + '" height="' + f.h + '"' : "") + "><span>" + esc(f.name) + "</span>" + (solutionsFor(f.name) ? '<em class="msol">есть решение</em>' : "") + "</button>";
@@ -525,12 +526,12 @@ var LB = null;
 function openLightbox(list, idx) {
   if (!LB) {
     var el = document.createElement("div"); el.className = "lb"; el.hidden = true; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", "Просмотр фото");
-    el.innerHTML = '<div class="lb-top"><span class="lb-cap"></span><span class="lb-cnt"></span><button class="lb-btn" id="lbSol" type="button" hidden>Решение</button><a class="lb-btn lb-ico" id="lbDl" download title="Скачать" aria-label="Скачать"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></a><button class="lb-btn" id="lbX" aria-label="Закрыть">Закрыть</button></div>' +
+    el.innerHTML = '<div class="lb-top"><span class="lb-cap"></span><span class="lb-cnt"></span><button class="lb-btn" id="lbSol" type="button" hidden>Решение</button><a class="lb-btn lb-ico" id="lbDl" download title="Скачать" aria-label="Скачать">' + ICO_DL + '</a><button class="lb-btn" id="lbX" aria-label="Закрыть">Закрыть</button></div>' +
       '<div class="lb-body"><div class="lb-main"><div class="lb-stage" id="lbStage"><img class="lb-img" id="lbImg" alt="" draggable="false"></div>' +
       '<button class="lb-nav lb-prev" id="lbPrev" aria-label="Предыдущее">&#8249;</button><button class="lb-nav lb-next" id="lbNext" aria-label="Следующее">&#8250;</button></div>' +
-      '<div class="lb-sol" id="lbSolP" hidden role="complementary" aria-label="Решение"></div></div>';
+      '<div class="lb-rs" id="lbRs" role="separator" aria-orientation="vertical" aria-label="Изменить ширину решения" title="Потяните, чтобы изменить ширину; двойной клик — сбросить"></div><div class="lb-sol" id="lbSolP" hidden role="complementary" aria-label="Решение"></div></div>';
     document.body.appendChild(el);
-    LB = { el: el, img: el.querySelector("#lbImg"), stage: el.querySelector("#lbStage"), list: [], i: 0, s: 1, x: 0, y: 0, ptr: {}, pinch: 0, moved: false, startX: 0, lastTap: 0, solOpen: false, sols: null };
+    LB = { el: el, img: el.querySelector("#lbImg"), stage: el.querySelector("#lbStage"), list: [], i: 0, s: 1, x: 0, y: 0, ptr: {}, pinch: 0, moved: false, startX: 0, lastTap: 0, solOpen: true, sols: null };
     var L = LB;
     var apply = function (anim) { L.img.style.transition = anim ? "transform .18s ease-out" : "none"; L.img.style.transform = "translate(" + L.x + "px," + L.y + "px) scale(" + L.s + ")"; };
     var clamp = function () {
@@ -559,6 +560,20 @@ function openLightbox(list, idx) {
     };
     L.close = function () { el.hidden = true; document.body.classList.remove("lb-open"); L.img.removeAttribute("src"); };
     el.querySelector("#lbX").onclick = L.close;
+    /* ширина панели решения (ПК): перетаскивание за левый край, двойной клик — сброс */
+    var setSolW = function (w, save) {
+      w = Math.max(280, Math.min(Math.round(w), Math.min(900, innerWidth - 320)));
+      el.style.setProperty("--solw", w + "px"); if (save) lsSet("s30s:solw", String(w));
+    };
+    var savedW = +lsGet("s30s:solw"); if (savedW) setSolW(savedW, false);
+    var rs = el.querySelector("#lbRs");
+    rs.onpointerdown = function (e) {
+      e.preventDefault(); rs.setPointerCapture(e.pointerId); document.body.classList.add("resizing");
+      var mv = function (ev) { setSolW(innerWidth - ev.clientX, false); };
+      var up = function (ev) { rs.removeEventListener("pointermove", mv); rs.removeEventListener("pointerup", up); rs.removeEventListener("pointercancel", up); document.body.classList.remove("resizing"); setSolW(innerWidth - ev.clientX, true); };
+      rs.addEventListener("pointermove", mv); rs.addEventListener("pointerup", up); rs.addEventListener("pointercancel", up);
+    };
+    rs.ondblclick = function () { el.style.removeProperty("--solw"); lsSet("s30s:solw", null); };
     el.querySelector("#lbSol").onclick = function () {
       L.solOpen = !L.solOpen; L.s = 1; L.x = 0; L.y = 0; apply(false); L.syncSol(L.list[L.i].name);
     };
