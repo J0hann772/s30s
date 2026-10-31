@@ -293,7 +293,7 @@ function pageRkq() {
     return "<li><span class=\"n\">" + esc(n) + ".</span><span class=\"tx\">" + (href ? '<a href="' + href + '">' + inner + "</a>" : inner) + "</span></li>";
   }
   var h = '<div class="rkq"><h1>Список вопросов РК</h1>' +
-    '<div class="meta">Текст файла «Вопросы для подготовки». Кликабельны ' + c[0] + " пунктов из " + c[1] + ".</div>" +
+    '<div class="meta">Текст файла «Вопросы для подготовки». Кликабельны ' + c[0] + " пунктов из " + c[1] + ". Числа в квадратных скобках — номера лекций по календарному плану (как в файле).</div>" +
     '<div class="title"><b>' + mdInline(q.header[0] + " " + q.header[1]) + "</b>" + esc(q.header[2]) + "<br>" + esc(q.header[3]) + "</div>";
   q.sections.forEach(function (s) {
     h += "<h2>" + mdInline(s.title) + (s.sup ? "<sup>" + s.sup + "</sup>" : "") + "</h2>";
@@ -324,6 +324,11 @@ function cardText(id) {
   var out = null;
   EXAM.exam.rkq.sections.forEach(function (s) { (s.items || []).forEach(function (it) { if (!out && it.to === "theory:" + id) out = it; }); });
   return out;
+}
+var LECT_RE = /\s*\[([0-9][0-9,\s]*)\]/;
+function cardParts(t, q) {
+  var raw = t ? t.text : q.q, m = raw.match(LECT_RE);
+  return { text: raw.replace(LECT_RE, ""), lect: m ? (m[1].indexOf(",") >= 0 ? "лекции " : "лекция ") + m[1].split(",").map(function (x) { return x.trim(); }).join(", ") : "" };
 }
 function cardState(id) { if (!PROGRESS) return "new"; var v = lsGet(key("cards:" + id)); return v === "1" ? "ok" : v === "0" ? "bad" : "new"; }
 function cardCounts() {
@@ -369,14 +374,14 @@ function renderCards() {
       '<div class="row">' + (m ? '<button class="btn" data-act="round">Следующий круг (' + m + ")</button>" : "") +
       '<button class="btn" data-act="menu">К выбору режима</button></div></div>';
   } else {
-    var q = theoryById(CARDS.queue[CARDS.i]), t = cardText(q.id), st = cardState(q.id);
+    var q = theoryById(CARDS.queue[CARDS.i]), t = cardText(q.id), st = cardState(q.id), cp = cardParts(t, q);
     var refs = (q.refs || []).map(function (r) { var tp = topicById(r); return tp ? '<a href="#/t/' + r + '">конспект: ' + mdInline(tp.title) + "</a>" : ""; }).filter(Boolean).join(" · ");
     var pct = Math.round(CARDS.i / CARDS.queue.length * 100);
     h = '<div class="deckhead"><span>Круг ' + CARDS.round + " · " + (CARDS.i + 1) + " из " + CARDS.queue.length + " · " + esc(q.id) + ' · <b class="ok">' + CARDS.got + '</b> / <b class="bad">' + CARDS.miss.length + '</b></span><button class="lnk" data-act="menu">Закончить</button></div>' +
       '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
       '<div class="deck"><div class="cardwrap enter" id="cardwrap"><span class="hint hl">Знаю</span><span class="hint hr">Не знаю</span>' +
       '<div class="flip" id="flip">' +
-      '<div class="face front"' + (CARDS.flipped ? " hidden" : "") + '><div class="cid">' + q.points + " б." + (st === "ok" ? " · раньше: знаю" : st === "bad" ? " · раньше: не знаю" : "") + '</div><p class="cq">' + (t ? mdInline(t.text) : mdInline(q.q)) + '</p><div class="tap">Нажмите, чтобы перевернуть</div></div>' +
+      '<div class="face front"' + (CARDS.flipped ? " hidden" : "") + '><div class="cid">' + q.points + " б." + (cp.lect ? " · " + esc(cp.lect) : "") + (st === "ok" ? " · раньше: знаю" : st === "bad" ? " · раньше: не знаю" : "") + '</div><p class="cq">' + mdInline(cp.text) + '</p><div class="tap">Нажмите, чтобы перевернуть</div></div>' +
       '<div class="face back"' + (CARDS.flipped ? "" : " hidden") + '><div class="cid">Ответ</div><div class="ans md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div>" + (refs ? '<p class="stat">' + refs + "</p>" : "") + "</div>" +
       "</div></div></div>" +
       '<div class="row sw"><button class="btn" data-act="know">&larr; Знаю</button><button class="btn" data-act="flip">Перевернуть</button><button class="btn" data-act="dont">Не знаю &rarr;</button></div>';
