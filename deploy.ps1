@@ -1,4 +1,4 @@
-# Деплой s30s (Windows): пересобрать данные -> (коммит) -> git push -> git pull на сервере -> проверка сайта.
+﻿# Деплой s30s (Windows): пересобрать данные -> (коммит) -> git push -> git pull на сервере -> проверка сайта.
 # Запуск:  .\deploy.cmd                      (дерево должно быть чистым)
 #          .\deploy.cmd -m "текст"           (закоммитить все изменения этим сообщением и задеплоить)
 #          .\deploy.cmd -DryRun              (только показать команды)
@@ -9,6 +9,7 @@ param(
   [switch]$DryRun,
   [switch]$NoBuild
 )
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
