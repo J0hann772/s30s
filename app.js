@@ -478,7 +478,26 @@ function pageMaterials() {
 function bindMaterials() {
   var box = document.getElementById("mat"), id = EXAM.id;
   var ready = (window.S30S.materials && window.S30S.materials[id]) ? Promise.resolve() : loadScript("materials/" + id + "/index.js");
+  // решения необязательны: нет файла — просто нет кнопки «Решение»
+  var sols = (window.S30S.solutions && window.S30S.solutions[id]) ? Promise.resolve() : loadScript("solutions/" + id + ".js").catch(function () {});
+  ready = ready.then(function () { return sols; });
   ready.then(function () { MAT = window.S30S.materials[id]; renderMaterials(box); }).catch(function () { box.innerHTML = '<p class="empty">Материалов пока нет.</p>'; });
+}
+/* решения к фото: ключ — имя файла без расширения, «Р»/«P» и «К»/«K» не различаются */
+function solKey(n) { return String(n).replace(/[\u0420P]/g, "P").replace(/[\u041aK]/g, "K"); }
+function solutionsFor(name) {
+  var S = window.S30S.solutions && EXAM && window.S30S.solutions[EXAM.id]; if (!S) return null;
+  var k = solKey(name), key = Object.keys(S.items).filter(function (x) { return solKey(x) === k; })[0];
+  if (!key) return null;
+  return S.items[key].map(function (r) { var p = S.pool[r[1]]; return p ? { n: r[0], c: p.c, s: p.s } : null; }).filter(Boolean);
+}
+function solutionsHtml(list, title) {
+  return '<div class="sol-head"><b>' + esc(title) + '</b><button type="button" class="lb-btn sol-all" data-open="0">Раскрыть все</button></div>' +
+    '<p class="sol-note">Разбор не из лекций: сверяй с конспектом и методами на занятиях.</p>' +
+    list.map(function (t) {
+      return '<section class="sol-t"><div class="sol-q"><span class="sol-n">№' + esc(t.n) + '</span><div class="sol-c">' + mdInline(t.c) + "</div></div>" +
+        '<details><summary>решение</summary><div class="sol-s">' + md(t.s) + "</div></details></section>";
+    }).join("");
 }
 function renderMaterials(box) {
   if (!MAT || !MAT.groups.length) { box.innerHTML = '<p class="empty">Материалов пока нет.</p>'; return; }
@@ -491,7 +510,7 @@ function renderMaterials(box) {
         (f.kind === "pdf" ? '<a href="' + esc(f.url) + '" target="_blank" rel="noopener">Открыть</a>' : "") + '<a href="' + esc(f.url) + '" download>Скачать</a></li>';
     }).join("") + "</ul>";
     if (imgs.length) h += '<div class="mgrid">' + imgs.map(function (f, i) {
-      return '<button class="mthumb" data-g="' + gi + '" data-i="' + i + '" title="' + esc(f.name) + '"><img loading="lazy" src="' + esc(f.thumb) + '" alt="' + esc(f.name) + '"' + (f.w ? ' width="' + f.w + '" height="' + f.h + '"' : "") + "><span>" + esc(f.name) + "</span></button>";
+      return '<button class="mthumb" data-g="' + gi + '" data-i="' + i + '" title="' + esc(f.name) + '"><img loading="lazy" src="' + esc(f.thumb) + '" alt="' + esc(f.name) + '"' + (f.w ? ' width="' + f.w + '" height="' + f.h + '"' : "") + "><span>" + esc(f.name) + "</span>" + (solutionsFor(f.name) ? '<em class="msol">есть решение</em>' : "") + "</button>";
     }).join("") + "</div>";
   });
   box.innerHTML = h;
@@ -506,11 +525,12 @@ var LB = null;
 function openLightbox(list, idx) {
   if (!LB) {
     var el = document.createElement("div"); el.className = "lb"; el.hidden = true; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", "Просмотр фото");
-    el.innerHTML = '<div class="lb-top"><span class="lb-cap"></span><span class="lb-cnt"></span><a class="lb-btn" id="lbDl" download>Скачать</a><button class="lb-btn" id="lbX" aria-label="Закрыть">Закрыть</button></div>' +
-      '<div class="lb-stage" id="lbStage"><img class="lb-img" id="lbImg" alt="" draggable="false"></div>' +
-      '<button class="lb-nav lb-prev" id="lbPrev" aria-label="Предыдущее">&#8249;</button><button class="lb-nav lb-next" id="lbNext" aria-label="Следующее">&#8250;</button>';
+    el.innerHTML = '<div class="lb-top"><span class="lb-cap"></span><span class="lb-cnt"></span><button class="lb-btn" id="lbSol" type="button" hidden>Решение</button><a class="lb-btn lb-ico" id="lbDl" download title="Скачать" aria-label="Скачать"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></a><button class="lb-btn" id="lbX" aria-label="Закрыть">Закрыть</button></div>' +
+      '<div class="lb-body"><div class="lb-main"><div class="lb-stage" id="lbStage"><img class="lb-img" id="lbImg" alt="" draggable="false"></div>' +
+      '<button class="lb-nav lb-prev" id="lbPrev" aria-label="Предыдущее">&#8249;</button><button class="lb-nav lb-next" id="lbNext" aria-label="Следующее">&#8250;</button></div>' +
+      '<div class="lb-sol" id="lbSolP" hidden role="complementary" aria-label="Решение"></div></div>';
     document.body.appendChild(el);
-    LB = { el: el, img: el.querySelector("#lbImg"), stage: el.querySelector("#lbStage"), list: [], i: 0, s: 1, x: 0, y: 0, ptr: {}, pinch: 0, moved: false, startX: 0, lastTap: 0 };
+    LB = { el: el, img: el.querySelector("#lbImg"), stage: el.querySelector("#lbStage"), list: [], i: 0, s: 1, x: 0, y: 0, ptr: {}, pinch: 0, moved: false, startX: 0, lastTap: 0, solOpen: false, sols: null };
     var L = LB;
     var apply = function (anim) { L.img.style.transition = anim ? "transform .18s ease-out" : "none"; L.img.style.transform = "translate(" + L.x + "px," + L.y + "px) scale(" + L.s + ")"; };
     var clamp = function () {
@@ -527,10 +547,27 @@ function openLightbox(list, idx) {
       L.s = 1; L.x = 0; L.y = 0; apply(false); L.img.src = f.url; L.img.alt = f.name;
       el.querySelector(".lb-cap").textContent = f.name; el.querySelector(".lb-cnt").textContent = (L.i + 1) + " / " + L.list.length;
       var d = el.querySelector("#lbDl"); d.href = f.url; d.setAttribute("download", f.name + ".jpg");
+      L.sols = solutionsFor(f.name); L.syncSol(f.name);
       [1, -1].forEach(function (k) { var n = L.list[(L.i + k + L.list.length) % L.list.length]; if (n) { var im = new Image(); im.src = n.url; } });
+    };
+    L.syncSol = function (name) {
+      var btn = el.querySelector("#lbSol"), pan = el.querySelector("#lbSolP"), has = !!(L.sols && L.sols.length);
+      btn.hidden = !has;
+      if (has) { pan.innerHTML = solutionsHtml(L.sols, name); pan.scrollTop = 0; }
+      var open = has && L.solOpen; pan.hidden = !open; el.classList.toggle("sol-open", open);
+      btn.classList.toggle("on", open); btn.setAttribute("aria-expanded", String(open));
     };
     L.close = function () { el.hidden = true; document.body.classList.remove("lb-open"); L.img.removeAttribute("src"); };
     el.querySelector("#lbX").onclick = L.close;
+    el.querySelector("#lbSol").onclick = function () {
+      L.solOpen = !L.solOpen; L.s = 1; L.x = 0; L.y = 0; apply(false); L.syncSol(L.list[L.i].name);
+    };
+    el.querySelector("#lbSolP").onclick = function (e) {
+      var b = e.target.closest && e.target.closest(".sol-all"); if (!b) return;
+      var open = b.getAttribute("data-open") !== "1";
+      [].forEach.call(el.querySelectorAll("#lbSolP details"), function (x) { x.open = open; });
+      b.setAttribute("data-open", open ? "1" : "0"); b.textContent = open ? "Свернуть все" : "Раскрыть все";
+    };
     el.querySelector("#lbPrev").onclick = function () { L.show(L.i - 1); };
     el.querySelector("#lbNext").onclick = function () { L.show(L.i + 1); };
     L.stage.addEventListener("wheel", function (e) { e.preventDefault(); zoomAt(L.s * (e.deltaY < 0 ? 1.15 : 1 / 1.15), e.clientX, e.clientY); }, { passive: false });
@@ -565,6 +602,7 @@ function openLightbox(list, idx) {
     document.addEventListener("keydown", function (e) {
       if (L.el.hidden) return;
       if (e.key === "Escape") L.close();
+      else if (e.target && e.target.closest && e.target.closest("#lbSolP") && /^Arrow/.test(e.key)) return;
       else if (e.key === "ArrowLeft") L.show(L.i - 1);
       else if (e.key === "ArrowRight") L.show(L.i + 1);
       else if (e.key === "+" || e.key === "=") zoomAt(L.s * 1.3, innerWidth / 2, innerHeight / 2);
