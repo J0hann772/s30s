@@ -474,7 +474,7 @@ var KIND_LBL = { pdf: "PDF", doc: "Word", ppt: "Презентация", xls: "�
 var MAT = null;
 function pageMaterials() {
   setTitle("Материалы");
-  return '<div class="mats"><h1>Материалы</h1><div class="meta">Презентации, слитые варианты и задачи. Фото открываются на сайте, всё можно скачать архивом.</div><div id="mat"><p class="empty">Загрузка…</p></div></div>';
+  return '<div class="mats"><h1>Материалы</h1><div class="meta">Презентации, слитые варианты и задачи. Фото открываются на сайте, всё можно скачать архивом. <span class="stat" id="offState">' + esc(offlineText()) + '</span></div><div id="mat"><p class="empty">Загрузка…</p></div></div>';
 }
 function bindMaterials() {
   var box = document.getElementById("mat"), id = EXAM.id;
@@ -886,10 +886,59 @@ function openExam(id, then) {
   }).catch(function (e) { $view.innerHTML = '<p class="empty">Не удалось загрузить ' + esc(e.message) + "</p>"; });
 }
 function ensureKatex() { return Promise.resolve(); }  // KaTeX только локальный (vendor/katex); внешних скриптов нет
+/* ===== Офлайн: service worker (sw.js) + предзагрузка материалов в кэш браузера ===== */
+var SW_CACHE = "s30s-v1";   // совпадает с sw.js
+var OFFLINE_KEY = "s30s:offline";
+function offlineText() { return lsGet(OFFLINE_KEY) ? "Сайт и материалы сохранены в браузере: работают без интернета (кроме скачивания архивов)." : ""; }
+function setupOffline() {
+  if (!("serviceWorker" in navigator) || !window.caches) return;
+  var host = location.hostname;
+  if (location.protocol !== "https:" && host !== "localhost" && host !== "127.0.0.1") return;
+  navigator.serviceWorker.register("sw.js").catch(function () {});
+  var go = function () { navigator.serviceWorker.ready.then(function () { setTimeout(warmOffline, 1500); }); };
+  if (document.readyState === "complete") go(); else window.addEventListener("load", go);
+}
+function warmOffline() {
+  if (navigator.onLine === false) return;
+  var conn = navigator.connection; if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) return;   // экономим трафик
+  var seen = {}, media = {};
+  var add = function (u, isMedia) { var a = new URL(u, location.href).href; seen[a] = 1; if (isMedia) media[a] = 1; };
+  ["index.html", "style.css", "app.js", "manifest.js", "vendor/katex/katex.min.css", "vendor/katex/katex.min.js"].forEach(function (u) { add(u); });
+  var cssUrl = new URL("vendor/katex/katex.min.css", location.href).href;
+  var jobs = [fetch(cssUrl).then(function (r) { return r.text(); }).then(function (t) {
+    (t.match(/url\([^)]*\.woff2[^)]*\)/g) || []).forEach(function (m) { add(new URL(m.replace(/^url\(["']?|["']?\)$/g, ""), cssUrl).href, true); });
+  }).catch(function () {})];
+  allExams().forEach(function (e) {
+    add(e.data);
+    var id = e.id;
+    jobs.push(Promise.all([
+      (window.S30S.materials && window.S30S.materials[id]) ? 0 : loadScript("materials/" + id + "/index.js").catch(function () {}),
+      (window.S30S.solutions && window.S30S.solutions[id]) ? 0 : loadScript("solutions/" + id + ".js").catch(function () {})
+    ]).then(function () {
+      var M = window.S30S.materials && window.S30S.materials[id];
+      if (!M) return;
+      add("materials/" + id + "/index.js");
+      if (window.S30S.solutions && window.S30S.solutions[id]) add("solutions/" + id + ".js");
+      M.groups.forEach(function (g) { g.items.forEach(function (i) { add(i.url, true); if (i.thumb) add(i.thumb, true); }); });
+    }));
+  });
+  Promise.all(jobs).then(function () { return caches.open(SW_CACHE); }).then(function (c) {
+    var list = Object.keys(seen), i = 0, failed = 0, coreFailed = 0;
+    var next = function () {
+      if (i >= list.length) return Promise.resolve();
+      var u = list[i++];
+      return c.match(u).then(function (hit) { if (hit && media[u]) return; return c.add(u).catch(function () { failed++; if (!media[u]) coreFailed++; }); }).then(next);
+    };
+    return Promise.all([next(), next(), next()]).then(function () {
+      if (!coreFailed && failed <= list.length * 0.1) { lsSet(OFFLINE_KEY, String(Date.now())); var el = document.getElementById("offState"); if (el) el.textContent = offlineText(); }
+    });
+  }).catch(function () {});
+}
 (function start() {
   ensureKatex().then(function () {
     if (!allExams().length) { $view.innerHTML = '<p class="empty">manifest.js пуст.</p>'; return; }
     route();
+    setupOffline();
   });
 })();
 })();
