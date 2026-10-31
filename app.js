@@ -381,17 +381,30 @@ function renderCards() {
       '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
       '<div class="deck"><div class="cardwrap enter" id="cardwrap"><span class="hint hl">Знаю</span><span class="hint hr">Не знаю</span>' +
       '<div class="flip" id="flip">' +
-      '<div class="face front"' + (CARDS.flipped ? " hidden" : "") + '><div class="cid">' + q.points + " б." + (cp.lect ? " · " + esc(cp.lect) : "") + (st === "ok" ? " · раньше: знаю" : st === "bad" ? " · раньше: не знаю" : "") + '</div><p class="cq">' + mdInline(cp.text) + '</p><div class="tap">Нажмите, чтобы перевернуть</div></div>' +
+      '<div class="face front"' + (CARDS.flipped ? " hidden" : "") + '><div class="cid">' + q.points + " б." + (cp.lect ? " · " + esc(cp.lect) : "") + (st === "ok" ? " · раньше: знаю" : st === "bad" ? " · раньше: не знаю" : "") + '</div><p class="cq"><span class="cqt">' + mdInline(cp.text) + '</span></p><div class="tap">Нажмите, чтобы перевернуть</div></div>' +
       '<div class="face back"' + (CARDS.flipped ? "" : " hidden") + '><div class="cid">Ответ</div><div class="ans md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div>" + (refs ? '<p class="stat">' + refs + "</p>" : "") + "</div>" +
       "</div></div></div>" +
       '<div class="row sw"><button class="btn" data-act="know">&larr; Знаю</button><button class="btn" data-act="flip">Перевернуть</button><button class="btn" data-act="dont">Не знаю &rarr;</button></div>';
   }
   box.innerHTML = h;
+  fitCardMath();
 }
+/* широкие формулы на карточке сжимаем под ширину экрана; если и так не влезает — оставляем прокрутку пальцем только внутри формулы */
+function fitCardMath() {
+  var root = document.querySelector("#flip .face:not([hidden])"); if (!root) return;
+  [].forEach.call(root.querySelectorAll(".katex-display"), function (d) {
+    d.style.fontSize = ""; d.style.touchAction = ""; d.classList.remove("wide");
+    if (d.scrollWidth - d.clientWidth <= 1) return;
+    var k = d.clientWidth / d.scrollWidth;
+    d.style.fontSize = Math.max(82, Math.floor(k * 98)) + "%";
+    if (d.scrollWidth - d.clientWidth > 1) { d.style.touchAction = "pan-x pan-y"; d.classList.add("wide"); }
+  });
+}
+window.addEventListener("resize", function () { if (document.getElementById("flip")) fitCardMath(); });
 function flipCard() {
   var f = document.getElementById("flip"); if (!f || CARDS.busy || f.getAttribute("data-turning")) return;
   var fr = f.querySelector(".front"), bk = f.querySelector(".back");
-  var swap = function () { CARDS.flipped = !CARDS.flipped; fr.hidden = CARDS.flipped; bk.hidden = !CARDS.flipped; };
+  var swap = function () { CARDS.flipped = !CARDS.flipped; fr.hidden = CARDS.flipped; bk.hidden = !CARDS.flipped; fitCardMath(); };
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) { swap(); return; }
   f.setAttribute("data-turning", "1"); f.classList.add("turn");
   setTimeout(function () { swap(); f.classList.remove("turn"); setTimeout(function () { f.removeAttribute("data-turning"); }, 170); }, 150);
