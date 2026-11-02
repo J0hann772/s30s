@@ -12,6 +12,9 @@ cd "$(dirname "$0")"
 BUILD_CMDS=(
   "tools/build_data.py notes/matan-rk1 notes/matan-rk1/93_block_b_figs.json data/matan-rk1.js"
   "tools/build_materials.py matan-rk1"
+  "tools/figs_angem.py notes/angem-rk1/figs.json"
+  "tools/build_exam.py notes/angem-rk1 data/angem-rk1.js"
+  "tools/build_materials.py angem-rk1"
 )
 
 # ---- настройки (значения по умолчанию, перекрываются deploy.conf) ----

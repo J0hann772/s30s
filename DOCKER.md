@@ -55,8 +55,14 @@ Docker не пересобирает `data/*.js` из `notes/`. После пр�
 
 ```bash
 python tools/build_data.py notes/matan-rk1 notes/matan-rk1/93_block_b_figs.json data/matan-rk1.js
+python tools/figs_angem.py notes/angem-rk1/figs.json
+python tools/build_exam.py notes/angem-rk1 data/angem-rk1.js
 docker compose up -d --build
 ```
+
+Обычно это делает `deploy.ps1` / `deploy.sh`: собирает данные у тебя на компьютере, пушит,
+а на сервере выполняет `git pull` и `docker compose up -d --build`. Собранные `data/*.js`
+и `materials/` лежат в git, поэтому на сервере Python не нужен.
 
 ## На боевом сервере
 

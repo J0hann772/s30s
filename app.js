@@ -106,8 +106,8 @@ function mdBody(text) {
     if (/^\s*>/.test(ln)) {
       var q = []; while (i < lines.length && /^\s*>/.test(lines[i])) { q.push(lines[i].replace(/^\s*>\s?/, "")); i++; }
       var qt = q.join("\n");
-      var W = "**Расхождение со слайдами.**", isW = qt.indexOf(W) === 0;
-      out.push('<div class="' + (isW ? "warn" : "note") + ' md">' + mdBody(isW ? qt.slice(W.length).trim() : qt) + "</div>"); continue;
+      var W = ["**Расхождение со слайдами.**", "**Неточность в конспекте.**"].filter(function (w) { return qt.indexOf(w) === 0; })[0], isW = !!W;
+      out.push('<div class="' + (isW ? "warn" : "note") + ' md"' + (isW ? ' data-label="' + esc(W.replace(/\*/g, "").replace(/\.$/, "")) + '"' : "") + ">" + mdBody(isW ? qt.slice(W.length).trim() : qt) + "</div>"); continue;
     }
     if (/^\s*([-*]|\d+[.)])\s+/.test(ln)) { var r = listHtml(lines, i); out.push(r.html); i = r.next; continue; }
     var p = [];
@@ -150,7 +150,7 @@ function renderBlock(b) {
   switch (b.type) {
     case "md": return '<div class="md">' + md(b.text) + "</div>";
     case "table": return tableHtml(b.head, b.rows, false);
-    case "warn": return '<div class="warn md">' + md(b.text) + "</div>";
+    case "warn": return '<div class="warn md" data-label="' + esc(txt("warnLabel", "Расхождение со слайдами")) + '">' + md(b.text) + "</div>";
     case "note": return '<div class="note md">' + md(b.text) + "</div>";
     case "extra": return '<div class="note md"><span class="extra">[не из лекций]</span> ' + md(b.text) + "</div>";
     case "figure": return figure(b.key);
@@ -193,6 +193,9 @@ function topicForNum(n) {
   })[0];
 }
 function theoryById(id) { return EXAM.exam.theory.filter(function (q) { return q.id === id; })[0]; }
+function qLabel(q) { return q.label || q.id; }                 // подпись вопроса («Б3» вместо «B3»)
+function ptsHtml(p) { return p ? ' <span class="stat">(' + p + " б.)</span>" : ""; } // баллы, если известны
+function txt(k, def) { return (EXAM && EXAM[k]) || (EXAM && EXAM.exam && EXAM.exam[k]) || def; } // настраиваемые тексты
 function daysLeft() {
   if (EXAM_META && EXAM_META.when) return EXAM_META.when;
   if (!EXAM_META || !EXAM_META.date) return "";
@@ -247,7 +250,7 @@ function renderSide(route) {
       return link("#/t/" + t.id, '<span class="num">' + esc(t.num) + "</span>" + mdInline(t.title) + mark, t.status !== "done" ? "todo" : "");
     }).join("")) +
     sec("refs", "Справочники") +
-    body("refs", link("#/disc", "Расхождения со слайдами") +
+    body("refs", link("#/disc", esc(txt("discTitle", "Расхождения со слайдами"))) +
       refs.filter(function (t) { return t.id !== "t97" && t.id !== "t99"; }).map(function (t) { return link("#/t/" + t.id, mdInline(t.title)); }).join("")) +
     "</nav></div>";
   $side.innerHTML = h + '<div class="resizer" id="resizer" role="separator" aria-orientation="vertical" aria-label="Изменить ширину колонки" title="Потяните, чтобы изменить ширину; двойной клик — сбросить"></div>';
@@ -261,7 +264,7 @@ function pageTopic(id) {
   var t = topicById(id);
   if (!t) return '<p class="empty">Тема не найдена.</p>';
   setTitle(t.title, (t.kind === "ref" ? "" : "Тема " + t.num + ". ") + plain(t.title));
-  var refs = (t.examRefs || []).map(function (r) { return '<a href="#/rk/theory/' + r + '">' + r + "</a>"; }).join(", ");
+  var refs = (t.examRefs || []).map(function (r) { var q = theoryById(r); return '<a href="#/rk/theory/' + r + '">' + esc(q ? qLabel(q) : r) + "</a>"; }).join(", ");
   var head = "<h1>" + (t.kind === "ref" ? "" : esc(t.num) + ". ") + mdInline(t.title) + '</h1><div class="meta">' + [t.lecture ? esc(t.lecture) : "", refs ? "вопросы РК: " + refs : ""].filter(Boolean).join(" · ") + "</div>";
   if (t.status !== "done") return head + '<p class="empty">Конспект этой темы ещё не написан. Формулировки, нужные для РК, — на странице «РК».</p>';
   var isRead = flag("topic:" + t.id + ":read");
@@ -295,7 +298,7 @@ function pageRkq() {
     return "<li><span class=\"n\">" + esc(n) + ".</span><span class=\"tx\">" + (href ? '<a href="' + href + '">' + inner + "</a>" : inner) + "</span></li>";
   }
   var h = '<div class="rkq"><h1>Список вопросов РК</h1>' +
-    '<div class="meta">Текст файла «Вопросы для подготовки». Кликабельны ' + c[0] + " пунктов из " + c[1] + ". Числа в квадратных скобках — номера лекций по календарному плану (как в файле).</div>" +
+    '<div class="meta">' + (q.note ? mdInline(q.note.replace("{link}", c[0]).replace("{total}", c[1])) : "Текст файла «Вопросы для подготовки». Кликабельны " + c[0] + " пунктов из " + c[1] + ". Числа в квадратных скобках — номера лекций по календарному плану (как в файле).") + "</div>" +
     '<div class="title"><b>' + mdInline(q.header[0] + " " + q.header[1]) + "</b>" + esc(q.header[2]) + "<br>" + esc(q.header[3]) + "</div>";
   q.sections.forEach(function (s) {
     h += "<h2>" + mdInline(s.title) + (s.sup ? "<sup>" + s.sup + "</sup>" : "") + "</h2>";
@@ -321,7 +324,7 @@ function pageRkq() {
 
 /* ===== Карточки: блоки A и C (в духе Quizlet: переворот, свайп, круги) ===== */
 var CARDS = { mode: null, queue: [], i: 0, round: 1, flipped: false, got: 0, miss: [], total: 0, resetAsk: false, busy: false, between: false };
-function cardPool() { return EXAM.exam.theory.filter(function (q) { return q.block === "A" || q.block === "C"; }); }
+function cardPool() { var bl = EXAM.exam.cardBlocks || ["A", "C"]; return EXAM.exam.theory.filter(function (q) { return bl.indexOf(q.block) >= 0; }); }
 function cardText(id) {
   var out = null;
   EXAM.exam.rkq.sections.forEach(function (s) { (s.items || []).forEach(function (it) { if (!out && it.to === "theory:" + id) out = it; }); });
@@ -379,11 +382,11 @@ function renderCards() {
     var q = theoryById(CARDS.queue[CARDS.i]), t = cardText(q.id), st = cardState(q.id), cp = cardParts(t, q);
     var refs = (q.refs || []).map(function (r) { var tp = topicById(r); return tp ? '<a href="#/t/' + r + '">конспект: ' + mdInline(tp.title) + "</a>" : ""; }).filter(Boolean).join(" · ");
     var pct = Math.round(CARDS.i / CARDS.queue.length * 100);
-    h = '<div class="deckhead"><span>Круг ' + CARDS.round + " · " + (CARDS.i + 1) + " из " + CARDS.queue.length + " · " + esc(q.id) + ' · <b class="ok">' + CARDS.got + '</b> / <b class="bad">' + CARDS.miss.length + '</b></span><button class="lnk" data-act="menu">Закончить</button></div>' +
+    h = '<div class="deckhead"><span>Круг ' + CARDS.round + " · " + (CARDS.i + 1) + " из " + CARDS.queue.length + " · " + esc(qLabel(q)) + ' · <b class="ok">' + CARDS.got + '</b> / <b class="bad">' + CARDS.miss.length + '</b></span><button class="lnk" data-act="menu">Закончить</button></div>' +
       '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
       '<div class="deck"><div class="cardwrap enter" id="cardwrap"><span class="hint hl">Знаю</span><span class="hint hr">Не знаю</span>' +
       '<div class="flip" id="flip">' +
-      '<div class="face front"' + (CARDS.flipped ? " hidden" : "") + '><div class="cid">' + q.points + " б." + (cp.lect ? " · " + esc(cp.lect) : "") + (st === "ok" ? " · раньше: знаю" : st === "bad" ? " · раньше: не знаю" : "") + '</div><p class="cq"><span class="cqt">' + mdInline(cp.text) + '</span></p><div class="tap">Нажмите, чтобы перевернуть</div></div>' +
+      '<div class="face front"' + (CARDS.flipped ? " hidden" : "") + '><div class="cid">' + [q.points ? q.points + " б." : esc(qLabel(q)), cp.lect ? esc(cp.lect) : ""].filter(Boolean).join(" · ") + (st === "ok" ? " · раньше: знаю" : st === "bad" ? " · раньше: не знаю" : "") + '</div><p class="cq"><span class="cqt">' + mdInline(cp.text) + '</span></p><div class="tap">Нажмите, чтобы перевернуть</div></div>' +
       '<div class="face back"' + (CARDS.flipped ? "" : " hidden") + '><div class="cid">Ответ</div><div class="ans md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div>" + (refs ? '<p class="stat">' + refs + "</p>" : "") + "</div>" +
       "</div></div></div>" +
       '<div class="row sw"><button class="btn" data-act="know">&larr; Знаю</button><button class="btn" data-act="flip">Перевернуть</button><button class="btn" data-act="dont">Не знаю &rarr;</button></div>';
@@ -478,7 +481,7 @@ function bindCards() {
 }
 function pageCards() {
   setTitle("Карточки");
-  return '<div class="cards"><h1>Карточки</h1><div class="meta">Определения (блок A, 30) и формулировки теорем (блок C, 7). Прогресс хранится в браузере.</div><div id="cards"></div></div>';
+  return '<div class="cards"><h1>Карточки</h1><div class="meta">' + esc(txt("cardsNote", "Определения (блок A, 30) и формулировки теорем (блок C, 7).")) + ' Прогресс хранится в браузере.</div><div id="cards"></div></div>';
 }
 
 /* ===== Материалы: фото, PDF, Word, презентации + просмотр фото ===== */
@@ -489,7 +492,7 @@ var KIND_LBL = { pdf: "PDF", doc: "Word", ppt: "Презентация", xls: "�
 var MAT = null;
 function pageMaterials() {
   setTitle("Материалы");
-  return '<div class="mats"><h1>Материалы</h1><div class="meta">Презентации, слитые варианты и задачи. Фото открываются на сайте, всё можно скачать архивом. <span class="stat" id="offState">' + esc(offlineText()) + '</span></div><div id="mat"><p class="empty">Загрузка…</p></div></div>';
+  return '<div class="mats"><h1>Материалы</h1><div class="meta">' + esc(txt("materialsNote", "Презентации, слитые варианты и задачи. Фото открываются на сайте, всё можно скачать архивом.")) + ' <span class="stat" id="offState">' + esc(offlineText()) + '</span></div><div id="mat"><p class="empty">Загрузка…</p></div></div>';
 }
 function bindMaterials() {
   var box = document.getElementById("mat"), id = EXAM.id;
@@ -649,8 +652,8 @@ window.addEventListener("hashchange", function () { if (LB && !LB.el.hidden) LB.
 function theoryCard(q) {
   var refs = (q.refs || []).map(function (r) { var t = topicById(r); return t ? '<a href="#/t/' + r + '">конспект: ' + mdInline(t.title) + "</a>" : ""; }).join(" · ");
   var known = flag("exam:" + q.id + ":known");
-  return '<div class="item" id="' + q.id + '"><div class="q"><span class="qid">' + q.id + '</span><div class="qtext">' + mdInline(q.q) +
-    ' <span class="stat">(' + q.points + " б.)</span></div></div>" +
+  return '<div class="item" id="' + q.id + '"><div class="q"><span class="qid">' + esc(qLabel(q)) + '</span><div class="qtext">' + mdInline(q.q) +
+    ptsHtml(q.points) + "</div></div>" +
     '<details class="solution"><summary>ответ</summary><div class="body md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + (q.widget ? widgetHtml(q.widget) : "") + "</div></details>" +
     '<div class="tools"><label class="chk"><input type="checkbox" data-k="exam:' + q.id + ':known"' + (known ? " checked" : "") + "> знаю</label>" + (refs ? "<span>" + refs + "</span>" : "") + "</div></div>";
 }
@@ -658,15 +661,16 @@ function pageRK(tab, anchor) {
   setTitle("РК");
   tab = tab || "theory";
   var ex = EXAM.exam;
-  var tabs = '<div class="tabs">' + [["theory", "Теория"], ["tasks", "Задачи"], ["variant", "Типовой вариант"]].map(function (x) {
+  if (tab === "variant" && !ex.variant) tab = "theory";
+  var tabs = '<div class="tabs">' + [["theory", "Теория"], ["tasks", "Задачи"]].concat(ex.variant ? [["variant", ex.variant.title || "Типовой вариант"]] : []).map(function (x) {
     return '<a href="#/rk/' + x[0] + '" class="' + (tab === x[0] ? "on" : "") + '">' + x[1] + "</a>";
   }).join("") + "</div>";
-  var h = "<h1>" + esc(EXAM_META.title) + '</h1><div class="meta"><span>Главный экран: строго по файлу «Вопросы для подготовки»</span></div>' + tabs;
+  var h = "<h1>" + esc(EXAM_META.title) + '</h1><div class="meta"><span>' + esc(ex.note || "Главный экран: строго по файлу «Вопросы для подготовки»") + "</span></div>" + tabs;
   if (tab === "theory") {
     ex.blocks.forEach(function (b) {
       var qs = ex.theory.filter(function (q) { return q.block === b.id; });
       var k = qs.filter(function (q) { return flag("exam:" + q.id + ":known"); }).length;
-      h += "<h2>" + b.id + ". " + esc(b.title) + ' <span class="stat">' + esc(b.points) + "</span></h2>" +
+      h += "<h2>" + esc(b.label || b.id) + ". " + esc(b.title) + (b.points ? ' <span class="stat">' + esc(b.points) + "</span>" : "") + "</h2>" +
         '<div class="stat pg">знаю ' + k + " из " + qs.length + "</div>" +
         qs.map(theoryCard).join("");
     });
@@ -682,9 +686,9 @@ function pageRK(tab, anchor) {
           '<div class="tools"><label class="chk"><input type="checkbox" data-k="task:' + t.id + ':done"' + (flag("task:" + t.id + ":done") ? " checked" : "") + "> решил сам</label></div></div>";
       }).join("");
     });
-    var vt = ex.variant.tasks;
-    h += "<h2>Типовой вариант билета по задачам</h2>" + vt.map(function (t) {
-      return '<div class="item" id="task-v' + t.n + '"><div class="q"><span class="qid">' + t.n + '.</span><div class="qtext">' + mdInline(t.q) + ' <span class="stat">(' + t.points + " б.)</span></div></div>" +
+    var vt = ex.variant && ex.variant.inTasks !== false ? ex.variant.tasks : [];
+    if (vt.length) h += "<h2>Типовой вариант билета по задачам</h2>" + vt.map(function (t) {
+      return '<div class="item" id="task-v' + t.n + '"><div class="q"><span class="qid">' + t.n + '.</span><div class="qtext">' + mdInline(t.q) + ptsHtml(t.points) + "</div></div>" +
         '<details class="solution"><summary>решение</summary><div class="body md">' + md(t.solution) + "</div></details></div>";
     }).join("");
   } else {
@@ -706,22 +710,23 @@ function pageVariant() {
     (!started ? '<label class="stat">минут: <input id="mins" type="number" min="10" max="240" value="' + minutes + '" style="width:64px"></label><button class="btn" id="vStart">Начать</button>'
       : !finished ? '<button class="btn" id="vFinish">Закончить и сверить</button>' : "") +
     (started ? '<button class="btn ghost" id="vReset">Сбросить</button>' : "") +
-    '</div><div class="stat" style="margin-top:6px">Решения скрыты до конца. Теория — 2–4 б., задачи — 10–16 б. Время реальной РК в файле не указано — ставь своё.</div></div>';
+    '</div><div class="stat" style="margin-top:6px">' + esc(v.note || "Решения скрыты до конца. Теория — 2–4 б., задачи — 10–16 б. Время реальной РК в файле не указано — ставь своё.") + "</div></div>";
+  var scoring = v.scoring !== false;
   if (!started) return h + '<p class="empty">Нажми «Начать» — появятся вопросы.</p>';
   h += "<h2>Теория</h2>" + th.map(function (q, i) {
-    return '<div class="item"><div class="q"><span class="qid">' + (i + 1) + '.</span><div class="qtext">' + mdInline(q.q) + ' <span class="stat">(' + q.points + " б.)</span></div></div>" +
+    return '<div class="item"><div class="q"><span class="qid">' + (i + 1) + '.</span><div class="qtext">' + mdInline(q.q) + ptsHtml(q.points) + "</div></div>" +
       (finished ? '<details class="solution" open><summary>Эталон</summary><div class="body md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + (q.widget ? widgetHtml(q.widget) : "") + "</div></details>" +
-        scoreBox("vt:" + i, q.points) : "") + "</div>";
+        (scoring ? scoreBox("vt:" + i, q.points) : "") : "") + "</div>";
   }).join("");
   h += "<h2>Задачи</h2>" + v.tasks.map(function (t, i) {
-    return '<div class="item"><div class="q"><span class="qid">' + t.n + '.</span><div class="qtext">' + md(t.q) + ' <span class="stat">(' + t.points + " б.)</span></div></div>" +
-      (finished ? '<details class="solution" open><summary>Эталонное решение</summary><div class="body md">' + md(t.solution) + "</div></details>" + scoreBox("vz:" + i, t.points) : "") + "</div>";
+    return '<div class="item"><div class="q"><span class="qid">' + t.n + '.</span><div class="qtext">' + md(t.q) + ptsHtml(t.points) + "</div></div>" +
+      (finished ? '<details class="solution" open><summary>Эталонное решение</summary><div class="body md">' + md(t.solution) + "</div></details>" + (scoring ? scoreBox("vz:" + i, t.points) : "") : "") + "</div>";
   }).join("");
-  if (finished) {
+  if (finished && scoring) {
     var tot = 0, max = 0;
     th.forEach(function (q, i) { max += q.points; tot += +(lsGet(key("variant:score:vt:" + i)) || 0); });
     v.tasks.forEach(function (t, i) { max += t.points; tot += +(lsGet(key("variant:score:vz:" + i)) || 0); });
-    h += '<div class="item"><b>Итого: ' + tot + " из " + max + "</b> " + '<span class="stat">(теория min 2 из 4, задачи min 10 из 16)</span></div>';
+    h += '<div class="item"><b>Итого: ' + tot + " из " + max + "</b> " + '<span class="stat">' + esc(v.passNote || "(теория min 2 из 4, задачи min 10 из 16)") + "</span></div>";
   }
   return h;
 }
@@ -733,6 +738,7 @@ function scoreBox(id, max) {
 function fmt(sec) { sec = Math.max(0, Math.floor(sec)); var m = Math.floor(sec / 60), s = sec % 60; return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s; }
 function bindVariant() {
   var v = EXAM.exam.variant;
+  if (!v) return;
   var b;
   if ((b = document.getElementById("vStart"))) b.onclick = function () {
     var m = +document.getElementById("mins").value || v.minutes;
@@ -760,14 +766,15 @@ function bindVariant() {
 
 /* ===== Расхождения ===== */
 function pageDisc(filter) {
-  setTitle("Расхождения со слайдами");
+  var dt = txt("discTitle", "Расхождения со слайдами");
+  setTitle(dt);
   var only = lsGet(key("disc:onlyMajor")) === "1";
   var nums = [];
   EXAM.discrepancies.forEach(function (d) { d.topics.forEach(function (n) { if (nums.indexOf(n) < 0) nums.push(n); }); });
   nums.sort(function (a, b) { return a - b; });
   var list = EXAM.discrepancies.filter(function (d) { return (!filter || d.topics.indexOf(filter) >= 0) && (!only || d.severity === "major"); });
-  var h = "<h1>Расхождения со слайдами</h1>" +
-    '<div class="meta"><span>Как в слайдах → как правильно → что писать на РК.</span></div>' +
+  var h = "<h1>" + esc(dt) + "</h1>" +
+    '<div class="meta"><span>' + esc(txt("discNote", "Как в слайдах → как правильно → что писать на РК.")) + "</span></div>" +
     '<div class="tabs"><a href="#/disc" class="' + (!filter ? "on" : "") + '">все темы</a>' +
     nums.map(function (n) { return '<a href="#/disc/' + n + '" class="' + (filter === n ? "on" : "") + '">тема ' + n + "</a>"; }).join("") + "</div>" +
     '<p><label class="chk"><input type="checkbox" id="onlyMajor"' + (only ? " checked" : "") + "> только важные</label> <span class=stat>показано " + list.length + "</span></p>";
@@ -803,10 +810,10 @@ function pageSearch(q) {
     var snip = esc(p.slice(Math.max(0, i - 70), i)) + "<mark>" + esc(p.substr(i, q.length)) + "</mark>" + esc(p.slice(i + q.length, i + q.length + 90));
     res.push('<div class="item"><a href="' + href + '"><b>' + title + '</b></a><div class="stat">…' + snip + "…</div></div>");
   }
-  EXAM.exam.theory.forEach(function (x) { add("#/rk/theory/" + x.id, "РК " + x.id + ": " + mdInline(x.q), x.q + " " + x.answer); });
+  EXAM.exam.theory.forEach(function (x) { add("#/rk/theory/" + x.id, "РК " + esc(qLabel(x)) + ": " + mdInline(x.q), x.q + " " + x.answer); });
   EXAM.exam.tasks.forEach(function (x) { add("#/rk/tasks/" + x.id, "Задача " + x.id, x.q + " " + x.hint + " " + x.solution); });
   EXAM.traps.forEach(function (x) { add("#/traps", "Ловушка " + x.id + ": " + mdInline(x.title), x.title + " " + x.text); });
-  EXAM.discrepancies.forEach(function (x) { add("#/disc", "Расхождение: " + mdInline(x.title), x.title + " " + x.text); });
+  EXAM.discrepancies.forEach(function (x) { add("#/disc", esc(txt("discItem", "Расхождение")) + ": " + mdInline(x.title), x.title + " " + x.text); });
   EXAM.topics.forEach(function (t) { add("#/t/" + t.id, "Тема " + esc(t.num) + ": " + mdInline(t.title), t.title + " " + (t.blocks || []).map(blockText).join(" ")); });
   return "<h1>Поиск: «" + esc(q) + '»</h1><div class="result">Найдено: ' + res.length + "</div>" + (res.join("") || '<p class="empty">Ничего не найдено.</p>');
 }

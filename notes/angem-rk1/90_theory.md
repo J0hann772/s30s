@@ -1,0 +1,278 @@
+# Вопросы РК: ответы
+
+Формат: `### <блок><номер>. <вопрос>`, строка `refs:` — темы конспекта, затем ответ. `{{figure:key}}` — рисунок к ответу.
+
+## A
+
+### A1. Определение равенства геометрических векторов
+refs: g01
+Два вектора $\vec a$ и $\vec b$ **равны**, если
+1. они коллинеарны и сонаправлены ($\vec a\uparrow\uparrow\vec b$);
+2. их длины равны: $|\vec a|=|\vec b|$.
+
+### A2. Определение суммы векторов и умножения вектора на число
+refs: g01
+**Сумма.** Совместим начало $\vec b$ с концом $\vec a$; вектор $\vec c$, идущий из начала $\vec a$ в конец $\vec b$, — сумма $\vec a+\vec b$ (правило треугольника; равносильно — диагональ параллелограмма, построенного на $\vec a,\vec b$ из общего начала).
+**Умножение на число.** Произведение ненулевого $\vec a$ на $\lambda\in\mathbb R$ — вектор $\vec c=\lambda\vec a$, у которого $|\vec c|=|\lambda|\cdot|\vec a|$, $\vec c\uparrow\uparrow\vec a$ при $\lambda>0$ и $\vec c\uparrow\downarrow\vec a$ при $\lambda<0$. Если $\lambda=0$ или $\vec a=\vec 0$, то $\lambda\vec a=\vec 0$.
+{{figure:vec_sum}}
+
+### A3. Определение коллинеарных и компланарных векторов
+refs: g01
+**Коллинеарные** — лежат на одной прямой или на параллельных прямых; нулевой вектор коллинеарен любому.
+**Компланарные** — три вектора, лежащие в одной плоскости или параллельные одной плоскости.
+{{figure:collinear_coplanar}}
+
+### A4. Определение линейно зависимой и линейно независимой системы векторов
+refs: g02
+Система $\{\vec a_1,\dots,\vec a_n\}$ **линейно зависима**, если существует нетривиальный набор $\lambda_1,\dots,\lambda_n$ (хотя бы одно $\lambda_i\ne0$) такой, что $\lambda_1\vec a_1+\dots+\lambda_n\vec a_n=\vec 0$.
+**Линейно независима**, если $\lambda_1\vec a_1+\dots+\lambda_n\vec a_n=\vec 0\ \Rightarrow\ \lambda_1=\dots=\lambda_n=0$.
+
+### A5. Геометрические критерии линейной зависимости 2-х и 3-х векторов
+refs: g02
+- Два вектора линейно зависимы $\iff$ они коллинеарны.
+- Три вектора линейно зависимы $\iff$ они компланарны.
+
+### A6. Определение базиса и координат вектора
+refs: g03
+**Базис** в $V_n$ ($n=1,2,3$) — упорядоченная максимальная линейно независимая система векторов: один ненулевой вектор в $V_1$, два неколлинеарных в $V_2$, три некомпланарных в $V_3$.
+**Координаты** вектора $\vec x$ — коэффициенты $(x_1,\dots,x_n)$ его единственного разложения по базису: $\vec x=x_1\vec e_1+\dots+x_n\vec e_n$.
+
+### A7. Теорема о разложении вектора по базису
+refs: g03
+Любой вектор пространства можно разложить по базису, и притом единственным образом: если $(\vec e_1,\dots,\vec e_n)$ — базис, то $\forall\vec x\ \exists!\,(x_1,\dots,x_n):\ \vec x=\sum_{i=1}^n x_i\vec e_i$.
+
+### A8. Определение ортогональной скалярной проекции вектора на направление
+refs: g04
+Ортогональная скалярная проекция вектора $\vec a$ на направление вектора $\vec b$ — число
+$$\operatorname{Пр}_{\vec b}\vec a=|\vec a|\cos\varphi,$$
+где $\varphi$ — угол между $\vec a$ и $\vec b$.
+{{figure:projection}}
+
+### A9. Определение скалярного произведения векторов
+refs: g04
+Скалярное произведение $\vec a$ и $\vec b$ — число, равное произведению их длин на косинус угла между ними:
+$$\vec a\cdot\vec b=|\vec a|\,|\vec b|\cos\varphi=|\vec b|\operatorname{Пр}_{\vec b}\vec a.$$
+
+### A10. Свойство линейности скалярного произведения
+refs: g04
+1. $(\vec a+\vec b)\cdot\vec c=\vec a\cdot\vec c+\vec b\cdot\vec c$;
+2. $(\lambda\vec a)\cdot\vec b=\lambda(\vec a\cdot\vec b)$.
+
+### A11. Вычисление скалярного произведения в ОНБ
+refs: g04
+$$\vec a\cdot\vec b=x_ax_b+y_ay_b+z_az_b.$$
+
+### A12. Косинус угла между векторами в ОНБ
+refs: g04
+$$\cos\varphi=\frac{x_ax_b+y_ay_b+z_az_b}{\sqrt{x_a^2+y_a^2+z_a^2}\cdot\sqrt{x_b^2+y_b^2+z_b^2}}\qquad(\vec a,\vec b\ne\vec 0).$$
+
+### A13. Определение правой и левой тройки векторов
+refs: g05
+Упорядоченная тройка некомпланарных векторов $(\vec a,\vec b,\vec c)$ **правая**, если из конца третьего вектора $\vec c$ кратчайший поворот от $\vec a$ к $\vec b$ виден против часовой стрелки; если по часовой — **левая**.
+{{figure:right_left}}
+
+### A14. Определение векторного произведения векторов
+refs: g05
+Векторное произведение неколлинеарных $\vec a$ и $\vec b$ — вектор $\vec c=\vec a\times\vec b$, для которого:
+1. $\vec c\perp\vec a$ и $\vec c\perp\vec b$;
+2. $|\vec c|=|\vec a|\,|\vec b|\sin\varphi$ (площадь параллелограмма на $\vec a$ и $\vec b$);
+3. тройка $(\vec a,\vec b,\vec c)$ правая.
+
+Если $\vec a\parallel\vec b$, то $\vec a\times\vec b=\vec 0$.
+{{figure:cross}}
+
+### A15. Симметричность скалярного и антисимметричность векторного произведения
+refs: g04, g05
+- Скалярное коммутативно: $\vec a\cdot\vec b=\vec b\cdot\vec a$.
+- Векторное антикоммутативно: $\vec a\times\vec b=-(\vec b\times\vec a)$.
+
+### A16. Свойство линейности векторного произведения
+refs: g05
+1. $(\vec a_1+\vec a_2)\times\vec b=\vec a_1\times\vec b+\vec a_2\times\vec b$;
+2. $(\lambda\vec a)\times\vec b=\lambda(\vec a\times\vec b)$.
+
+### A17. Вычисление векторного произведения в правом ОНБ
+refs: g05
+$$\vec a\times\vec b=\begin{vmatrix}\vec i&\vec j&\vec k\\x_a&y_a&z_a\\x_b&y_b&z_b\end{vmatrix}=\vec i\,(y_az_b-z_ay_b)-\vec j\,(x_az_b-z_ax_b)+\vec k\,(x_ay_b-y_ax_b).$$
+
+### A18. Определение смешанного произведения векторов
+refs: g06
+Смешанное произведение трёх векторов — число $\vec a\vec b\vec c=(\vec a\times\vec b)\cdot\vec c$.
+{{figure:mixed}}
+
+### A19. Правило перестановок смешанного произведения
+refs: g06
+$$\vec a\vec b\vec c=\vec b\vec c\vec a=\vec c\vec a\vec b=-\vec b\vec a\vec c=-\vec c\vec b\vec a=-\vec a\vec c\vec b.$$
+Циклическая перестановка не меняет значения, перестановка двух сомножителей меняет знак.
+
+### A20. Свойство линейности смешанного произведения
+refs: g06
+1. $(\vec a_1+\vec a_2)\vec b\vec c=\vec a_1\vec b\vec c+\vec a_2\vec b\vec c$;
+2. $(\lambda\vec a)\vec b\vec c=\lambda(\vec a\vec b\vec c)$.
+
+### A21. Вычисление смешанного произведения в правом ОНБ
+refs: g06
+$$\vec a\vec b\vec c=\begin{vmatrix}x_a&y_a&z_a\\x_b&y_b&z_b\\x_c&y_c&z_c\end{vmatrix}.$$
+
+### A22. Общее уравнение плоскости и уравнение в отрезках
+refs: g07
+- Общее: $Ax+By+Cz+D=0$; нормаль $\vec n=\{A,B,C\}\perp$ плоскости.
+- В отрезках: $\dfrac xa+\dfrac yb+\dfrac zc=1$, где $a,b,c$ — отрезки, отсекаемые плоскостью на осях $Ox,Oy,Oz$.
+{{figure:plane_intercepts}}
+
+### A23. Уравнение плоскости через три точки
+refs: g07
+Через точки $M_1,M_2,M_3$, не лежащие на одной прямой:
+$$\begin{vmatrix}x-x_1&y-y_1&z-z_1\\x_2-x_1&y_2-y_1&z_2-z_1\\x_3-x_1&y_3-y_1&z_3-z_1\end{vmatrix}=0.$$
+
+### A24. Условия взаимного расположения двух плоскостей
+refs: g07
+- Перпендикулярность: $A_1A_2+B_1B_2+C_1C_2=0$ ($\vec n_1\cdot\vec n_2=0$).
+- Параллельность: $\dfrac{A_1}{A_2}=\dfrac{B_1}{B_2}=\dfrac{C_1}{C_2}$ ($\vec n_1\parallel\vec n_2$); различны, если это отношение $\ne\dfrac{D_1}{D_2}$, совпадают, если $=\dfrac{D_1}{D_2}$.
+
+### A25. Расстояние от точки M₀(x₀, y₀, z₀) до плоскости Ax + By + Cz + D = 0
+refs: g07
+$$\rho(M_0,\pi)=\frac{|Ax_0+By_0+Cz_0+D|}{\sqrt{A^2+B^2+C^2}}.$$
+{{figure:dist_point_plane}}
+
+### A26. Уравнения прямой в пространстве
+refs: g08
+$M_0(x_0,y_0,z_0)$ — точка прямой, $\vec s=\{l,m,n\}$ — направляющий вектор.
+- Канонические: $\dfrac{x-x_0}l=\dfrac{y-y_0}m=\dfrac{z-z_0}n$.
+- Параметрические: $x=x_0+lt,\ y=y_0+mt,\ z=z_0+nt$, $t\in\mathbb R$.
+{{figure:line_param}}
+
+### A27. Уравнение прямой через две точки
+refs: g08
+$$\frac{x-x_1}{x_2-x_1}=\frac{y-y_1}{y_2-y_1}=\frac{z-z_1}{z_2-z_1}.$$
+
+### A28. Условие принадлежности двух прямых одной плоскости
+refs: g08
+Прямые $L_1(M_1,\vec s_1)$ и $L_2(M_2,\vec s_2)$ лежат в одной плоскости (пересекаются или параллельны) $\iff$ векторы $\vec s_1,\vec s_2,\overrightarrow{M_1M_2}$ компланарны:
+$$\vec s_1\,\vec s_2\,\overrightarrow{M_1M_2}=0.$$
+{{figure:coplanar_lines}}
+
+### A29. Расстояние от точки M₁ до прямой L(M₀, s)
+refs: g08
+$$\rho(M_1,L)=\frac{|\overrightarrow{M_0M_1}\times\vec s|}{|\vec s|}.$$
+{{figure:dist_point_line}}
+
+### A30. Расстояние между скрещивающимися прямыми L₁(M₁, s₁) и L₂(M₂, s₂)
+refs: g08
+$$\rho(L_1,L_2)=\frac{|\vec s_1\,\vec s_2\,\overrightarrow{M_1M_2}|}{|\vec s_1\times\vec s_2|}.$$
+{{figure:skew}}
+
+## B
+
+### B1. Геометрический критерий линейной зависимости трёх векторов
+refs: g02
+**Теорема.** Три вектора ЛЗ $\iff$ они компланарны.
+
+**⇒** Пусть $\lambda_1\vec a+\lambda_2\vec b+\lambda_3\vec c=\vec 0$, $\lambda_1\ne0$. Тогда $\vec a=\beta\vec b+\gamma\vec c$, где $\beta=-\frac{\lambda_2}{\lambda_1}$, $\gamma=-\frac{\lambda_3}{\lambda_1}$. Отложим $\vec b,\vec c$ из точки $O$: $\beta\vec b$ и $\gamma\vec c$ лежат в плоскости $\vec b,\vec c$, их сумма $\vec a$ (правило параллелограмма) — тоже. Векторы компланарны.
+
+**⇐** Если среди векторов есть нулевой или два коллинеарных — ЛЗ очевидна (нулевой с коэффициентом $1$; коллинеарные ЛЗ по критерию для двух векторов). Пусть $\vec a\nparallel\vec b$. Отложим $\overrightarrow{OA}=\vec a$, $\overrightarrow{OB}=\vec b$, $\overrightarrow{OC}=\vec c$ в одной плоскости. Через $C$ проведём прямые, параллельные $OA$ и $OB$; получим параллелограмм $OA'CB'$:
+$$\vec c=\overrightarrow{OA'}+\overrightarrow{OB'}=\alpha\vec a+\beta\vec b\ \Rightarrow\ \alpha\vec a+\beta\vec b-1\cdot\vec c=\vec 0.$$
+Коэффициент $-1\ne0$ — комбинация нетривиальна, векторы ЛЗ. $\blacksquare$
+{{figure:lin_dep_proof}}
+
+### B2. Теорема о разложении вектора по базису
+refs: g03
+**Теорема.** Любой вектор $V_3$ раскладывается по базису $(\vec e_1,\vec e_2,\vec e_3)$, и единственным образом.
+
+**Существование.** Любые 4 вектора в $V_3$ ЛЗ: $\alpha_0\vec x+\alpha_1\vec e_1+\alpha_2\vec e_2+\alpha_3\vec e_3=\vec 0$ нетривиально. Здесь $\alpha_0\ne0$, иначе базис был бы ЛЗ. Делим на $\alpha_0$:
+$$\vec x=-\tfrac{\alpha_1}{\alpha_0}\vec e_1-\tfrac{\alpha_2}{\alpha_0}\vec e_2-\tfrac{\alpha_3}{\alpha_0}\vec e_3.$$
+**Единственность.** Если $\vec x=\sum x_i\vec e_i=\sum y_i\vec e_i$, то $\vec 0=\sum(x_i-y_i)\vec e_i$; базис ЛНЗ, значит $x_i=y_i$. $\blacksquare$
+{{figure:basis}}
+
+### B3. Доказательство линейности скалярного произведения
+refs: g04
+Опора: $\vec a\cdot\vec c=|\vec c|\operatorname{Пр}_{\vec c}\vec a$; проекция суммы равна сумме проекций, $\operatorname{Пр}(\lambda\vec a)=\lambda\operatorname{Пр}\vec a$.
+1. $(\vec a+\vec b)\cdot\vec c=|\vec c|\operatorname{Пр}_{\vec c}(\vec a+\vec b)=|\vec c|(\operatorname{Пр}_{\vec c}\vec a+\operatorname{Пр}_{\vec c}\vec b)=\vec a\cdot\vec c+\vec b\cdot\vec c$.
+2. $(\lambda\vec a)\cdot\vec b=|\vec b|\operatorname{Пр}_{\vec b}(\lambda\vec a)=\lambda|\vec b|\operatorname{Пр}_{\vec b}\vec a=\lambda(\vec a\cdot\vec b)$. $\blacksquare$
+
+### B4. Вывод скалярного произведения в ОНБ
+refs: g04
+$\vec a=x_a\vec i+y_a\vec j+z_a\vec k$, $\vec b=x_b\vec i+y_b\vec j+z_b\vec k$. В ОНБ $\vec i\cdot\vec i=\vec j\cdot\vec j=\vec k\cdot\vec k=1$, $\vec i\cdot\vec j=\vec i\cdot\vec k=\vec j\cdot\vec k=0$. Раскрываем скобки по линейности — из девяти слагаемых остаются три:
+$$\vec a\cdot\vec b=x_ax_b\cdot1+y_ay_b\cdot1+z_az_b\cdot1=x_ax_b+y_ay_b+z_az_b.\ \blacksquare$$
+
+### B5. Вывод векторного произведения в правом ОНБ
+refs: g05
+В правом ОНБ: $\vec i\times\vec i=\vec j\times\vec j=\vec k\times\vec k=\vec 0$; $\vec i\times\vec j=\vec k$, $\vec j\times\vec k=\vec i$, $\vec k\times\vec i=\vec j$; при перестановке — знак минус. Раскрываем по линейности:
+$$\vec a\times\vec b=x_ay_b\vec k-x_az_b\vec j-y_ax_b\vec k+y_az_b\vec i+z_ax_b\vec j-z_ay_b\vec i$$
+$$=(y_az_b-z_ay_b)\vec i-(x_az_b-z_ax_b)\vec j+(x_ay_b-y_ax_b)\vec k=\begin{vmatrix}\vec i&\vec j&\vec k\\x_a&y_a&z_a\\x_b&y_b&z_b\end{vmatrix}.\ \blacksquare$$
+
+### B6. Доказательство линейности смешанного произведения
+refs: g06
+По определению $\vec a\vec b\vec c=(\vec a\times\vec b)\cdot\vec c$ и линейности векторного и скалярного произведений:
+1. $(\vec a_1+\vec a_2)\vec b\vec c=(\vec a_1\times\vec b+\vec a_2\times\vec b)\cdot\vec c=\vec a_1\vec b\vec c+\vec a_2\vec b\vec c$;
+2. $(\lambda\vec a)\vec b\vec c=(\lambda(\vec a\times\vec b))\cdot\vec c=\lambda(\vec a\vec b\vec c)$. $\blacksquare$
+
+### B7. Вывод смешанного произведения в правом ОНБ
+refs: g06
+$\vec a\times\vec b=\{y_az_b-z_ay_b,\ -(x_az_b-z_ax_b),\ x_ay_b-y_ax_b\}$. Скалярно на $\vec c$:
+$$(\vec a\times\vec b)\cdot\vec c=x_c(y_az_b-z_ay_b)-y_c(x_az_b-z_ax_b)+z_c(x_ay_b-y_ax_b)=\begin{vmatrix}x_a&y_a&z_a\\x_b&y_b&z_b\\x_c&y_c&z_c\end{vmatrix}$$
+— разложение определителя по третьей строке. $\blacksquare$
+
+### B8. Вывод формулы расстояния от точки до плоскости
+refs: g07
+Возьмём $M_1(x_1,y_1,z_1)\in\pi$: $D=-(Ax_1+By_1+Cz_1)$. Расстояние — модуль проекции $\overrightarrow{M_1M_0}$ на нормаль:
+$$\rho=\frac{|\overrightarrow{M_1M_0}\cdot\vec n|}{|\vec n|},\qquad \overrightarrow{M_1M_0}\cdot\vec n=A(x_0-x_1)+B(y_0-y_1)+C(z_0-z_1)=Ax_0+By_0+Cz_0+D.$$
+$|\vec n|=\sqrt{A^2+B^2+C^2}$, откуда $\rho=\dfrac{|Ax_0+By_0+Cz_0+D|}{\sqrt{A^2+B^2+C^2}}$. $\blacksquare$
+{{figure:dist_point_plane}}
+
+### B9. Вывод расстояния от точки до прямой в пространстве
+refs: g08
+Построим параллелограмм на $\vec s$ и $\overrightarrow{M_0M_1}$. Площадь двумя способами: $S=|\overrightarrow{M_0M_1}\times\vec s|$ и $S=|\vec s|\cdot h$, где $h$ — высота из $M_1$ на $L$, то есть $\rho(M_1,L)$. Приравнивая:
+$$\rho(M_1,L)=\frac{|\overrightarrow{M_0M_1}\times\vec s|}{|\vec s|}.\ \blacksquare$$
+{{figure:dist_point_line}}
+
+### B10. Вывод расстояния между скрещивающимися прямыми
+refs: g08
+$\vec s_1,\vec s_2,\overrightarrow{M_1M_2}$ некомпланарны — строим на них параллелепипед. Объём двумя способами: $V=|\vec s_1\vec s_2\overrightarrow{M_1M_2}|$ и $V=S_{\text{осн}}\cdot h$, где $S_{\text{осн}}=|\vec s_1\times\vec s_2|$, а $h$ — расстояние между параллельными плоскостями, содержащими прямые, то есть $\rho(L_1,L_2)$:
+$$\rho(L_1,L_2)=\frac{|\vec s_1\vec s_2\overrightarrow{M_1M_2}|}{|\vec s_1\times\vec s_2|}.\ \blacksquare$$
+{{figure:skew}}
+
+## C
+
+### C1. Аксиомы векторного (линейного) пространства V(ℝ)
+refs: g09
+Множество $V$ с операциями сложения и умножения на число из $\mathbb R$, $\forall\vec u,\vec v,\vec w\in V$, $\forall\alpha,\beta\in\mathbb R$:
+1. $(\vec u+\vec v)+\vec w=\vec u+(\vec v+\vec w)$;
+2. $\exists\vec 0\in V:\ \vec v+\vec 0=\vec v$;
+3. $\exists(-\vec v)\in V:\ \vec v+(-\vec v)=\vec 0$;
+4. $\vec u+\vec v=\vec v+\vec u$;
+5. $(\alpha\beta)\vec v=\alpha(\beta\vec v)$;
+6. $1\cdot\vec v=\vec v$;
+7. $\alpha(\vec u+\vec v)=\alpha\vec u+\alpha\vec v$;
+8. $(\alpha+\beta)\vec v=\alpha\vec v+\beta\vec v$.
+
+### C2. Аксиомы скалярного произведения и нормы
+refs: g09
+**Скалярное произведение** $\langle\vec u,\vec v\rangle$ в $V(\mathbb R)$:
+- линейность: $\langle\alpha\vec u,\vec v\rangle=\alpha\langle\vec u,\vec v\rangle$, $\langle\vec u+\vec w,\vec v\rangle=\langle\vec u,\vec v\rangle+\langle\vec w,\vec v\rangle$;
+- симметричность: $\langle\vec u,\vec v\rangle=\langle\vec v,\vec u\rangle$;
+- положительная определённость и невырожденность: $\langle\vec v,\vec v\rangle\ge0$, $\langle\vec v,\vec v\rangle=0\iff\vec v=\vec 0$.
+
+**Норма:** $\|\alpha\vec v\|=|\alpha|\,\|\vec v\|$; $\vec v\ne\vec 0\Rightarrow\|\vec v\|>0$; $\|\vec x+\vec y\|\le\|\vec x\|+\|\vec y\|$. Скалярное произведение порождает норму $\|\vec v\|=\sqrt{\langle\vec v,\vec v\rangle}$.
+
+### C3. Двойное векторное произведение и тождества
+refs: g06, g09
+$$[\vec u,[\vec v,\vec w]]=\vec v\langle\vec u,\vec w\rangle-\vec w\langle\vec u,\vec v\rangle\qquad\text{(тождество Лагранжа у лектора, «бац минус цаб»)};$$
+$$[\vec u,[\vec v,\vec w]]+[\vec v,[\vec w,\vec u]]+[\vec w,[\vec u,\vec v]]=\vec 0\qquad\text{(тождество Якоби)}.$$
+
+### C4. Аффинное пространство и аффинное подпространство
+refs: g09
+**Аффинное пространство** $A(V)$ — множество точек с операцией сдвига точки на вектор $P+\vec v=Q$:
+1. $(P+\vec u)+\vec v=P+(\vec u+\vec v)$;
+2. $\forall P,Q\in A\ \exists!\,\vec v\in V:\ P+\vec v=Q$ (обозначение $\overrightarrow{PQ}$).
+
+**Аффинное подпространство** через точку $P_0$ с направляющим линейным подпространством $V_0\subseteq V$:
+$$L=P_0+V_0=\{P\in A\mid P=P_0+\vec v,\ \vec v\in V_0\},\qquad\dim L=\dim V_0.$$
+
+### C5. Геометрические примеры аффинных подпространств
+refs: g09
+- $\dim0$: $V_0=\{\vec 0\}$, $P=P_0$ — точка;
+- $\dim1$: $V_0=\operatorname{span}\{\vec s\}$, $P=P_0+t\vec s$ — прямая;
+- $\dim2$: $V_0=\operatorname{span}\{\vec u,\vec v\}$, $P=P_0+\lambda\vec u+\mu\vec v$ — плоскость;
+- $\dim3$: $V_0=V_3$, $P=P_0+\vec v$ — всё пространство.
+{{figure:affine}}
