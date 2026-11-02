@@ -1,12 +1,12 @@
 # Боевой вариант: сайт собирается в образ.
 #   docker compose up -d --build     запустить/обновить
 #   docker compose down              остановить
-# Сайт: http://localhost:8080
+# Сайт: http://localhost:8080 (порт открыт только на 127.0.0.1)
 services:
   site:
     build: .
     image: s30s:local
     container_name: s30s
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     restart: unless-stopped
