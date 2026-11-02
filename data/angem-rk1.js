@@ -1226,7 +1226,7 @@ S30S.register({
     "label": "А1",
     "block": "A",
     "n": 1,
-    "points": null,
+    "points": 1,
     "q": "Определение равенства геометрических векторов",
     "answer": "Два вектора $\\vec a$ и $\\vec b$ **равны**, если\n1. они коллинеарны и сонаправлены ($\\vec a\\uparrow\\uparrow\\vec b$);\n2. их длины равны: $|\\vec a|=|\\vec b|$.",
     "refs": [
@@ -1238,7 +1238,7 @@ S30S.register({
     "label": "А2",
     "block": "A",
     "n": 2,
-    "points": null,
+    "points": 1,
     "q": "Определение суммы векторов и умножения вектора на число",
     "answer": "**Сумма.** Совместим начало $\\vec b$ с концом $\\vec a$; вектор $\\vec c$, идущий из начала $\\vec a$ в конец $\\vec b$, — сумма $\\vec a+\\vec b$ (правило треугольника; равносильно — диагональ параллелограмма, построенного на $\\vec a,\\vec b$ из общего начала).\n**Умножение на число.** Произведение ненулевого $\\vec a$ на $\\lambda\\in\\mathbb R$ — вектор $\\vec c=\\lambda\\vec a$, у которого $|\\vec c|=|\\lambda|\\cdot|\\vec a|$, $\\vec c\\uparrow\\uparrow\\vec a$ при $\\lambda>0$ и $\\vec c\\uparrow\\downarrow\\vec a$ при $\\lambda<0$. Если $\\lambda=0$ или $\\vec a=\\vec 0$, то $\\lambda\\vec a=\\vec 0$.",
     "refs": [
@@ -1251,7 +1251,7 @@ S30S.register({
     "label": "А3",
     "block": "A",
     "n": 3,
-    "points": null,
+    "points": 1,
     "q": "Определение коллинеарных и компланарных векторов",
     "answer": "**Коллинеарные** — лежат на одной прямой или на параллельных прямых; нулевой вектор коллинеарен любому.\n**Компланарные** — три вектора, лежащие в одной плоскости или параллельные одной плоскости.",
     "refs": [
@@ -1264,7 +1264,7 @@ S30S.register({
     "label": "А4",
     "block": "A",
     "n": 4,
-    "points": null,
+    "points": 1,
     "q": "Определение линейно зависимой и линейно независимой системы векторов",
     "answer": "Система $\\{\\vec a_1,\\dots,\\vec a_n\\}$ **линейно зависима**, если существует нетривиальный набор $\\lambda_1,\\dots,\\lambda_n$ (хотя бы одно $\\lambda_i\\ne0$) такой, что $\\lambda_1\\vec a_1+\\dots+\\lambda_n\\vec a_n=\\vec 0$.\n**Линейно независима**, если $\\lambda_1\\vec a_1+\\dots+\\lambda_n\\vec a_n=\\vec 0\\ \\Rightarrow\\ \\lambda_1=\\dots=\\lambda_n=0$.",
     "refs": [
@@ -1276,7 +1276,7 @@ S30S.register({
     "label": "А5",
     "block": "A",
     "n": 5,
-    "points": null,
+    "points": 1,
     "q": "Геометрические критерии линейной зависимости 2-х и 3-х векторов",
     "answer": "- Два вектора линейно зависимы $\\iff$ они коллинеарны.\n- Три вектора линейно зависимы $\\iff$ они компланарны.",
     "refs": [
@@ -1288,7 +1288,7 @@ S30S.register({
     "label": "А6",
     "block": "A",
     "n": 6,
-    "points": null,
+    "points": 1,
     "q": "Определение базиса и координат вектора",
     "answer": "**Базис** в $V_n$ ($n=1,2,3$) — упорядоченная максимальная линейно независимая система векторов: один ненулевой вектор в $V_1$, два неколлинеарных в $V_2$, три некомпланарных в $V_3$.\n**Координаты** вектора $\\vec x$ — коэффициенты $(x_1,\\dots,x_n)$ его единственного разложения по базису: $\\vec x=x_1\\vec e_1+\\dots+x_n\\vec e_n$.",
     "refs": [
@@ -1300,8 +1300,8 @@ S30S.register({
     "label": "А7",
     "block": "A",
     "n": 7,
-    "points": null,
-    "q": "Теорема о разложении вектора по базису",
+    "points": 1,
+    "q": "Сформулировать теорему о разложении вектора по базису",
     "answer": "Любой вектор пространства можно разложить по базису, и притом единственным образом: если $(\\vec e_1,\\dots,\\vec e_n)$ — базис, то $\\forall\\vec x\\ \\exists!\\,(x_1,\\dots,x_n):\\ \\vec x=\\sum_{i=1}^n x_i\\vec e_i$.",
     "refs": [
      "g03"
@@ -1312,7 +1312,7 @@ S30S.register({
     "label": "А8",
     "block": "A",
     "n": 8,
-    "points": null,
+    "points": 1,
     "q": "Определение ортогональной скалярной проекции вектора на направление",
     "answer": "Ортогональная скалярная проекция вектора $\\vec a$ на направление вектора $\\vec b$ — число\n$$\\operatorname{Пр}_{\\vec b}\\vec a=|\\vec a|\\cos\\varphi,$$\nгде $\\varphi$ — угол между $\\vec a$ и $\\vec b$.",
     "refs": [
@@ -1325,7 +1325,7 @@ S30S.register({
     "label": "А9",
     "block": "A",
     "n": 9,
-    "points": null,
+    "points": 1,
     "q": "Определение скалярного произведения векторов",
     "answer": "Скалярное произведение $\\vec a$ и $\\vec b$ — число, равное произведению их длин на косинус угла между ними:\n$$\\vec a\\cdot\\vec b=|\\vec a|\\,|\\vec b|\\cos\\varphi=|\\vec b|\\operatorname{Пр}_{\\vec b}\\vec a.$$",
     "refs": [
@@ -1337,7 +1337,7 @@ S30S.register({
     "label": "А10",
     "block": "A",
     "n": 10,
-    "points": null,
+    "points": 1,
     "q": "Свойство линейности скалярного произведения",
     "answer": "1. $(\\vec a+\\vec b)\\cdot\\vec c=\\vec a\\cdot\\vec c+\\vec b\\cdot\\vec c$;\n2. $(\\lambda\\vec a)\\cdot\\vec b=\\lambda(\\vec a\\cdot\\vec b)$.",
     "refs": [
@@ -1349,7 +1349,7 @@ S30S.register({
     "label": "А11",
     "block": "A",
     "n": 11,
-    "points": null,
+    "points": 1,
     "q": "Вычисление скалярного произведения в ОНБ",
     "answer": "$$\\vec a\\cdot\\vec b=x_ax_b+y_ay_b+z_az_b.$$",
     "refs": [
@@ -1361,7 +1361,7 @@ S30S.register({
     "label": "А12",
     "block": "A",
     "n": 12,
-    "points": null,
+    "points": 1,
     "q": "Косинус угла между векторами в ОНБ",
     "answer": "$$\\cos\\varphi=\\frac{x_ax_b+y_ay_b+z_az_b}{\\sqrt{x_a^2+y_a^2+z_a^2}\\cdot\\sqrt{x_b^2+y_b^2+z_b^2}}\\qquad(\\vec a,\\vec b\\ne\\vec 0).$$",
     "refs": [
@@ -1373,7 +1373,7 @@ S30S.register({
     "label": "А13",
     "block": "A",
     "n": 13,
-    "points": null,
+    "points": 1,
     "q": "Определение правой и левой тройки векторов",
     "answer": "Упорядоченная тройка некомпланарных векторов $(\\vec a,\\vec b,\\vec c)$ **правая**, если из конца третьего вектора $\\vec c$ кратчайший поворот от $\\vec a$ к $\\vec b$ виден против часовой стрелки; если по часовой — **левая**.",
     "refs": [
@@ -1386,7 +1386,7 @@ S30S.register({
     "label": "А14",
     "block": "A",
     "n": 14,
-    "points": null,
+    "points": 1,
     "q": "Определение векторного произведения векторов",
     "answer": "Векторное произведение неколлинеарных $\\vec a$ и $\\vec b$ — вектор $\\vec c=\\vec a\\times\\vec b$, для которого:\n1. $\\vec c\\perp\\vec a$ и $\\vec c\\perp\\vec b$;\n2. $|\\vec c|=|\\vec a|\\,|\\vec b|\\sin\\varphi$ (площадь параллелограмма на $\\vec a$ и $\\vec b$);\n3. тройка $(\\vec a,\\vec b,\\vec c)$ правая.\n\nЕсли $\\vec a\\parallel\\vec b$, то $\\vec a\\times\\vec b=\\vec 0$.",
     "refs": [
@@ -1399,7 +1399,7 @@ S30S.register({
     "label": "А15",
     "block": "A",
     "n": 15,
-    "points": null,
+    "points": 1,
     "q": "Симметричность скалярного и антисимметричность векторного произведения",
     "answer": "- Скалярное коммутативно: $\\vec a\\cdot\\vec b=\\vec b\\cdot\\vec a$.\n- Векторное антикоммутативно: $\\vec a\\times\\vec b=-(\\vec b\\times\\vec a)$.",
     "refs": [
@@ -1412,8 +1412,8 @@ S30S.register({
     "label": "А16",
     "block": "A",
     "n": 16,
-    "points": null,
-    "q": "Свойство линейности векторного произведения",
+    "points": 1,
+    "q": "Сформулировать свойство линейности векторного произведения векторов",
     "answer": "1. $(\\vec a_1+\\vec a_2)\\times\\vec b=\\vec a_1\\times\\vec b+\\vec a_2\\times\\vec b$;\n2. $(\\lambda\\vec a)\\times\\vec b=\\lambda(\\vec a\\times\\vec b)$.",
     "refs": [
      "g05"
@@ -1424,8 +1424,8 @@ S30S.register({
     "label": "А17",
     "block": "A",
     "n": 17,
-    "points": null,
-    "q": "Вычисление векторного произведения в правом ОНБ",
+    "points": 1,
+    "q": "Записать формулу для вычисления векторного произведения в правом ортонормированном базисе",
     "answer": "$$\\vec a\\times\\vec b=\\begin{vmatrix}\\vec i&\\vec j&\\vec k\\\\x_a&y_a&z_a\\\\x_b&y_b&z_b\\end{vmatrix}=\\vec i\\,(y_az_b-z_ay_b)-\\vec j\\,(x_az_b-z_ax_b)+\\vec k\\,(x_ay_b-y_ax_b).$$",
     "refs": [
      "g05"
@@ -1436,7 +1436,7 @@ S30S.register({
     "label": "А18",
     "block": "A",
     "n": 18,
-    "points": null,
+    "points": 1,
     "q": "Определение смешанного произведения векторов",
     "answer": "Смешанное произведение трёх векторов — число $\\vec a\\vec b\\vec c=(\\vec a\\times\\vec b)\\cdot\\vec c$.",
     "refs": [
@@ -1449,7 +1449,7 @@ S30S.register({
     "label": "А19",
     "block": "A",
     "n": 19,
-    "points": null,
+    "points": 1,
     "q": "Правило перестановок смешанного произведения",
     "answer": "$$\\vec a\\vec b\\vec c=\\vec b\\vec c\\vec a=\\vec c\\vec a\\vec b=-\\vec b\\vec a\\vec c=-\\vec c\\vec b\\vec a=-\\vec a\\vec c\\vec b.$$\nЦиклическая перестановка не меняет значения, перестановка двух сомножителей меняет знак.",
     "refs": [
@@ -1461,7 +1461,7 @@ S30S.register({
     "label": "А20",
     "block": "A",
     "n": 20,
-    "points": null,
+    "points": 1,
     "q": "Свойство линейности смешанного произведения",
     "answer": "1. $(\\vec a_1+\\vec a_2)\\vec b\\vec c=\\vec a_1\\vec b\\vec c+\\vec a_2\\vec b\\vec c$;\n2. $(\\lambda\\vec a)\\vec b\\vec c=\\lambda(\\vec a\\vec b\\vec c)$.",
     "refs": [
@@ -1473,8 +1473,8 @@ S30S.register({
     "label": "А21",
     "block": "A",
     "n": 21,
-    "points": null,
-    "q": "Вычисление смешанного произведения в правом ОНБ",
+    "points": 1,
+    "q": "Записать формулу для вычисления смешанного произведения в правом ортонормированном базисе",
     "answer": "$$\\vec a\\vec b\\vec c=\\begin{vmatrix}x_a&y_a&z_a\\\\x_b&y_b&z_b\\\\x_c&y_c&z_c\\end{vmatrix}.$$",
     "refs": [
      "g06"
@@ -1485,9 +1485,9 @@ S30S.register({
     "label": "А22",
     "block": "A",
     "n": 22,
-    "points": null,
-    "q": "Общее уравнение плоскости и уравнение в отрезках",
-    "answer": "- Общее: $Ax+By+Cz+D=0$; нормаль $\\vec n=\\{A,B,C\\}\\perp$ плоскости.\n- В отрезках: $\\dfrac xa+\\dfrac yb+\\dfrac zc=1$, где $a,b,c$ — отрезки, отсекаемые плоскостью на осях $Ox,Oy,Oz$.",
+    "points": 1,
+    "q": "Записать общее уравнение плоскости и уравнение «в отрезках». Объяснить геометрический смысл входящих в эти уравнения параметров",
+    "answer": "- **Общее:** $Ax+By+Cz+D=0$, $A^2+B^2+C^2\\ne0$. Смысл: $\\vec n=\\{A,B,C\\}$ — **нормальный вектор**, перпендикулярный плоскости; $D$ задаёт положение плоскости: $D=0$ — плоскость проходит через начало координат, а $\\frac{|D|}{|\\vec n|}$ — расстояние от начала координат до плоскости.\n- **В отрезках:** $\\dfrac xa+\\dfrac yb+\\dfrac zc=1$ ($a,b,c\\ne0$). Смысл: $a,b,c$ — **величины отрезков** (со знаком), отсекаемых плоскостью на осях $Ox,Oy,Oz$: плоскость проходит через точки $(a,0,0)$, $(0,b,0)$, $(0,0,c)$.",
     "refs": [
      "g07"
     ],
@@ -1498,7 +1498,7 @@ S30S.register({
     "label": "А23",
     "block": "A",
     "n": 23,
-    "points": null,
+    "points": 1,
     "q": "Уравнение плоскости через три точки",
     "answer": "Через точки $M_1,M_2,M_3$, не лежащие на одной прямой:\n$$\\begin{vmatrix}x-x_1&y-y_1&z-z_1\\\\x_2-x_1&y_2-y_1&z_2-z_1\\\\x_3-x_1&y_3-y_1&z_3-z_1\\end{vmatrix}=0.$$",
     "refs": [
@@ -1510,8 +1510,8 @@ S30S.register({
     "label": "А24",
     "block": "A",
     "n": 24,
-    "points": null,
-    "q": "Условия взаимного расположения двух плоскостей",
+    "points": 1,
+    "q": "Записать условия параллельности и перпендикулярности плоскостей",
     "answer": "- Перпендикулярность: $A_1A_2+B_1B_2+C_1C_2=0$ ($\\vec n_1\\cdot\\vec n_2=0$).\n- Параллельность: $\\dfrac{A_1}{A_2}=\\dfrac{B_1}{B_2}=\\dfrac{C_1}{C_2}$ ($\\vec n_1\\parallel\\vec n_2$); различны, если это отношение $\\ne\\dfrac{D_1}{D_2}$, совпадают, если $=\\dfrac{D_1}{D_2}$.",
     "refs": [
      "g07"
@@ -1522,8 +1522,8 @@ S30S.register({
     "label": "А25",
     "block": "A",
     "n": 25,
-    "points": null,
-    "q": "Расстояние от точки M₀(x₀, y₀, z₀) до плоскости Ax + By + Cz + D = 0",
+    "points": 1,
+    "q": "Записать формулу для расстояния от точки до плоскости, заданной общим уравнением",
     "answer": "$$\\rho(M_0,\\pi)=\\frac{|Ax_0+By_0+Cz_0+D|}{\\sqrt{A^2+B^2+C^2}}.$$",
     "refs": [
      "g07"
@@ -1535,9 +1535,9 @@ S30S.register({
     "label": "А26",
     "block": "A",
     "n": 26,
-    "points": null,
-    "q": "Уравнения прямой в пространстве",
-    "answer": "$M_0(x_0,y_0,z_0)$ — точка прямой, $\\vec s=\\{l,m,n\\}$ — направляющий вектор.\n- Канонические: $\\dfrac{x-x_0}l=\\dfrac{y-y_0}m=\\dfrac{z-z_0}n$.\n- Параметрические: $x=x_0+lt,\\ y=y_0+mt,\\ z=z_0+nt$, $t\\in\\mathbb R$.",
+    "points": 1,
+    "q": "Записать канонические и параметрические уравнения прямой в пространстве. Объяснить геометрический смысл входящих в эти уравнения параметров",
+    "answer": "- **Канонические:** $\\dfrac{x-x_0}l=\\dfrac{y-y_0}m=\\dfrac{z-z_0}n$.\n- **Параметрические:** $x=x_0+lt,\\ y=y_0+mt,\\ z=z_0+nt$, $t\\in\\mathbb R$.\n\nСмысл: $(x_0,y_0,z_0)$ — координаты **точки $M_0$**, через которую проходит прямая; $\\vec s=\\{l,m,n\\}\\ne\\vec 0$ — **направляющий вектор**, параллельный прямой; $t$ — параметр: $\\overrightarrow{M_0M}=t\\vec s$, каждому $t$ соответствует одна точка прямой ($|t|\\,|\\vec s|$ — расстояние от $M_0$). Нуль в знаменателе канонических уравнений означает, что соответствующая координата постоянна.",
     "refs": [
      "g08"
     ],
@@ -1548,7 +1548,7 @@ S30S.register({
     "label": "А27",
     "block": "A",
     "n": 27,
-    "points": null,
+    "points": 1,
     "q": "Уравнение прямой через две точки",
     "answer": "$$\\frac{x-x_1}{x_2-x_1}=\\frac{y-y_1}{y_2-y_1}=\\frac{z-z_1}{z_2-z_1}.$$",
     "refs": [
@@ -1560,7 +1560,7 @@ S30S.register({
     "label": "А28",
     "block": "A",
     "n": 28,
-    "points": null,
+    "points": 1,
     "q": "Условие принадлежности двух прямых одной плоскости",
     "answer": "Прямые $L_1(M_1,\\vec s_1)$ и $L_2(M_2,\\vec s_2)$ лежат в одной плоскости (пересекаются или параллельны) $\\iff$ векторы $\\vec s_1,\\vec s_2,\\overrightarrow{M_1M_2}$ компланарны:\n$$\\vec s_1\\,\\vec s_2\\,\\overrightarrow{M_1M_2}=0.$$",
     "refs": [
@@ -1573,7 +1573,7 @@ S30S.register({
     "label": "А29",
     "block": "A",
     "n": 29,
-    "points": null,
+    "points": 1,
     "q": "Расстояние от точки M₁ до прямой L(M₀, s)",
     "answer": "$$\\rho(M_1,L)=\\frac{|\\overrightarrow{M_0M_1}\\times\\vec s|}{|\\vec s|}.$$",
     "refs": [
@@ -1586,7 +1586,7 @@ S30S.register({
     "label": "А30",
     "block": "A",
     "n": 30,
-    "points": null,
+    "points": 1,
     "q": "Расстояние между скрещивающимися прямыми L₁(M₁, s₁) и L₂(M₂, s₂)",
     "answer": "$$\\rho(L_1,L_2)=\\frac{|\\vec s_1\\,\\vec s_2\\,\\overrightarrow{M_1M_2}|}{|\\vec s_1\\times\\vec s_2|}.$$",
     "refs": [
@@ -1599,8 +1599,8 @@ S30S.register({
     "label": "Б1",
     "block": "B",
     "n": 1,
-    "points": null,
-    "q": "Геометрический критерий линейной зависимости трёх векторов",
+    "points": 2,
+    "q": "Доказать геометрический критерий линейной зависимости трёх векторов",
     "answer": "**Теорема.** Три вектора ЛЗ $\\iff$ они компланарны.\n\n**⇒** Пусть $\\lambda_1\\vec a+\\lambda_2\\vec b+\\lambda_3\\vec c=\\vec 0$, $\\lambda_1\\ne0$. Тогда $\\vec a=\\beta\\vec b+\\gamma\\vec c$, где $\\beta=-\\frac{\\lambda_2}{\\lambda_1}$, $\\gamma=-\\frac{\\lambda_3}{\\lambda_1}$. Отложим $\\vec b,\\vec c$ из точки $O$: $\\beta\\vec b$ и $\\gamma\\vec c$ лежат в плоскости $\\vec b,\\vec c$, их сумма $\\vec a$ (правило параллелограмма) — тоже. Векторы компланарны.\n\n**⇐** Если среди векторов есть нулевой или два коллинеарных — ЛЗ очевидна (нулевой с коэффициентом $1$; коллинеарные ЛЗ по критерию для двух векторов). Пусть $\\vec a\\nparallel\\vec b$. Отложим $\\overrightarrow{OA}=\\vec a$, $\\overrightarrow{OB}=\\vec b$, $\\overrightarrow{OC}=\\vec c$ в одной плоскости. Через $C$ проведём прямые, параллельные $OA$ и $OB$; получим параллелограмм $OA'CB'$:\n$$\\vec c=\\overrightarrow{OA'}+\\overrightarrow{OB'}=\\alpha\\vec a+\\beta\\vec b\\ \\Rightarrow\\ \\alpha\\vec a+\\beta\\vec b-1\\cdot\\vec c=\\vec 0.$$\nКоэффициент $-1\\ne0$ — комбинация нетривиальна, векторы ЛЗ. $\\blacksquare$",
     "refs": [
      "g02"
@@ -1612,7 +1612,7 @@ S30S.register({
     "label": "Б2",
     "block": "B",
     "n": 2,
-    "points": null,
+    "points": 2,
     "q": "Теорема о разложении вектора по базису",
     "answer": "**Теорема.** Любой вектор $V_3$ раскладывается по базису $(\\vec e_1,\\vec e_2,\\vec e_3)$, и единственным образом.\n\n**Существование.** Любые 4 вектора в $V_3$ ЛЗ: $\\alpha_0\\vec x+\\alpha_1\\vec e_1+\\alpha_2\\vec e_2+\\alpha_3\\vec e_3=\\vec 0$ нетривиально. Здесь $\\alpha_0\\ne0$, иначе базис был бы ЛЗ. Делим на $\\alpha_0$:\n$$\\vec x=-\\tfrac{\\alpha_1}{\\alpha_0}\\vec e_1-\\tfrac{\\alpha_2}{\\alpha_0}\\vec e_2-\\tfrac{\\alpha_3}{\\alpha_0}\\vec e_3.$$\n**Единственность.** Если $\\vec x=\\sum x_i\\vec e_i=\\sum y_i\\vec e_i$, то $\\vec 0=\\sum(x_i-y_i)\\vec e_i$; базис ЛНЗ, значит $x_i=y_i$. $\\blacksquare$",
     "refs": [
@@ -1625,7 +1625,7 @@ S30S.register({
     "label": "Б3",
     "block": "B",
     "n": 3,
-    "points": null,
+    "points": 2,
     "q": "Доказательство линейности скалярного произведения",
     "answer": "Опора: $\\vec a\\cdot\\vec c=|\\vec c|\\operatorname{Пр}_{\\vec c}\\vec a$; проекция суммы равна сумме проекций, $\\operatorname{Пр}(\\lambda\\vec a)=\\lambda\\operatorname{Пр}\\vec a$.\n1. $(\\vec a+\\vec b)\\cdot\\vec c=|\\vec c|\\operatorname{Пр}_{\\vec c}(\\vec a+\\vec b)=|\\vec c|(\\operatorname{Пр}_{\\vec c}\\vec a+\\operatorname{Пр}_{\\vec c}\\vec b)=\\vec a\\cdot\\vec c+\\vec b\\cdot\\vec c$.\n2. $(\\lambda\\vec a)\\cdot\\vec b=|\\vec b|\\operatorname{Пр}_{\\vec b}(\\lambda\\vec a)=\\lambda|\\vec b|\\operatorname{Пр}_{\\vec b}\\vec a=\\lambda(\\vec a\\cdot\\vec b)$. $\\blacksquare$",
     "refs": [
@@ -1637,7 +1637,7 @@ S30S.register({
     "label": "Б4",
     "block": "B",
     "n": 4,
-    "points": null,
+    "points": 2,
     "q": "Вывод скалярного произведения в ОНБ",
     "answer": "$\\vec a=x_a\\vec i+y_a\\vec j+z_a\\vec k$, $\\vec b=x_b\\vec i+y_b\\vec j+z_b\\vec k$. В ОНБ $\\vec i\\cdot\\vec i=\\vec j\\cdot\\vec j=\\vec k\\cdot\\vec k=1$, $\\vec i\\cdot\\vec j=\\vec i\\cdot\\vec k=\\vec j\\cdot\\vec k=0$. Раскрываем скобки по линейности — из девяти слагаемых остаются три:\n$$\\vec a\\cdot\\vec b=x_ax_b\\cdot1+y_ay_b\\cdot1+z_az_b\\cdot1=x_ax_b+y_ay_b+z_az_b.\\ \\blacksquare$$",
     "refs": [
@@ -1649,8 +1649,8 @@ S30S.register({
     "label": "Б5",
     "block": "B",
     "n": 5,
-    "points": null,
-    "q": "Вывод векторного произведения в правом ОНБ",
+    "points": 2,
+    "q": "Вывести формулу для вычисления векторного произведения в правом ортонормированном базисе",
     "answer": "В правом ОНБ: $\\vec i\\times\\vec i=\\vec j\\times\\vec j=\\vec k\\times\\vec k=\\vec 0$; $\\vec i\\times\\vec j=\\vec k$, $\\vec j\\times\\vec k=\\vec i$, $\\vec k\\times\\vec i=\\vec j$; при перестановке — знак минус. Раскрываем по линейности:\n$$\\vec a\\times\\vec b=x_ay_b\\vec k-x_az_b\\vec j-y_ax_b\\vec k+y_az_b\\vec i+z_ax_b\\vec j-z_ay_b\\vec i$$\n$$=(y_az_b-z_ay_b)\\vec i-(x_az_b-z_ax_b)\\vec j+(x_ay_b-y_ax_b)\\vec k=\\begin{vmatrix}\\vec i&\\vec j&\\vec k\\\\x_a&y_a&z_a\\\\x_b&y_b&z_b\\end{vmatrix}.\\ \\blacksquare$$",
     "refs": [
      "g05"
@@ -1661,7 +1661,7 @@ S30S.register({
     "label": "Б6",
     "block": "B",
     "n": 6,
-    "points": null,
+    "points": 2,
     "q": "Доказательство линейности смешанного произведения",
     "answer": "По определению $\\vec a\\vec b\\vec c=(\\vec a\\times\\vec b)\\cdot\\vec c$ и линейности векторного и скалярного произведений:\n1. $(\\vec a_1+\\vec a_2)\\vec b\\vec c=(\\vec a_1\\times\\vec b+\\vec a_2\\times\\vec b)\\cdot\\vec c=\\vec a_1\\vec b\\vec c+\\vec a_2\\vec b\\vec c$;\n2. $(\\lambda\\vec a)\\vec b\\vec c=(\\lambda(\\vec a\\times\\vec b))\\cdot\\vec c=\\lambda(\\vec a\\vec b\\vec c)$. $\\blacksquare$",
     "refs": [
@@ -1673,7 +1673,7 @@ S30S.register({
     "label": "Б7",
     "block": "B",
     "n": 7,
-    "points": null,
+    "points": 2,
     "q": "Вывод смешанного произведения в правом ОНБ",
     "answer": "$\\vec a\\times\\vec b=\\{y_az_b-z_ay_b,\\ -(x_az_b-z_ax_b),\\ x_ay_b-y_ax_b\\}$. Скалярно на $\\vec c$:\n$$(\\vec a\\times\\vec b)\\cdot\\vec c=x_c(y_az_b-z_ay_b)-y_c(x_az_b-z_ax_b)+z_c(x_ay_b-y_ax_b)=\\begin{vmatrix}x_a&y_a&z_a\\\\x_b&y_b&z_b\\\\x_c&y_c&z_c\\end{vmatrix}$$\n— разложение определителя по третьей строке. $\\blacksquare$",
     "refs": [
@@ -1685,8 +1685,8 @@ S30S.register({
     "label": "Б8",
     "block": "B",
     "n": 8,
-    "points": null,
-    "q": "Вывод формулы расстояния от точки до плоскости",
+    "points": 2,
+    "q": "Вывести формулу для расстояния от точки до плоскости, заданной общим уравнением",
     "answer": "Возьмём $M_1(x_1,y_1,z_1)\\in\\pi$: $D=-(Ax_1+By_1+Cz_1)$. Расстояние — модуль проекции $\\overrightarrow{M_1M_0}$ на нормаль:\n$$\\rho=\\frac{|\\overrightarrow{M_1M_0}\\cdot\\vec n|}{|\\vec n|},\\qquad \\overrightarrow{M_1M_0}\\cdot\\vec n=A(x_0-x_1)+B(y_0-y_1)+C(z_0-z_1)=Ax_0+By_0+Cz_0+D.$$\n$|\\vec n|=\\sqrt{A^2+B^2+C^2}$, откуда $\\rho=\\dfrac{|Ax_0+By_0+Cz_0+D|}{\\sqrt{A^2+B^2+C^2}}$. $\\blacksquare$",
     "refs": [
      "g07"
@@ -1698,8 +1698,8 @@ S30S.register({
     "label": "Б9",
     "block": "B",
     "n": 9,
-    "points": null,
-    "q": "Вывод расстояния от точки до прямой в пространстве",
+    "points": 2,
+    "q": "Вывести формулу для расстояния от точки до прямой в пространстве",
     "answer": "Построим параллелограмм на $\\vec s$ и $\\overrightarrow{M_0M_1}$. Площадь двумя способами: $S=|\\overrightarrow{M_0M_1}\\times\\vec s|$ и $S=|\\vec s|\\cdot h$, где $h$ — высота из $M_1$ на $L$, то есть $\\rho(M_1,L)$. Приравнивая:\n$$\\rho(M_1,L)=\\frac{|\\overrightarrow{M_0M_1}\\times\\vec s|}{|\\vec s|}.\\ \\blacksquare$$",
     "refs": [
      "g08"
@@ -1711,7 +1711,7 @@ S30S.register({
     "label": "Б10",
     "block": "B",
     "n": 10,
-    "points": null,
+    "points": 2,
     "q": "Вывод расстояния между скрещивающимися прямыми",
     "answer": "$\\vec s_1,\\vec s_2,\\overrightarrow{M_1M_2}$ некомпланарны — строим на них параллелепипед. Объём двумя способами: $V=|\\vec s_1\\vec s_2\\overrightarrow{M_1M_2}|$ и $V=S_{\\text{осн}}\\cdot h$, где $S_{\\text{осн}}=|\\vec s_1\\times\\vec s_2|$, а $h$ — расстояние между параллельными плоскостями, содержащими прямые, то есть $\\rho(L_1,L_2)$:\n$$\\rho(L_1,L_2)=\\frac{|\\vec s_1\\vec s_2\\overrightarrow{M_1M_2}|}{|\\vec s_1\\times\\vec s_2|}.\\ \\blacksquare$$",
     "refs": [
@@ -1786,42 +1786,766 @@ S30S.register({
    {
     "id": "A",
     "label": "А",
-    "title": "Определения и формулы"
+    "title": "Определения и формулы",
+    "points": "по 1 баллу"
    },
    {
     "id": "B",
     "label": "Б",
-    "title": "Доказательства и выводы"
+    "title": "Доказательства и выводы",
+    "points": "по 2 балла"
    },
    {
     "id": "C",
     "label": "В",
-    "title": "Аксиоматика"
+    "title": "Аксиоматика (в слитых билетах не встречалась)",
+    "points": ""
    }
   ],
   "taskTypes": [
    {
+    "id": "pos1",
+    "title": "Задача 1 (4 балла): деление отрезка, разложение вектора, точка пересечения прямых"
+   },
+   {
+    "id": "pos2",
+    "title": "Задача 2 (4 балла): площадь, объём, компланарность"
+   },
+   {
+    "id": "pos3",
+    "title": "Задача 3 (4 балла): плоскость"
+   },
+   {
+    "id": "pos4",
+    "title": "Задача 4 (4 балла): плоскость и прямая, расстояния, проекции"
+   },
+   {
+    "id": "pos5",
+    "title": "Задача 5 (4 балла): уравнения прямой, углы"
+   },
+   {
+    "id": "pos6",
+    "title": "Задача 6 (6 баллов): высоты через линейные комбинации, объём пирамиды"
+   },
+   {
+    "id": "pos7",
+    "title": "Задача 7 (6 баллов): симметрия, пересекающиеся прямые"
+   },
+   {
     "id": "plane",
-    "title": "1. Уравнение плоскости по условиям"
+    "title": "Задачник: Уравнение плоскости по условиям"
    },
    {
     "id": "perp",
-    "title": "2. Перпендикуляры, проекции, симметричные точки"
+    "title": "Задачник: Перпендикуляры, проекции, симметричные точки"
    },
    {
     "id": "dist",
-    "title": "3. Расстояния и углы"
+    "title": "Задачник: Расстояния и углы"
    },
    {
     "id": "bisect",
-    "title": "4. Биссекторные плоскости, острый и тупой угол"
+    "title": "Задачник: Биссекторные плоскости, острый и тупой угол"
    },
    {
     "id": "solid",
-    "title": "5. Многогранники, сферы, общий перпендикуляр"
+    "title": "Задачник: Многогранники, сферы, общий перпендикуляр"
    }
   ],
   "tasks": [
+   {
+    "id": "s3_1",
+    "type": "pos1",
+    "q": "В параллелограмме $ABCD$ точка $M$ делит диагональ $BD$ в отношении $1:3$, а точка $N$ делит сторону $CD$ пополам. Найти разложение вектора $\\overrightarrow{MN}$ по векторам $\\vec a=\\overrightarrow{AB}$ и $\\vec b=\\overrightarrow{AD}$.",
+    "hint": "Выразить положения точек через $\\vec a,\\vec b$, отложив их от $A$.",
+    "solution": "От точки $A$: $B=\\vec a$, $D=\\vec b$, $C=\\vec a+\\vec b$.\n$BM:MD=1:3\\Rightarrow\\overrightarrow{AM}=\\overrightarrow{AB}+\\frac14\\overrightarrow{BD}=\\vec a+\\frac14(\\vec b-\\vec a)=\\frac34\\vec a+\\frac14\\vec b$.\n$N$ — середина $CD$: $\\overrightarrow{AN}=\\frac12\\bigl((\\vec a+\\vec b)+\\vec b\\bigr)=\\frac12\\vec a+\\vec b$.\n$$\\overrightarrow{MN}=\\overrightarrow{AN}-\\overrightarrow{AM}=-\\frac14\\vec a+\\frac34\\vec b.$$\n**Ответ:** $\\overrightarrow{MN}=-\\frac14\\vec a+\\frac34\\vec b$.",
+    "refs": [
+     "g01",
+     "g03"
+    ],
+    "label": "3.1",
+    "ticket": 3,
+    "points": 4
+   },
+   {
+    "id": "s7_1",
+    "type": "pos1",
+    "q": "Разложить вектор $\\vec c=\\{-10;3\\}$ по векторам $\\vec a=\\{3;-1\\}$ и $\\vec b=\\{7;-2\\}$.",
+    "hint": "$\\vec c=\\alpha\\vec a+\\beta\\vec b$ — система из двух уравнений.",
+    "solution": "$$\\begin{cases}3\\alpha+7\\beta=-10\\\\-\\alpha-2\\beta=3\\end{cases}\\Rightarrow\\alpha=-3-2\\beta,\\ \\ -9-6\\beta+7\\beta=-10\\Rightarrow\\beta=-1,\\ \\alpha=-1.$$\nПроверка: $-\\{3,-1\\}-\\{7,-2\\}=\\{-10,3\\}$.\n**Ответ:** $\\vec c=-\\vec a-\\vec b$.",
+    "refs": [
+     "g01",
+     "g03"
+    ],
+    "label": "7.1",
+    "ticket": 7,
+    "points": 4
+   },
+   {
+    "id": "s9_1",
+    "type": "pos1",
+    "q": "Найти точку пересечения прямых $3x-5y-13=0$ и $2x+7y-81=0$.",
+    "hint": "Решить систему.",
+    "solution": "Умножим первое на $7$, второе на $5$ и сложим: $21x+10x=91+405$, $31x=496$, $x=16$; $\\ 5y=3\\cdot16-13=35$, $y=7$.\n**Ответ:** $(16;7)$.",
+    "refs": [
+     "g01",
+     "g03"
+    ],
+    "label": "9.1",
+    "ticket": 9,
+    "points": 4
+   },
+   {
+    "id": "s11_1",
+    "type": "pos1",
+    "q": "Даны точки $A(1;1;2)$ и $B(-4;6;12)$. Найти точку $C$, которая делит отрезок $AB$ в отношении $2:3$.",
+    "hint": "$AC:CB=\\lambda=\\frac23$: $C=A+\\frac{\\lambda}{1+\\lambda}\\overrightarrow{AB}$.",
+    "solution": "$C=A+\\frac25\\overrightarrow{AB}=(1;1;2)+\\frac25(-5;5;10)=(-1;3;6)$.\n(Через формулу: $x_C=\\frac{x_A+\\lambda x_B}{1+\\lambda}=\\frac{1+\\frac23(-4)}{\\frac53}=-1$ и т. д.)\n**Ответ:** $C(-1;3;6)$.",
+    "refs": [
+     "g01",
+     "g03"
+    ],
+    "label": "11.1",
+    "ticket": 11,
+    "points": 4
+   },
+   {
+    "id": "s16_1",
+    "type": "pos1",
+    "q": "Даны точки $A(-2;0;-3)$ и $B(6;8;9)$. Найти точку $C$, которая делит отрезок $AB$ в отношении $1:3$.",
+    "hint": "$C=A+\\frac14\\overrightarrow{AB}$.",
+    "solution": "$\\overrightarrow{AB}=(8;8;12)$, $C=(-2;0;-3)+(2;2;3)=(0;2;0)$.\n**Ответ:** $C(0;2;0)$.",
+    "refs": [
+     "g01",
+     "g03"
+    ],
+    "label": "16.1",
+    "ticket": 16,
+    "points": 4
+   },
+   {
+    "id": "s17_1",
+    "type": "pos1",
+    "q": "Найти точку пересечения прямых $-4x+y-3=0$ и $-5x+y-4=0$.",
+    "hint": "Вычесть уравнения.",
+    "solution": "Вычитаем: $x+1=0$, $x=-1$; $\\ y=3+4x=-1$.\n**Ответ:** $(-1;-1)$.",
+    "refs": [
+     "g01",
+     "g03"
+    ],
+    "label": "17.1",
+    "ticket": 17,
+    "points": 4
+   },
+   {
+    "id": "s18_1",
+    "type": "pos1",
+    "q": "В трапеции $ABCD$ основания $AD$ и $BC$ относятся как $2:1$, точка $M$ делит сторону $AB$ в отношении $2:3$, а точка $N$ — середина стороны $CD$. Найти разложение вектора $\\overrightarrow{MN}$ по векторам $\\vec a=\\overrightarrow{AD}$ и $\\vec b=\\overrightarrow{AB}$.",
+    "hint": "$\\overrightarrow{BC}=\\frac12\\vec a$ (основания параллельны и сонаправлены).",
+    "solution": "От $A$: $D=\\vec a$, $B=\\vec b$, $C=\\vec b+\\frac12\\vec a$; $\\ \\overrightarrow{AM}=\\frac25\\vec b$.\n$\\overrightarrow{AN}=\\frac12\\left(\\vec b+\\frac12\\vec a+\\vec a\\right)=\\frac34\\vec a+\\frac12\\vec b$.\n$$\\overrightarrow{MN}=\\frac34\\vec a+\\frac12\\vec b-\\frac25\\vec b=\\frac34\\vec a+\\frac1{10}\\vec b.$$\n**Ответ:** $\\overrightarrow{MN}=\\frac34\\vec a+\\frac1{10}\\vec b$.",
+    "refs": [
+     "g01",
+     "g03"
+    ],
+    "label": "18.1",
+    "ticket": 18,
+    "points": 4
+   },
+   {
+    "id": "s3_2",
+    "type": "pos2",
+    "q": "Объём параллелепипеда, построенного на векторах $\\vec a,\\vec b,\\vec c$, равен $3$. Найти объём параллелепипеда, построенного на векторах $-\\vec a+\\vec b+\\vec c$, $\\vec a-\\vec b+\\vec c$, $\\vec a+\\vec b-\\vec c$.",
+    "hint": "Смешанное произведение линейных комбинаций = определитель коэффициентов $\\times\\ \\vec a\\vec b\\vec c$.",
+    "solution": "$$\\begin{vmatrix}-1&1&1\\\\1&-1&1\\\\1&1&-1\\end{vmatrix}=-1(1-1)-1(-1-1)+1(1+1)=4.$$\n$V'=|4|\\cdot3=12$.\n**Ответ:** $12$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "3.2",
+    "ticket": 3,
+    "points": 4
+   },
+   {
+    "id": "s7_2",
+    "type": "pos2",
+    "q": "Найти площадь треугольника, вершинами которого служат точки $A(0;1;-1)$, $B(0;1;0)$, $C(0;2;-3)$.",
+    "hint": "$S=\\frac12|\\overrightarrow{AB}\\times\\overrightarrow{AC}|$.",
+    "solution": "$\\overrightarrow{AB}=\\{0,0,1\\}$, $\\overrightarrow{AC}=\\{0,1,-2\\}$, $\\overrightarrow{AB}\\times\\overrightarrow{AC}=\\{-1,0,0\\}$.\n**Ответ:** $S=\\frac12$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "7.2",
+    "ticket": 7,
+    "points": 4
+   },
+   {
+    "id": "s9_2",
+    "type": "pos2",
+    "q": "Найти площадь треугольника, вершинами которого служат точки $A(1;-2;3)$, $B(4;2;2)$, $C(3;0;2)$.",
+    "hint": "$S=\\frac12|\\overrightarrow{AB}\\times\\overrightarrow{AC}|$.",
+    "solution": "$\\overrightarrow{AB}=\\{3,4,-1\\}$, $\\overrightarrow{AC}=\\{2,2,-1\\}$:\n$$\\overrightarrow{AB}\\times\\overrightarrow{AC}=\\{-4+2,\\ -(-3+2),\\ 6-8\\}=\\{-2,1,-2\\},\\quad|\\cdot|=3.$$\n**Ответ:** $S=\\frac32$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "9.2",
+    "ticket": 9,
+    "points": 4
+   },
+   {
+    "id": "s11_2",
+    "type": "pos2",
+    "q": "Найти все значения $\\lambda$, при которых точки $A(2;1;3)$, $B(3;-2;2)$, $C(2;2;3)$, $D(1;0;\\lambda)$ лежат в одной плоскости.",
+    "hint": "Компланарность: $\\overrightarrow{AB}\\,\\overrightarrow{AC}\\,\\overrightarrow{AD}=0$.",
+    "solution": "$$\\begin{vmatrix}1&-3&-1\\\\0&1&0\\\\-1&-1&\\lambda-3\\end{vmatrix}=1\\cdot(\\lambda-3)-0+(-1)\\cdot(0+1)=\\lambda-4=0.$$\n**Ответ:** $\\lambda=4$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "11.2",
+    "ticket": 11,
+    "points": 4
+   },
+   {
+    "id": "s16_2",
+    "type": "pos2",
+    "q": "Найти объём тетраэдра с вершинами $A(2;2;3)$, $B(2;-1;3)$, $C(3;1;2)$, $D(2;3;1)$.",
+    "hint": "$V=\\frac16|\\overrightarrow{AB}\\,\\overrightarrow{AC}\\,\\overrightarrow{AD}|$.",
+    "solution": "$$\\begin{vmatrix}0&-3&0\\\\1&-1&-1\\\\0&1&-2\\end{vmatrix}=3\\cdot(1\\cdot(-2)-(-1)\\cdot0)=-6.$$\n**Ответ:** $V=\\frac{6}{6}=1$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "16.2",
+    "ticket": 16,
+    "points": 4
+   },
+   {
+    "id": "s17_2",
+    "type": "pos2",
+    "q": "Найти площадь треугольника, вершинами которого служат точки $A(0;0;7)$, $B(2;3;5)$, $C(6;4;3)$.",
+    "hint": "$S=\\frac12|\\overrightarrow{AB}\\times\\overrightarrow{AC}|$.",
+    "solution": "$\\overrightarrow{AB}=\\{2,3,-2\\}$, $\\overrightarrow{AC}=\\{6,4,-4\\}$:\n$$\\overrightarrow{AB}\\times\\overrightarrow{AC}=\\{-12+8,\\ -(-8+12),\\ 8-18\\}=\\{-4,-4,-10\\},\\quad|\\cdot|=\\sqrt{132}=2\\sqrt{33}.$$\n**Ответ:** $S=\\sqrt{33}$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "17.2",
+    "ticket": 17,
+    "points": 4
+   },
+   {
+    "id": "s18_2",
+    "type": "pos2",
+    "q": "Найти все значения $\\lambda$, при которых точки $A(1;-3;4)$, $B(3;1;-2)$, $C(-8;5;5)$, $D(-1;-2;\\lambda)$ лежат в одной плоскости.",
+    "hint": "$\\overrightarrow{AB}\\,\\overrightarrow{AC}\\,\\overrightarrow{AD}=0$.",
+    "solution": "$\\overrightarrow{AB}=\\{2,4,-6\\}$, $\\overrightarrow{AC}=\\{-9,8,1\\}$, $\\overrightarrow{AD}=\\{-2,1,\\lambda-4\\}$:\n$$2\\bigl(8(\\lambda-4)-1\\bigr)-4\\bigl(-9(\\lambda-4)+2\\bigr)-6(-9+16)=52\\lambda-260=0.$$\n**Ответ:** $\\lambda=5$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "18.2",
+    "ticket": 18,
+    "points": 4
+   },
+   {
+    "id": "s3_3",
+    "type": "pos3",
+    "q": "Найти точки пересечения плоскости $2x-5y-z+10=0$ с осями координат и задать эту плоскость уравнением «в отрезках».",
+    "hint": "Перенести свободный член вправо и разделить на него.",
+    "solution": "$2x-5y-z=-10\\ \\Big|:(-10)$: $\\ \\dfrac x{-5}+\\dfrac y2+\\dfrac z{10}=1$.\n**Ответ:** $(-5;0;0)$, $(0;2;0)$, $(0;0;10)$; $\\ \\dfrac x{-5}+\\dfrac y2+\\dfrac z{10}=1$.",
+    "refs": [
+     "g07",
+     "g97"
+    ],
+    "label": "3.3",
+    "ticket": 3,
+    "points": 4
+   },
+   {
+    "id": "s7_3",
+    "type": "pos3",
+    "q": "Составить общее уравнение плоскости, которая проходит через точку $M(2;0;-3)$ и перпендикулярна прямой $\\dfrac x2=\\dfrac{y+2}{-1}=\\dfrac{z-3}{-2}$.",
+    "hint": "$\\vec n=\\vec s$.",
+    "solution": "$2(x-2)-(y-0)-2(z+3)=0$.\n**Ответ:** $2x-y-2z-10=0$.",
+    "refs": [
+     "g07",
+     "g97"
+    ],
+    "label": "7.3",
+    "ticket": 7,
+    "points": 4
+   },
+   {
+    "id": "s9_3",
+    "type": "pos3",
+    "q": "Составить общее уравнение плоскости, которая проходит через точку $M(3;2;1)$ параллельно плоскости $x+y-z+1=0$.",
+    "hint": "Та же нормаль, новый свободный член.",
+    "solution": "$x+y-z+D=0$, $3+2-1+D=0\\Rightarrow D=-4$.\n**Ответ:** $x+y-z-4=0$.",
+    "refs": [
+     "g07",
+     "g97"
+    ],
+    "label": "9.3",
+    "ticket": 9,
+    "points": 4
+   },
+   {
+    "id": "s11_3",
+    "type": "pos3",
+    "q": "Найти расстояние от точки $M(-2;-3;3)$ до плоскости $9x-4y+z+17=0$.",
+    "hint": "Формула расстояния от точки до плоскости.",
+    "solution": "$\\rho=\\dfrac{|9(-2)-4(-3)+3+17|}{\\sqrt{81+16+1}}=\\dfrac{14}{\\sqrt{98}}=\\dfrac{14}{7\\sqrt2}$.\n**Ответ:** $\\sqrt2$.",
+    "refs": [
+     "g07",
+     "g97"
+    ],
+    "label": "11.3",
+    "ticket": 11,
+    "points": 4
+   },
+   {
+    "id": "s16_3",
+    "type": "pos3",
+    "q": "Составить общее уравнение плоскости, проходящей через точки $A(1;1;2)$, $B(7;-2;2)$, $C(-1;5;6)$.",
+    "hint": "$\\vec n=\\overrightarrow{AB}\\times\\overrightarrow{AC}$.",
+    "solution": "$\\overrightarrow{AB}=\\{6,-3,0\\}$, $\\overrightarrow{AC}=\\{-2,4,4\\}$:\n$\\vec n=\\{-12-0,\\ -(24-0),\\ 24-6\\}=\\{-12,-24,18\\}\\parallel\\{2,4,-3\\}$.\n$2(x-1)+4(y-1)-3(z-2)=0$. Проверка $B$: $14-8-6=0$, $C$: $-2+20-18=0$.\n**Ответ:** $2x+4y-3z=0$.",
+    "refs": [
+     "g07",
+     "g97"
+    ],
+    "label": "16.3",
+    "ticket": 16,
+    "points": 4
+   },
+   {
+    "id": "s17_3",
+    "type": "pos3",
+    "q": "Составить общее уравнение плоскости, которая проходит через точку $M(3;-3;4)$ параллельно плоскости $-3x-2y+2z-1=0$.",
+    "hint": "Та же нормаль.",
+    "solution": "$-3x-2y+2z+D=0$: $-9+6+8+D=0\\Rightarrow D=-5$.\n**Ответ:** $3x+2y-2z+5=0$.",
+    "refs": [
+     "g07",
+     "g97"
+    ],
+    "label": "17.3",
+    "ticket": 17,
+    "points": 4
+   },
+   {
+    "id": "s18_3",
+    "type": "pos3",
+    "q": "Составить общее уравнение плоскости, которая проходит через точку $M(1;2;3)$ параллельно плоскости $x-y-z+1=0$.",
+    "hint": "Та же нормаль.",
+    "solution": "$x-y-z+D=0$: $1-2-3+D=0\\Rightarrow D=4$.\n**Ответ:** $x-y-z+4=0$.",
+    "refs": [
+     "g07",
+     "g97"
+    ],
+    "label": "18.3",
+    "ticket": 18,
+    "points": 4
+   },
+   {
+    "id": "s3_4",
+    "type": "pos4",
+    "q": "Найти проекцию $Q$ точки $P(5;1;2)$ на плоскость $2x-2y-z=-3$.",
+    "hint": "$Q=P-\\dfrac{f(P)}{|\\vec n|^2}\\vec n$.",
+    "solution": "$f=2x-2y-z+3$, $f(P)=10-2-2+3=9$, $|\\vec n|^2=9$: $Q=(5;1;2)-1\\cdot(2;-2;-1)$.\nПроверка: $6-6-3+3=0$.\n**Ответ:** $Q(3;3;3)$.",
+    "refs": [
+     "g07",
+     "g08",
+     "g97"
+    ],
+    "label": "3.4",
+    "ticket": 3,
+    "points": 4
+   },
+   {
+    "id": "s7_4",
+    "type": "pos4",
+    "q": "Составить общее уравнение плоскости, которая проходит через прямую $\\dfrac x3=\\dfrac y3=\\dfrac{z-1}2$ и перпендикулярна плоскости $2x+2y+3z=7$.",
+    "hint": "$\\vec n=\\vec s\\times\\vec n_1$, точка — с прямой.",
+    "solution": "$\\vec s=\\{3,3,2\\}$, $\\vec n_1=\\{2,2,3\\}$: $\\vec s\\times\\vec n_1=\\{9-4,\\ -(9-4),\\ 6-6\\}=\\{5,-5,0\\}\\parallel\\{1,-1,0\\}$.\nЧерез $M_0(0;0;1)$: $x-y=0$.\n**Ответ:** $x-y=0$.",
+    "refs": [
+     "g07",
+     "g08",
+     "g97"
+    ],
+    "label": "7.4",
+    "ticket": 7,
+    "points": 4
+   },
+   {
+    "id": "s9_4",
+    "type": "pos4",
+    "q": "Найти расстояние от точки $M(9;0;5)$ до прямой $\\dfrac{x-4}3=\\dfrac{y+5}{-1}=\\dfrac{z+4}0$.",
+    "hint": "$\\rho=\\frac{|\\overrightarrow{M_0M}\\times\\vec s|}{|\\vec s|}$. На фото последняя дробь читается нечётко — решено для $\\frac{z+4}0$.",
+    "solution": "$M_0(4;-5;-4)$, $\\vec s=\\{3,-1,0\\}$, $\\overrightarrow{M_0M}=\\{5,5,9\\}$.\n$\\overrightarrow{M_0M}\\times\\vec s=\\{0+9,\\ -(0-27),\\ -5-15\\}=\\{9,27,-20\\}$, $|\\cdot|=\\sqrt{1210}=11\\sqrt{10}$; $|\\vec s|=\\sqrt{10}$.\n**Ответ:** $\\rho=11$.",
+    "refs": [
+     "g07",
+     "g08",
+     "g97"
+    ],
+    "label": "9.4",
+    "ticket": 9,
+    "points": 4
+   },
+   {
+    "id": "s11_4",
+    "type": "pos4",
+    "q": "Для прямой $x-y-z-2=0,\\ x-3y+3z-2=0$ найти параметрические уравнения.",
+    "hint": "$\\vec s=\\vec n_1\\times\\vec n_2$; точка — при $z=0$.",
+    "solution": "$\\vec s=\\{1,-1,-1\\}\\times\\{1,-3,3\\}=\\{-3-3,\\ -(3+1),\\ -3+1\\}=\\{-6,-4,-2\\}\\parallel\\{3,2,1\\}$.\n$z=0$: $x-y=2$, $x-3y=2\\Rightarrow y=0$, $x=2$.\n**Ответ:** $x=2+3t,\\ y=2t,\\ z=t$.",
+    "refs": [
+     "g07",
+     "g08",
+     "g97"
+    ],
+    "label": "11.4",
+    "ticket": 11,
+    "points": 4
+   },
+   {
+    "id": "s16_4",
+    "type": "pos4",
+    "q": "Найти точку пересечения плоскости $x+y+z=0$ с прямой, проходящей через точки $A(-6;-9;-1)$ и $B(8;5;3)$.",
+    "hint": "Параметрически прямую $AB$ — в уравнение плоскости.",
+    "solution": "$\\overrightarrow{AB}=\\{14,14,4\\}\\parallel\\{7,7,2\\}$: $(-6+7t;\\ -9+7t;\\ -1+2t)$.\n$-16+16t=0\\Rightarrow t=1$.\n**Ответ:** $(1;-2;1)$.",
+    "refs": [
+     "g07",
+     "g08",
+     "g97"
+    ],
+    "label": "16.4",
+    "ticket": 16,
+    "points": 4
+   },
+   {
+    "id": "s17_4",
+    "type": "pos4",
+    "q": "Составить общее уравнение плоскости, которая проходит через прямую $\\dfrac{x-1}1=\\dfrac{y-2}1=\\dfrac{z-3}2$ и перпендикулярна плоскости $2x+y-z-1=0$.",
+    "hint": "$\\vec n=\\vec s\\times\\vec n_1$.",
+    "solution": "$\\{1,1,2\\}\\times\\{2,1,-1\\}=\\{-1-2,\\ -(-1-4),\\ 1-2\\}=\\{-3,5,-1\\}$.\n$-3(x-1)+5(y-2)-(z-3)=0$.\n**Ответ:** $3x-5y+z+4=0$.",
+    "refs": [
+     "g07",
+     "g08",
+     "g97"
+    ],
+    "label": "17.4",
+    "ticket": 17,
+    "points": 4
+   },
+   {
+    "id": "s18_4",
+    "type": "pos4",
+    "q": "Найти расстояние от точки $M(5;-1;-2)$ до прямой $\\dfrac{x-2}1=\\dfrac{y+1}0=\\dfrac{z-1}0$.",
+    "hint": "Прямая: $y=-1$, $z=1$, параллельна $Ox$.",
+    "solution": "Расстояние до прямой, параллельной $Ox$, — расстояние в плоскости $yz$: $\\sqrt{(-1+1)^2+(-2-1)^2}=3$.\n(Формулой: $\\overrightarrow{M_0M}=\\{3,0,-3\\}$, $\\times\\{1,0,0\\}=\\{0,-3,0\\}$, $\\rho=\\frac31$.)\n**Ответ:** $3$.",
+    "refs": [
+     "g07",
+     "g08",
+     "g97"
+    ],
+    "label": "18.4",
+    "ticket": 18,
+    "points": 4
+   },
+   {
+    "id": "s3_5",
+    "type": "pos5",
+    "q": "Составить канонические уравнения прямой, проходящей через точку $M(1;0;0)$ параллельно оси $Oz$.",
+    "hint": "$\\vec s=\\vec k=\\{0,0,1\\}$.",
+    "solution": "**Ответ:** $\\dfrac{x-1}0=\\dfrac y0=\\dfrac z1$ (то есть $x=1$, $y=0$).",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "3.5",
+    "ticket": 3,
+    "points": 4
+   },
+   {
+    "id": "s7_5",
+    "type": "pos5",
+    "q": "Составить параметрические уравнения прямой, проходящей через точку $M(0;1;0)$ перпендикулярно плоскости $x+z=0$.",
+    "hint": "$\\vec s=\\vec n=\\{1,0,1\\}$.",
+    "solution": "**Ответ:** $x=t,\\ y=1,\\ z=t$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "7.5",
+    "ticket": 7,
+    "points": 4
+   },
+   {
+    "id": "s9_5",
+    "type": "pos5",
+    "q": "Составить параметрические уравнения прямой, проходящей через точку $M(3;3;3)$ перпендикулярно плоскости $z=1$.",
+    "hint": "$\\vec s=\\vec n=\\{0,0,1\\}$.",
+    "solution": "**Ответ:** $x=3,\\ y=3,\\ z=3+t$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "9.5",
+    "ticket": 9,
+    "points": 4
+   },
+   {
+    "id": "s11_5",
+    "type": "pos5",
+    "q": "Найти угол между прямыми $x=2+3t,\\ y=t,\\ z=-t$ и $x=2+t,\\ y=3t,\\ z=t$.",
+    "hint": "$\\cos\\varphi=\\frac{|\\vec s_1\\cdot\\vec s_2|}{|\\vec s_1||\\vec s_2|}$.",
+    "solution": "$\\vec s_1=\\{3,1,-1\\}$, $\\vec s_2=\\{1,3,1\\}$: $\\vec s_1\\cdot\\vec s_2=5$, $|\\vec s_1|=|\\vec s_2|=\\sqrt{11}$.\n**Ответ:** $\\varphi=\\arccos\\frac5{11}$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "11.5",
+    "ticket": 11,
+    "points": 4
+   },
+   {
+    "id": "s16_5",
+    "type": "pos5",
+    "q": "Составить параметрические уравнения прямой, проходящей через точку $M(2;1;-1)$ перпендикулярно плоскости $2x+y+z-5=0$.",
+    "hint": "$\\vec s=\\vec n$.",
+    "solution": "**Ответ:** $x=2+2t,\\ y=1+t,\\ z=-1+t$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "16.5",
+    "ticket": 16,
+    "points": 4
+   },
+   {
+    "id": "s17_5",
+    "type": "pos5",
+    "q": "Составить канонические уравнения прямой, проходящей через точку $M(3;0;-1)$ параллельно оси $Oy$.",
+    "hint": "$\\vec s=\\vec j$.",
+    "solution": "**Ответ:** $\\dfrac{x-3}0=\\dfrac y1=\\dfrac{z+1}0$ (то есть $x=3$, $z=-1$).",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "17.5",
+    "ticket": 17,
+    "points": 4
+   },
+   {
+    "id": "s18_5",
+    "type": "pos5",
+    "q": "Найти угол между плоскостями $x-y+12=0$ и $-2x+2z-1=0$.",
+    "hint": "Угол между нормалями, по модулю.",
+    "solution": "$\\vec n_1=\\{1,-1,0\\}$, $\\vec n_2=\\{-2,0,2\\}$: $|\\vec n_1\\cdot\\vec n_2|=2$, $|\\vec n_1|\\,|\\vec n_2|=\\sqrt2\\cdot2\\sqrt2=4$, $\\cos\\varphi=\\frac12$.\n**Ответ:** $\\varphi=\\frac\\pi3$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "18.5",
+    "ticket": 18,
+    "points": 4
+   },
+   {
+    "id": "s3_6",
+    "type": "pos6",
+    "q": "Объём параллелепипеда, построенного на векторах $\\vec a,\\vec b,\\vec c$, равен $V=6$. Площадь параллелограмма, построенного на векторах $\\vec a,\\vec b$, равна $S=2$. Найти высоту параллелепипеда, построенного на векторах $\\vec a+\\vec b$, $4\\vec a-2\\vec b$, $-\\vec a-\\vec b+3\\vec c$, которая опущена из конца третьего вектора на грань, построенную на первых двух.",
+    "hint": "$h=\\frac{V'}{S'}$; $V'$ — через определитель коэффициентов, $S'$ — через $\\vec a\\times\\vec b$.",
+    "solution": "$V'=\\left|\\begin{vmatrix}1&1&0\\\\4&-2&0\\\\-1&-1&3\\end{vmatrix}\\right|\\cdot V=|3\\cdot(-2-4)|\\cdot6=108$.\n$(\\vec a+\\vec b)\\times(4\\vec a-2\\vec b)=-2\\,\\vec a\\times\\vec b+4\\,\\vec b\\times\\vec a=-6\\,\\vec a\\times\\vec b$, $S'=6\\cdot2=12$.\n**Ответ:** $h=\\frac{108}{12}=9$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "3.6",
+    "ticket": 3,
+    "points": 6
+   },
+   {
+    "id": "s7_6",
+    "type": "pos6",
+    "q": "Объём параллелепипеда, построенного на векторах $\\vec a,\\vec b,\\vec c$, равен $5$. Площадь параллелограмма, построенного на векторах $\\vec a,\\vec b$, равна $10$. Найти высоту параллелепипеда, построенного на векторах $\\vec a+4\\vec b$, $2\\vec a+3\\vec b$, $\\vec a+\\vec b-2\\vec c$, опущенную из конца третьего вектора на грань, построенную на первых двух.",
+    "hint": "$h=\\frac{V'}{S'}$.",
+    "solution": "$V'=\\left|\\begin{vmatrix}1&4&0\\\\2&3&0\\\\1&1&-2\\end{vmatrix}\\right|\\cdot5=|-2(3-8)|\\cdot5=50$.\n$(\\vec a+4\\vec b)\\times(2\\vec a+3\\vec b)=(3-8)\\,\\vec a\\times\\vec b$, $S'=5\\cdot10=50$.\n**Ответ:** $h=1$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "7.6",
+    "ticket": 7,
+    "points": 6
+   },
+   {
+    "id": "s9_6",
+    "type": "pos6",
+    "q": "Параллелограмм построен на векторах $\\vec m=13\\vec a-2\\vec b$ и $\\vec n=-3\\vec a+\\vec b$, где $|\\vec a|=|\\vec b|=1$ и угол между $\\vec a$ и $\\vec b$ равен $60^\\circ$. Найти высоту параллелограмма, опущенную из конца вектора $\\vec n$ на вектор $\\vec m$.",
+    "hint": "$h=\\frac{S}{|\\vec m|}=\\frac{|\\vec m\\times\\vec n|}{|\\vec m|}$.",
+    "solution": "$\\vec m\\times\\vec n=13\\,\\vec a\\times\\vec b+6\\,\\vec b\\times\\vec a=7\\,\\vec a\\times\\vec b$, $S=7\\cdot1\\cdot1\\cdot\\sin60^\\circ=\\frac{7\\sqrt3}2$.\n$\\vec a\\cdot\\vec b=\\frac12$: $|\\vec m|^2=169-52\\cdot\\frac12+4=147$, $|\\vec m|=7\\sqrt3$.\n**Ответ:** $h=\\frac12$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "9.6",
+    "ticket": 9,
+    "points": 6
+   },
+   {
+    "id": "s11_6",
+    "type": "pos6",
+    "q": "Объём параллелепипеда, построенного на векторах $\\vec a,\\vec b,\\vec c$, равен $V=4$. Площадь параллелограмма, построенного на векторах $\\vec a,\\vec b$, равна $S=2$. Найти высоту параллелепипеда, построенного на векторах $\\vec a+3\\vec b$, $\\vec a-4\\vec b$, $2\\vec a-3\\vec b+4\\vec c$, которая опущена из конца третьего вектора на грань, построенную на первых двух.",
+    "hint": "$h=\\frac{V'}{S'}$.",
+    "solution": "$V'=\\left|\\begin{vmatrix}1&3&0\\\\1&-4&0\\\\2&-3&4\\end{vmatrix}\\right|\\cdot4=|4(-4-3)|\\cdot4=112$.\n$(\\vec a+3\\vec b)\\times(\\vec a-4\\vec b)=(-4-3)\\,\\vec a\\times\\vec b$, $S'=7\\cdot2=14$.\n**Ответ:** $h=8$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "11.6",
+    "ticket": 11,
+    "points": 6
+   },
+   {
+    "id": "s16_6",
+    "type": "pos6",
+    "q": "Вершинами тетраэдра служат точки $A(-1;2;2)$, $B(0;1;2)$, $C(-1;4;2)$, $D(0;1;0)$. Найти высоту тетраэдра, опущенную из вершины $D$ на грань $ABC$.",
+    "hint": "$h=\\frac{|\\overrightarrow{AB}\\,\\overrightarrow{AC}\\,\\overrightarrow{AD}|}{|\\overrightarrow{AB}\\times\\overrightarrow{AC}|}$ — или заметить, что грань лежит в плоскости $z=2$.",
+    "solution": "У $A,B,C$ одинаковая $z=2$ — грань в плоскости $z=2$; расстояние от $D(0;1;0)$ до неё $|0-2|=2$.\n(Формулой: $\\overrightarrow{AB}=\\{1,-1,0\\}$, $\\overrightarrow{AC}=\\{0,2,0\\}$, $\\overrightarrow{AD}=\\{1,-1,-2\\}$; смешанное $=-4$, $|\\overrightarrow{AB}\\times\\overrightarrow{AC}|=2$, $h=2$.)\n**Ответ:** $h=2$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "16.6",
+    "ticket": 16,
+    "points": 6
+   },
+   {
+    "id": "s17_6",
+    "type": "pos6",
+    "q": "Треугольная пирамида $ABCD$ имеет объём $9$, вершины $A(2;-1;-1)$, $B(-1;2;-1)$, $C(-1;-1;2)$, а о вершине $D$ известно, что она лежит на положительной части оси $OX$. Найти координаты вершины $D$.",
+    "hint": "$D(d;0;0)$, $d>0$; $V=\\frac16|\\overrightarrow{AB}\\,\\overrightarrow{AC}\\,\\overrightarrow{AD}|$.",
+    "solution": "$\\overrightarrow{AB}=\\{-3,3,0\\}$, $\\overrightarrow{AC}=\\{-3,0,3\\}$, $\\overrightarrow{AD}=\\{d-2,1,1\\}$:\n$$\\begin{vmatrix}-3&3&0\\\\-3&0&3\\\\d-2&1&1\\end{vmatrix}=-3(0-3)-3(-3-3(d-2))=9d.$$\n$\\frac{|9d|}6=9\\Rightarrow|d|=6$, $d>0$.\n**Ответ:** $D(6;0;0)$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "17.6",
+    "ticket": 17,
+    "points": 6
+   },
+   {
+    "id": "s18_6",
+    "type": "pos6",
+    "q": "Параллелограмм построен на векторах $\\vec m=15\\vec a+11\\vec b$ и $\\vec n=\\vec a+2\\vec b$, где $|\\vec a|=1$, $|\\vec b|=\\sqrt3$ и угол между $\\vec a$ и $\\vec b$ равен $30^\\circ$. Найти высоту параллелограмма, опущенную из конца вектора $\\vec n$ на вектор $\\vec m$.",
+    "hint": "$h=\\frac{|\\vec m\\times\\vec n|}{|\\vec m|}$.",
+    "solution": "$\\vec m\\times\\vec n=(30-11)\\,\\vec a\\times\\vec b$, $S=19\\cdot1\\cdot\\sqrt3\\cdot\\frac12=\\frac{19\\sqrt3}2$.\n$\\vec a\\cdot\\vec b=\\sqrt3\\cdot\\frac{\\sqrt3}2=\\frac32$: $|\\vec m|^2=225+330\\cdot\\frac32+121\\cdot3=1083$, $|\\vec m|=19\\sqrt3$.\n**Ответ:** $h=\\frac12$.",
+    "refs": [
+     "g05",
+     "g06"
+    ],
+    "label": "18.6",
+    "ticket": 18,
+    "points": 6
+   },
+   {
+    "id": "s3_7",
+    "type": "pos7",
+    "q": "Найти точку $Q$, симметричную точке $P(-4;1;2)$ относительно прямой $\\dfrac x1=\\dfrac{y+1}{-3}=\\dfrac{z-3}0$.",
+    "hint": "Основание перпендикуляра $H$, затем $Q=2H-P$.",
+    "solution": "$M_0(0;-1;3)$, $\\vec s=\\{1,-3,0\\}$, $\\overrightarrow{M_0P}=\\{-4,2,-1\\}$; $t^*=\\frac{-4-6+0}{10}=-1$, $H=(-1;2;3)$.\n**Ответ:** $Q(2;3;4)$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "3.7",
+    "ticket": 3,
+    "points": 6
+   },
+   {
+    "id": "s7_7",
+    "type": "pos7",
+    "q": "Составить канонические уравнения прямой, симметричной прямой $x=2+t,\\ y=-1,\\ z=3-3t$ относительно плоскости $x+z-3=0$.",
+    "hint": "Точка пересечения прямой с плоскостью остаётся на месте; вторую точку отразить.",
+    "solution": "Пересечение: $2+t+3-3t-3=0\\Rightarrow t=1$, $K(3;-1;0)$.\nТочка прямой $P(2;-1;3)$ ($t=0$): $f(P)=2$, $|\\vec n|^2=2$, $P'=P-2\\cdot\\frac22\\{1,0,1\\}=(0;-1;1)$.\nНаправление $\\overrightarrow{KP'}=\\{-3,0,1\\}$.\n**Ответ:** $\\dfrac{x-3}{-3}=\\dfrac{y+1}0=\\dfrac z1$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "7.7",
+    "ticket": 7,
+    "points": 6
+   },
+   {
+    "id": "s9_7",
+    "type": "pos7",
+    "q": "Показать, что прямые $\\dfrac{x-1}0=\\dfrac{y-1}1=\\dfrac{z-1}1$ и $\\dfrac x{-1}=\\dfrac{y-3}3=\\dfrac z0$ пересекаются. Найти точку пересечения и составить уравнение плоскости, которой они принадлежат.",
+    "hint": "Параметрически приравнять; нормаль плоскости $\\vec s_1\\times\\vec s_2$.",
+    "solution": "$L_1$: $(1;\\ 1+t;\\ 1+t)$, $L_2$: $(-u;\\ 3+3u;\\ 0)$. Из $z$: $t=-1$, из $x$: $u=-1$; $y$: $0=0$ — совпало, прямые пересекаются в $(1;0;0)$ (и не параллельны).\n$\\vec s_1\\times\\vec s_2=\\{0,1,1\\}\\times\\{-1,3,0\\}=\\{-3,-1,1\\}$; $-3(x-1)-y+z=0$.\n**Ответ:** точка $(1;0;0)$, плоскость $3x+y-z-3=0$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "9.7",
+    "ticket": 9,
+    "points": 6
+   },
+   {
+    "id": "s11_7",
+    "type": "pos7",
+    "q": "Показать, что прямые $\\dfrac{x-4}1=\\dfrac y{-3}=\\dfrac{z-10}7$ и $\\dfrac{x+1}{-2}=\\dfrac{y-13}5=\\dfrac{z+19}{-11}$ пересекаются. Найти точку пересечения и составить уравнение плоскости, которой они принадлежат.",
+    "hint": "Параметрически приравнять.",
+    "solution": "$4+t=-1-2u$, $-3t=13+5u$, $10+7t=-19-11u$: из первых двух $t=-1$, $u=-2$; третье: $3=3$ — пересекаются в $(3;3;3)$.\n$\\vec s_1\\times\\vec s_2=\\{1,-3,7\\}\\times\\{-2,5,-11\\}=\\{-2,-3,-1\\}$; $2(x-3)+3(y-3)+(z-3)=0$.\n**Ответ:** точка $(3;3;3)$, плоскость $2x+3y+z-18=0$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "11.7",
+    "ticket": 11,
+    "points": 6
+   },
+   {
+    "id": "s16_7",
+    "type": "pos7",
+    "q": "Составить параметрические уравнения прямой, проходящей через точку $(-2;1;4)$ и пересекающей прямые $\\dfrac{x-1}1=\\dfrac{y-1}0=\\dfrac{z-1}1$ и $\\dfrac x1=\\dfrac{y-1}{-1}=\\dfrac{z-2}2$.",
+    "hint": "Плоскость через точку $P$ и первую прямую; её пересечение со второй прямой — точка $Q$; ответ — прямая $PQ$.",
+    "solution": "$P(-2;1;4)$, $L_1$: $M_1(1;1;1)$, $\\vec s_1=\\{1,0,1\\}$. Нормаль плоскости $(P,L_1)$: $\\vec s_1\\times\\overrightarrow{PM_1}=\\{1,0,1\\}\\times\\{3,0,-3\\}=\\{0,6,0\\}$ — плоскость $y=1$.\n$L_2$: $(u;\\ 1-u;\\ 2+2u)$, $y=1\\Rightarrow u=0$, $Q(0;1;2)$.\n$\\overrightarrow{PQ}=\\{2,0,-2\\}\\parallel\\{1,0,-1\\}$; эта прямая пересекает $L_1$ в $M_1(1;1;1)$ и не параллельна $L_1$.\n**Ответ:** $x=-2+t,\\ y=1,\\ z=4-t$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "16.7",
+    "ticket": 16,
+    "points": 6
+   },
+   {
+    "id": "s17_7",
+    "type": "pos7",
+    "q": "Составить параметрические уравнения прямой, проходящей через точку $(4;2;-3)$ и пересекающей прямые $\\dfrac{x-2}1=\\dfrac y{-1}=\\dfrac{z-1}0$ и $\\dfrac{x-1}{-1}=\\dfrac{y+1}{-1}=\\dfrac{z-3}1$.",
+    "hint": "Плоскость через точку и первую прямую ∩ вторая прямая.",
+    "solution": "$P(4;2;-3)$, $M_1(2;0;1)$, $\\vec s_1=\\{1,-1,0\\}$, $\\overrightarrow{PM_1}=\\{-2,-2,4\\}$.\nНормаль: $\\vec s_1\\times\\overrightarrow{PM_1}=\\{-4-0,\\ -(4-0),\\ -2-2\\}=\\{-4,-4,-4\\}\\parallel\\{1,1,1\\}$ — плоскость $x+y+z-3=0$.\n$L_2$: $(1-u;\\ -1-u;\\ 3+u)$: $3-u=3\\Rightarrow u=0$, $Q(1;-1;3)$.\n$\\overrightarrow{PQ}=\\{-3,-3,6\\}\\parallel\\{1,1,-2\\}$; прямая проходит и через $M_1(2;0;1)$ на $L_1$.\n**Ответ:** $x=4+t,\\ y=2+t,\\ z=-3-2t$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "17.7",
+    "ticket": 17,
+    "points": 6
+   },
+   {
+    "id": "s18_7",
+    "type": "pos7",
+    "q": "Найти точку $Q$, симметричную точке $P(3;2;-1)$ относительно прямой $\\dfrac{x-2}1=\\dfrac{y+1}{-1}=\\dfrac{z-3}1$.",
+    "hint": "$H=M_0+t^*\\vec s$, $Q=2H-P$.",
+    "solution": "$M_0(2;-1;3)$, $\\vec s=\\{1,-1,1\\}$, $\\overrightarrow{M_0P}=\\{1,3,-4\\}$; $t^*=\\frac{1-3-4}3=-2$, $H=(0;1;1)$.\n**Ответ:** $Q(-3;0;3)$.",
+    "refs": [
+     "g08",
+     "g97"
+    ],
+    "label": "18.7",
+    "ticket": 18,
+    "points": 6
+   },
    {
     "id": "416",
     "type": "plane",
@@ -2407,192 +3131,192 @@ S30S.register({
   "rkq": {
    "header": [
     "Аналитическая геометрия, 1-й семестр,",
-    "по конспекту «Подготовка к РК №1» и задачам 416–466",
+    "по конспекту «Подготовка к РК №1», задачнику 416–466 и слитым билетам",
     "Рубежный контроль 1",
     "Вопросы и задачи для подготовки"
    ],
-   "note": "Структура взята из присланного конспекта и задачника: официального списка вопросов кафедры в материалах нет. Кликабельны {link} пунктов из {total}.",
+   "note": "Вопросы — по присланному конспекту, баллы и формулировки сверены со слитыми билетами; официального списка вопросов кафедры в материалах нет. Кликабельны {link} пунктов из {total}.",
    "sections": [
     {
      "title": "Часть А. Базовые вопросы и определения (1–30)",
      "items": [
       {
        "n": 1,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Определение равенства геометрических векторов",
        "to": "theory:A1"
       },
       {
        "n": 2,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Определение суммы векторов и умножения вектора на число",
        "to": "theory:A2"
       },
       {
        "n": 3,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Определение коллинеарных и компланарных векторов",
        "to": "theory:A3"
       },
       {
        "n": 4,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Определение линейно зависимой и линейно независимой системы векторов",
        "to": "theory:A4"
       },
       {
        "n": 5,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Геометрические критерии линейной зависимости 2-х и 3-х векторов",
        "to": "theory:A5"
       },
       {
        "n": 6,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Определение базиса и координат вектора",
        "to": "theory:A6"
       },
       {
        "n": 7,
-       "pts": "",
-       "text": "Теорема о разложении вектора по базису",
+       "pts": "1 балл",
+       "text": "Сформулировать теорему о разложении вектора по базису",
        "to": "theory:A7"
       },
       {
        "n": 8,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Определение ортогональной скалярной проекции вектора на направление",
        "to": "theory:A8"
       },
       {
        "n": 9,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Определение скалярного произведения векторов",
        "to": "theory:A9"
       },
       {
        "n": 10,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Свойство линейности скалярного произведения",
        "to": "theory:A10"
       },
       {
        "n": 11,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Вычисление скалярного произведения в ОНБ",
        "to": "theory:A11"
       },
       {
        "n": 12,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Косинус угла между векторами в ОНБ",
        "to": "theory:A12"
       },
       {
        "n": 13,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Определение правой и левой тройки векторов",
        "to": "theory:A13"
       },
       {
        "n": 14,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Определение векторного произведения векторов",
        "to": "theory:A14"
       },
       {
        "n": 15,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Симметричность скалярного и антисимметричность векторного произведения",
        "to": "theory:A15"
       },
       {
        "n": 16,
-       "pts": "",
-       "text": "Свойство линейности векторного произведения",
+       "pts": "1 балл",
+       "text": "Сформулировать свойство линейности векторного произведения векторов",
        "to": "theory:A16"
       },
       {
        "n": 17,
-       "pts": "",
-       "text": "Вычисление векторного произведения в правом ОНБ",
+       "pts": "1 балл",
+       "text": "Записать формулу для вычисления векторного произведения в правом ортонормированном базисе",
        "to": "theory:A17"
       },
       {
        "n": 18,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Определение смешанного произведения векторов",
        "to": "theory:A18"
       },
       {
        "n": 19,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Правило перестановок смешанного произведения",
        "to": "theory:A19"
       },
       {
        "n": 20,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Свойство линейности смешанного произведения",
        "to": "theory:A20"
       },
       {
        "n": 21,
-       "pts": "",
-       "text": "Вычисление смешанного произведения в правом ОНБ",
+       "pts": "1 балл",
+       "text": "Записать формулу для вычисления смешанного произведения в правом ортонормированном базисе",
        "to": "theory:A21"
       },
       {
        "n": 22,
-       "pts": "",
-       "text": "Общее уравнение плоскости и уравнение в отрезках",
+       "pts": "1 балл",
+       "text": "Записать общее уравнение плоскости и уравнение «в отрезках». Объяснить геометрический смысл входящих в эти уравнения параметров",
        "to": "theory:A22"
       },
       {
        "n": 23,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Уравнение плоскости через три точки",
        "to": "theory:A23"
       },
       {
        "n": 24,
-       "pts": "",
-       "text": "Условия взаимного расположения двух плоскостей",
+       "pts": "1 балл",
+       "text": "Записать условия параллельности и перпендикулярности плоскостей",
        "to": "theory:A24"
       },
       {
        "n": 25,
-       "pts": "",
-       "text": "Расстояние от точки M₀(x₀, y₀, z₀) до плоскости Ax + By + Cz + D = 0",
+       "pts": "1 балл",
+       "text": "Записать формулу для расстояния от точки до плоскости, заданной общим уравнением",
        "to": "theory:A25"
       },
       {
        "n": 26,
-       "pts": "",
-       "text": "Уравнения прямой в пространстве",
+       "pts": "1 балл",
+       "text": "Записать канонические и параметрические уравнения прямой в пространстве. Объяснить геометрический смысл входящих в эти уравнения параметров",
        "to": "theory:A26"
       },
       {
        "n": 27,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Уравнение прямой через две точки",
        "to": "theory:A27"
       },
       {
        "n": 28,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Условие принадлежности двух прямых одной плоскости",
        "to": "theory:A28"
       },
       {
        "n": 29,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Расстояние от точки M₁ до прямой L(M₀, s)",
        "to": "theory:A29"
       },
       {
        "n": 30,
-       "pts": "",
+       "pts": "1 балл",
        "text": "Расстояние между скрещивающимися прямыми L₁(M₁, s₁) и L₂(M₂, s₂)",
        "to": "theory:A30"
       }
@@ -2603,61 +3327,61 @@ S30S.register({
      "items": [
       {
        "n": 1,
-       "pts": "",
-       "text": "Геометрический критерий линейной зависимости трёх векторов",
+       "pts": "2 балла",
+       "text": "Доказать геометрический критерий линейной зависимости трёх векторов",
        "to": "theory:B1"
       },
       {
        "n": 2,
-       "pts": "",
+       "pts": "2 балла",
        "text": "Теорема о разложении вектора по базису",
        "to": "theory:B2"
       },
       {
        "n": 3,
-       "pts": "",
+       "pts": "2 балла",
        "text": "Доказательство линейности скалярного произведения",
        "to": "theory:B3"
       },
       {
        "n": 4,
-       "pts": "",
+       "pts": "2 балла",
        "text": "Вывод скалярного произведения в ОНБ",
        "to": "theory:B4"
       },
       {
        "n": 5,
-       "pts": "",
-       "text": "Вывод векторного произведения в правом ОНБ",
+       "pts": "2 балла",
+       "text": "Вывести формулу для вычисления векторного произведения в правом ортонормированном базисе",
        "to": "theory:B5"
       },
       {
        "n": 6,
-       "pts": "",
+       "pts": "2 балла",
        "text": "Доказательство линейности смешанного произведения",
        "to": "theory:B6"
       },
       {
        "n": 7,
-       "pts": "",
+       "pts": "2 балла",
        "text": "Вывод смешанного произведения в правом ОНБ",
        "to": "theory:B7"
       },
       {
        "n": 8,
-       "pts": "",
-       "text": "Вывод формулы расстояния от точки до плоскости",
+       "pts": "2 балла",
+       "text": "Вывести формулу для расстояния от точки до плоскости, заданной общим уравнением",
        "to": "theory:B8"
       },
       {
        "n": 9,
-       "pts": "",
-       "text": "Вывод расстояния от точки до прямой в пространстве",
+       "pts": "2 балла",
+       "text": "Вывести формулу для расстояния от точки до прямой в пространстве",
        "to": "theory:B9"
       },
       {
        "n": 10,
-       "pts": "",
+       "pts": "2 балла",
        "text": "Вывод расстояния между скрещивающимися прямыми",
        "to": "theory:B10"
       }
@@ -2699,7 +3423,306 @@ S30S.register({
      ]
     },
     {
-     "title": "Практика: задачи 416–466",
+     "title": "Задачи из слитых билетов (номер: билет.задача)",
+     "items": [
+      {
+       "n": "3.1",
+       "pts": "4 балла",
+       "text": "В параллелограмме $ABCD$ точка $M$ делит диагональ $BD$ в отношении $1:3$, а точка $N$ делит сторону $CD$ пополам. Найти разложение вектора $\\overrightarrow{MN}$ по векторам $\\vec a=\\overrightarrow{AB}$ и $\\vec b=\\overrightarrow{AD}$.",
+       "to": "task:s3_1"
+      },
+      {
+       "n": "3.2",
+       "pts": "4 балла",
+       "text": "Объём параллелепипеда, построенного на векторах $\\vec a,\\vec b,\\vec c$, равен $3$. Найти объём параллелепипеда, построенного на векторах $-\\vec a+\\vec b+\\vec c$, $\\vec a-\\vec b+\\vec c$, $\\vec a+\\vec b-\\vec c$.",
+       "to": "task:s3_2"
+      },
+      {
+       "n": "3.3",
+       "pts": "4 балла",
+       "text": "Найти точки пересечения плоскости $2x-5y-z+10=0$ с осями координат и задать эту плоскость уравнением «в отрезках».",
+       "to": "task:s3_3"
+      },
+      {
+       "n": "3.4",
+       "pts": "4 балла",
+       "text": "Найти проекцию $Q$ точки $P(5;1;2)$ на плоскость $2x-2y-z=-3$.",
+       "to": "task:s3_4"
+      },
+      {
+       "n": "3.5",
+       "pts": "4 балла",
+       "text": "Составить канонические уравнения прямой, проходящей через точку $M(1;0;0)$ параллельно оси $Oz$.",
+       "to": "task:s3_5"
+      },
+      {
+       "n": "3.6",
+       "pts": "6 баллов",
+       "text": "Объём параллелепипеда, построенного на векторах $\\vec a,\\vec b,\\vec c$, равен $V=6$. Площадь параллелограмма, построенного на векторах $\\vec a,\\vec b$, равна $S=2$. Найти высоту параллелепипеда, построенного на векторах $\\vec a+\\vec b$, $4\\vec a-2\\vec b$, $-\\vec a-\\vec b+3\\vec c$, которая опущена из конца третьего вектора на грань, построенную на первых двух.",
+       "to": "task:s3_6"
+      },
+      {
+       "n": "3.7",
+       "pts": "6 баллов",
+       "text": "Найти точку $Q$, симметричную точке $P(-4;1;2)$ относительно прямой $\\dfrac x1=\\dfrac{y+1}{-3}=\\dfrac{z-3}0$.",
+       "to": "task:s3_7"
+      },
+      {
+       "n": "7.1",
+       "pts": "4 балла",
+       "text": "Разложить вектор $\\vec c=\\{-10;3\\}$ по векторам $\\vec a=\\{3;-1\\}$ и $\\vec b=\\{7;-2\\}$.",
+       "to": "task:s7_1"
+      },
+      {
+       "n": "7.2",
+       "pts": "4 балла",
+       "text": "Найти площадь треугольника, вершинами которого служат точки $A(0;1;-1)$, $B(0;1;0)$, $C(0;2;-3)$.",
+       "to": "task:s7_2"
+      },
+      {
+       "n": "7.3",
+       "pts": "4 балла",
+       "text": "Составить общее уравнение плоскости, которая проходит через точку $M(2;0;-3)$ и перпендикулярна прямой $\\dfrac x2=\\dfrac{y+2}{-1}=\\dfrac{z-3}{-2}$.",
+       "to": "task:s7_3"
+      },
+      {
+       "n": "7.4",
+       "pts": "4 балла",
+       "text": "Составить общее уравнение плоскости, которая проходит через прямую $\\dfrac x3=\\dfrac y3=\\dfrac{z-1}2$ и перпендикулярна плоскости $2x+2y+3z=7$.",
+       "to": "task:s7_4"
+      },
+      {
+       "n": "7.5",
+       "pts": "4 балла",
+       "text": "Составить параметрические уравнения прямой, проходящей через точку $M(0;1;0)$ перпендикулярно плоскости $x+z=0$.",
+       "to": "task:s7_5"
+      },
+      {
+       "n": "7.6",
+       "pts": "6 баллов",
+       "text": "Объём параллелепипеда, построенного на векторах $\\vec a,\\vec b,\\vec c$, равен $5$. Площадь параллелограмма, построенного на векторах $\\vec a,\\vec b$, равна $10$. Найти высоту параллелепипеда, построенного на векторах $\\vec a+4\\vec b$, $2\\vec a+3\\vec b$, $\\vec a+\\vec b-2\\vec c$, опущенную из конца третьего вектора на грань, построенную на первых двух.",
+       "to": "task:s7_6"
+      },
+      {
+       "n": "7.7",
+       "pts": "6 баллов",
+       "text": "Составить канонические уравнения прямой, симметричной прямой $x=2+t,\\ y=-1,\\ z=3-3t$ относительно плоскости $x+z-3=0$.",
+       "to": "task:s7_7"
+      },
+      {
+       "n": "9.1",
+       "pts": "4 балла",
+       "text": "Найти точку пересечения прямых $3x-5y-13=0$ и $2x+7y-81=0$.",
+       "to": "task:s9_1"
+      },
+      {
+       "n": "9.2",
+       "pts": "4 балла",
+       "text": "Найти площадь треугольника, вершинами которого служат точки $A(1;-2;3)$, $B(4;2;2)$, $C(3;0;2)$.",
+       "to": "task:s9_2"
+      },
+      {
+       "n": "9.3",
+       "pts": "4 балла",
+       "text": "Составить общее уравнение плоскости, которая проходит через точку $M(3;2;1)$ параллельно плоскости $x+y-z+1=0$.",
+       "to": "task:s9_3"
+      },
+      {
+       "n": "9.4",
+       "pts": "4 балла",
+       "text": "Найти расстояние от точки $M(9;0;5)$ до прямой $\\dfrac{x-4}3=\\dfrac{y+5}{-1}=\\dfrac{z+4}0$.",
+       "to": "task:s9_4"
+      },
+      {
+       "n": "9.5",
+       "pts": "4 балла",
+       "text": "Составить параметрические уравнения прямой, проходящей через точку $M(3;3;3)$ перпендикулярно плоскости $z=1$.",
+       "to": "task:s9_5"
+      },
+      {
+       "n": "9.6",
+       "pts": "6 баллов",
+       "text": "Параллелограмм построен на векторах $\\vec m=13\\vec a-2\\vec b$ и $\\vec n=-3\\vec a+\\vec b$, где $|\\vec a|=|\\vec b|=1$ и угол между $\\vec a$ и $\\vec b$ равен $60^\\circ$. Найти высоту параллелограмма, опущенную из конца вектора $\\vec n$ на вектор $\\vec m$.",
+       "to": "task:s9_6"
+      },
+      {
+       "n": "9.7",
+       "pts": "6 баллов",
+       "text": "Показать, что прямые $\\dfrac{x-1}0=\\dfrac{y-1}1=\\dfrac{z-1}1$ и $\\dfrac x{-1}=\\dfrac{y-3}3=\\dfrac z0$ пересекаются. Найти точку пересечения и составить уравнение плоскости, которой они принадлежат.",
+       "to": "task:s9_7"
+      },
+      {
+       "n": "11.1",
+       "pts": "4 балла",
+       "text": "Даны точки $A(1;1;2)$ и $B(-4;6;12)$. Найти точку $C$, которая делит отрезок $AB$ в отношении $2:3$.",
+       "to": "task:s11_1"
+      },
+      {
+       "n": "11.2",
+       "pts": "4 балла",
+       "text": "Найти все значения $\\lambda$, при которых точки $A(2;1;3)$, $B(3;-2;2)$, $C(2;2;3)$, $D(1;0;\\lambda)$ лежат в одной плоскости.",
+       "to": "task:s11_2"
+      },
+      {
+       "n": "11.3",
+       "pts": "4 балла",
+       "text": "Найти расстояние от точки $M(-2;-3;3)$ до плоскости $9x-4y+z+17=0$.",
+       "to": "task:s11_3"
+      },
+      {
+       "n": "11.4",
+       "pts": "4 балла",
+       "text": "Для прямой $x-y-z-2=0,\\ x-3y+3z-2=0$ найти параметрические уравнения.",
+       "to": "task:s11_4"
+      },
+      {
+       "n": "11.5",
+       "pts": "4 балла",
+       "text": "Найти угол между прямыми $x=2+3t,\\ y=t,\\ z=-t$ и $x=2+t,\\ y=3t,\\ z=t$.",
+       "to": "task:s11_5"
+      },
+      {
+       "n": "11.6",
+       "pts": "6 баллов",
+       "text": "Объём параллелепипеда, построенного на векторах $\\vec a,\\vec b,\\vec c$, равен $V=4$. Площадь параллелограмма, построенного на векторах $\\vec a,\\vec b$, равна $S=2$. Найти высоту параллелепипеда, построенного на векторах $\\vec a+3\\vec b$, $\\vec a-4\\vec b$, $2\\vec a-3\\vec b+4\\vec c$, которая опущена из конца третьего вектора на грань, построенную на первых двух.",
+       "to": "task:s11_6"
+      },
+      {
+       "n": "11.7",
+       "pts": "6 баллов",
+       "text": "Показать, что прямые $\\dfrac{x-4}1=\\dfrac y{-3}=\\dfrac{z-10}7$ и $\\dfrac{x+1}{-2}=\\dfrac{y-13}5=\\dfrac{z+19}{-11}$ пересекаются. Найти точку пересечения и составить уравнение плоскости, которой они принадлежат.",
+       "to": "task:s11_7"
+      },
+      {
+       "n": "16.1",
+       "pts": "4 балла",
+       "text": "Даны точки $A(-2;0;-3)$ и $B(6;8;9)$. Найти точку $C$, которая делит отрезок $AB$ в отношении $1:3$.",
+       "to": "task:s16_1"
+      },
+      {
+       "n": "16.2",
+       "pts": "4 балла",
+       "text": "Найти объём тетраэдра с вершинами $A(2;2;3)$, $B(2;-1;3)$, $C(3;1;2)$, $D(2;3;1)$.",
+       "to": "task:s16_2"
+      },
+      {
+       "n": "16.3",
+       "pts": "4 балла",
+       "text": "Составить общее уравнение плоскости, проходящей через точки $A(1;1;2)$, $B(7;-2;2)$, $C(-1;5;6)$.",
+       "to": "task:s16_3"
+      },
+      {
+       "n": "16.4",
+       "pts": "4 балла",
+       "text": "Найти точку пересечения плоскости $x+y+z=0$ с прямой, проходящей через точки $A(-6;-9;-1)$ и $B(8;5;3)$.",
+       "to": "task:s16_4"
+      },
+      {
+       "n": "16.5",
+       "pts": "4 балла",
+       "text": "Составить параметрические уравнения прямой, проходящей через точку $M(2;1;-1)$ перпендикулярно плоскости $2x+y+z-5=0$.",
+       "to": "task:s16_5"
+      },
+      {
+       "n": "16.6",
+       "pts": "6 баллов",
+       "text": "Вершинами тетраэдра служат точки $A(-1;2;2)$, $B(0;1;2)$, $C(-1;4;2)$, $D(0;1;0)$. Найти высоту тетраэдра, опущенную из вершины $D$ на грань $ABC$.",
+       "to": "task:s16_6"
+      },
+      {
+       "n": "16.7",
+       "pts": "6 баллов",
+       "text": "Составить параметрические уравнения прямой, проходящей через точку $(-2;1;4)$ и пересекающей прямые $\\dfrac{x-1}1=\\dfrac{y-1}0=\\dfrac{z-1}1$ и $\\dfrac x1=\\dfrac{y-1}{-1}=\\dfrac{z-2}2$.",
+       "to": "task:s16_7"
+      },
+      {
+       "n": "17.1",
+       "pts": "4 балла",
+       "text": "Найти точку пересечения прямых $-4x+y-3=0$ и $-5x+y-4=0$.",
+       "to": "task:s17_1"
+      },
+      {
+       "n": "17.2",
+       "pts": "4 балла",
+       "text": "Найти площадь треугольника, вершинами которого служат точки $A(0;0;7)$, $B(2;3;5)$, $C(6;4;3)$.",
+       "to": "task:s17_2"
+      },
+      {
+       "n": "17.3",
+       "pts": "4 балла",
+       "text": "Составить общее уравнение плоскости, которая проходит через точку $M(3;-3;4)$ параллельно плоскости $-3x-2y+2z-1=0$.",
+       "to": "task:s17_3"
+      },
+      {
+       "n": "17.4",
+       "pts": "4 балла",
+       "text": "Составить общее уравнение плоскости, которая проходит через прямую $\\dfrac{x-1}1=\\dfrac{y-2}1=\\dfrac{z-3}2$ и перпендикулярна плоскости $2x+y-z-1=0$.",
+       "to": "task:s17_4"
+      },
+      {
+       "n": "17.5",
+       "pts": "4 балла",
+       "text": "Составить канонические уравнения прямой, проходящей через точку $M(3;0;-1)$ параллельно оси $Oy$.",
+       "to": "task:s17_5"
+      },
+      {
+       "n": "17.6",
+       "pts": "6 баллов",
+       "text": "Треугольная пирамида $ABCD$ имеет объём $9$, вершины $A(2;-1;-1)$, $B(-1;2;-1)$, $C(-1;-1;2)$, а о вершине $D$ известно, что она лежит на положительной части оси $OX$. Найти координаты вершины $D$.",
+       "to": "task:s17_6"
+      },
+      {
+       "n": "17.7",
+       "pts": "6 баллов",
+       "text": "Составить параметрические уравнения прямой, проходящей через точку $(4;2;-3)$ и пересекающей прямые $\\dfrac{x-2}1=\\dfrac y{-1}=\\dfrac{z-1}0$ и $\\dfrac{x-1}{-1}=\\dfrac{y+1}{-1}=\\dfrac{z-3}1$.",
+       "to": "task:s17_7"
+      },
+      {
+       "n": "18.1",
+       "pts": "4 балла",
+       "text": "В трапеции $ABCD$ основания $AD$ и $BC$ относятся как $2:1$, точка $M$ делит сторону $AB$ в отношении $2:3$, а точка $N$ — середина стороны $CD$. Найти разложение вектора $\\overrightarrow{MN}$ по векторам $\\vec a=\\overrightarrow{AD}$ и $\\vec b=\\overrightarrow{AB}$.",
+       "to": "task:s18_1"
+      },
+      {
+       "n": "18.2",
+       "pts": "4 балла",
+       "text": "Найти все значения $\\lambda$, при которых точки $A(1;-3;4)$, $B(3;1;-2)$, $C(-8;5;5)$, $D(-1;-2;\\lambda)$ лежат в одной плоскости.",
+       "to": "task:s18_2"
+      },
+      {
+       "n": "18.3",
+       "pts": "4 балла",
+       "text": "Составить общее уравнение плоскости, которая проходит через точку $M(1;2;3)$ параллельно плоскости $x-y-z+1=0$.",
+       "to": "task:s18_3"
+      },
+      {
+       "n": "18.4",
+       "pts": "4 балла",
+       "text": "Найти расстояние от точки $M(5;-1;-2)$ до прямой $\\dfrac{x-2}1=\\dfrac{y+1}0=\\dfrac{z-1}0$.",
+       "to": "task:s18_4"
+      },
+      {
+       "n": "18.5",
+       "pts": "4 балла",
+       "text": "Найти угол между плоскостями $x-y+12=0$ и $-2x+2z-1=0$.",
+       "to": "task:s18_5"
+      },
+      {
+       "n": "18.6",
+       "pts": "6 баллов",
+       "text": "Параллелограмм построен на векторах $\\vec m=15\\vec a+11\\vec b$ и $\\vec n=\\vec a+2\\vec b$, где $|\\vec a|=1$, $|\\vec b|=\\sqrt3$ и угол между $\\vec a$ и $\\vec b$ равен $30^\\circ$. Найти высоту параллелограмма, опущенную из конца вектора $\\vec n$ на вектор $\\vec m$.",
+       "to": "task:s18_6"
+      },
+      {
+       "n": "18.7",
+       "pts": "6 баллов",
+       "text": "Найти точку $Q$, симметричную точке $P(3;2;-1)$ относительно прямой $\\dfrac{x-2}1=\\dfrac{y+1}{-1}=\\dfrac{z-3}1$.",
+       "to": "task:s18_7"
+      }
+     ]
+    },
+    {
+     "title": "Задачник: задачи 416–466",
      "items": [
       {
        "n": "416",
@@ -3011,55 +4034,67 @@ S30S.register({
     }
    ]
   },
-  "note": "Главный экран: по структуре присланного конспекта «Подготовка к РК №1» (части А и Б) и файлу с аксиомами (часть В)",
+  "note": "Главный экран: вопросы по конспекту, баллы и структура — по слитым билетам (теория: 3 вопроса по 1 баллу и вывод на 2 балла; задачи: 5 по 4 балла и 2 по 6)",
   "cardBlocks": [
    "A",
-   "B",
-   "C"
+   "B"
   ],
-  "cardsNote": "Определения и формулы (часть А, 30), доказательства (часть Б, 10) и аксиоматика (часть В, 5).",
+  "cardsNote": "Определения и формулы (часть А, 30, по 1 баллу) и доказательства (часть Б, 10, по 2 балла) — всё, что встречалось в билетах. Аксиоматика — на странице «РК».",
   "variant": {
-   "title": "Тренировочный вариант",
+   "title": "Вариант как на РК",
    "minutes": 90,
-   "scoring": false,
+   "scoring": true,
    "inTasks": false,
-   "note": "Тренировочный вариант собран из вопросов и задач раздела: официальной структуры билета, баллов и времени РК в материалах нет. Решения скрыты до конца.",
+   "note": "Теория — билет 8, задачи — билет 11 из слитых. Как на РК: теория 3×1 + 2 балла, задачи 5×4 + 2×6. Время РК в материалах не указано — ставь своё. Решения скрыты до конца.",
+   "passNote": "(теория: min 3 из 5; задачи: min 19 из 32)",
    "theory": [
-    "A9",
-    "A14",
-    "A29",
-    "B8"
+    "A13",
+    "A22",
+    "A16",
+    "B1"
    ],
    "tasks": [
     {
      "n": 1,
-     "points": null,
-     "q": "**419.** Найти уравнение плоскости, перпендикулярной прямой $x+2y-z+5=0,\\ 3x+y+z-7=0$ и проходящей через точку $(2,-3,1)$.",
-     "solution": "$$\\vec s=\\begin{vmatrix}\\vec i&\\vec j&\\vec k\\\\1&2&-1\\\\3&1&1\\end{vmatrix}=\\{2+1,\\ -(1+3),\\ 1-6\\}=\\{3,-4,-5\\}.$$\n$3(x-2)-4(y+3)-5(z-1)=0$.\n**Ответ:** $3x-4y-5z-13=0$."
+     "points": 4,
+     "q": "Даны точки $A(1;1;2)$ и $B(-4;6;12)$. Найти точку $C$, которая делит отрезок $AB$ в отношении $2:3$.",
+     "solution": "$C=A+\\frac25\\overrightarrow{AB}=(1;1;2)+\\frac25(-5;5;10)=(-1;3;6)$.\n(Через формулу: $x_C=\\frac{x_A+\\lambda x_B}{1+\\lambda}=\\frac{1+\\frac23(-4)}{\\frac53}=-1$ и т. д.)\n**Ответ:** $C(-1;3;6)$."
     },
     {
      "n": 2,
-     "points": null,
-     "q": "**432.** Найти точку, симметричную точке $(1,2,3)$ относительно прямой $\\dfrac{x-8}1=\\dfrac{y-11}3=\\dfrac{z-4}{-1}$.",
-     "solution": "$M_0(8,11,4)$, $\\vec s=\\{1,3,-1\\}$, $\\overrightarrow{M_0P}=\\{-7,-9,-1\\}$.\n$t^*=\\dfrac{-7-27+1}{11}=-3$, $H=(5,2,7)$.\n**Ответ:** $P'=(9,2,11)$."
+     "points": 4,
+     "q": "Найти все значения $\\lambda$, при которых точки $A(2;1;3)$, $B(3;-2;2)$, $C(2;2;3)$, $D(1;0;\\lambda)$ лежат в одной плоскости.",
+     "solution": "$$\\begin{vmatrix}1&-3&-1\\\\0&1&0\\\\-1&-1&\\lambda-3\\end{vmatrix}=1\\cdot(\\lambda-3)-0+(-1)\\cdot(0+1)=\\lambda-4=0.$$\n**Ответ:** $\\lambda=4$."
     },
     {
      "n": 3,
-     "points": null,
-     "q": "**429.** Найти расстояние от точки $(1,3,5)$ до прямой $2x+y+z-1=0,\\ 3x+y+2z-3=0$.",
-     "solution": "$\\vec s=\\begin{vmatrix}\\vec i&\\vec j&\\vec k\\\\2&1&1\\\\3&1&2\\end{vmatrix}=\\{1,-1,-1\\}$. При $z=0$: $2x+y=1,\\ 3x+y=3\\Rightarrow M_0(2,-3,0)$.\n$\\overrightarrow{M_0M_1}=\\{-1,6,5\\}$, $\\ \\overrightarrow{M_0M_1}\\times\\vec s=\\{-6+5,\\ 5-1,\\ 1-6\\}=\\{-1,4,-5\\}$, $|\\cdot|=\\sqrt{42}$; $|\\vec s|=\\sqrt3$.\n**Ответ:** $\\rho=\\sqrt{14}$."
+     "points": 4,
+     "q": "Найти расстояние от точки $M(-2;-3;3)$ до плоскости $9x-4y+z+17=0$.",
+     "solution": "$\\rho=\\dfrac{|9(-2)-4(-3)+3+17|}{\\sqrt{81+16+1}}=\\dfrac{14}{\\sqrt{98}}=\\dfrac{14}{7\\sqrt2}$.\n**Ответ:** $\\sqrt2$."
     },
     {
      "n": 4,
-     "points": null,
-     "q": "**445.** Найти уравнение плоскости, проходящей через линию пересечения плоскостей $x-y-z-1=0$ и $2x+10y-2z-5=0$ и делящей острый угол между ними пополам.",
-     "solution": "$|\\vec n_1|=\\sqrt3$, $|\\vec n_2|=6\\sqrt3$, $\\vec n_1\\cdot\\vec n_2=2-10+2=-6<0$. Острый угол — где $f_1f_2>0$, его биссектор: $\\frac{f_1}{\\sqrt3}=\\frac{f_2}{6\\sqrt3}$, то есть $6f_1-f_2=0$.\nПроверка: угол между плоскостями $\\arccos\\frac13\\approx70{,}5^\\circ$, биссектор образует с $\\Pi_1$ угол $\\approx35{,}3^\\circ$ — половину.\n**Ответ:** $4x-16y-4z-1=0$."
+     "points": 4,
+     "q": "Для прямой $x-y-z-2=0,\\ x-3y+3z-2=0$ найти параметрические уравнения.",
+     "solution": "$\\vec s=\\{1,-1,-1\\}\\times\\{1,-3,3\\}=\\{-3-3,\\ -(3+1),\\ -3+1\\}=\\{-6,-4,-2\\}\\parallel\\{3,2,1\\}$.\n$z=0$: $x-y=2$, $x-3y=2\\Rightarrow y=0$, $x=2$.\n**Ответ:** $x=2+3t,\\ y=2t,\\ z=t$."
     },
     {
      "n": 5,
-     "points": null,
-     "q": "**461.** Составить уравнения общего перпендикуляра к двум прямым $\\dfrac x1=\\dfrac{y+4}3=\\dfrac z2$ и $\\dfrac{x-3}2=\\dfrac{y+2}{-3}=\\dfrac{z+3}{-2}$.",
-     "solution": "$P=(t,\\ -4+3t,\\ 2t)$, $Q=(3+2u,\\ -2-3u,\\ -3-2u)$.\n$\\overrightarrow{PQ}\\cdot\\vec s_1=3-11u-14t=0$, $\\ \\overrightarrow{PQ}\\cdot\\vec s_2=6+17u+11t=0$ ⇒ $t=1$, $u=-1$.\n$P(1,-1,2)$, $Q(1,1,-1)$, $\\overrightarrow{PQ}=\\{0,2,-3\\}\\parallel\\vec s_1\\times\\vec s_2$; расстояние $\\sqrt{13}$.\n**Ответ:** $\\dfrac{x-1}0=\\dfrac{y+1}2=\\dfrac{z-2}{-3}$ (или $13x-3y-2z-12=0,\\ 13x+6y+4z-15=0$)."
+     "points": 4,
+     "q": "Найти угол между прямыми $x=2+3t,\\ y=t,\\ z=-t$ и $x=2+t,\\ y=3t,\\ z=t$.",
+     "solution": "$\\vec s_1=\\{3,1,-1\\}$, $\\vec s_2=\\{1,3,1\\}$: $\\vec s_1\\cdot\\vec s_2=5$, $|\\vec s_1|=|\\vec s_2|=\\sqrt{11}$.\n**Ответ:** $\\varphi=\\arccos\\frac5{11}$."
+    },
+    {
+     "n": 6,
+     "points": 6,
+     "q": "Объём параллелепипеда, построенного на векторах $\\vec a,\\vec b,\\vec c$, равен $V=4$. Площадь параллелограмма, построенного на векторах $\\vec a,\\vec b$, равна $S=2$. Найти высоту параллелепипеда, построенного на векторах $\\vec a+3\\vec b$, $\\vec a-4\\vec b$, $2\\vec a-3\\vec b+4\\vec c$, которая опущена из конца третьего вектора на грань, построенную на первых двух.",
+     "solution": "$V'=\\left|\\begin{vmatrix}1&3&0\\\\1&-4&0\\\\2&-3&4\\end{vmatrix}\\right|\\cdot4=|4(-4-3)|\\cdot4=112$.\n$(\\vec a+3\\vec b)\\times(\\vec a-4\\vec b)=(-4-3)\\,\\vec a\\times\\vec b$, $S'=7\\cdot2=14$.\n**Ответ:** $h=8$."
+    },
+    {
+     "n": 7,
+     "points": 6,
+     "q": "Показать, что прямые $\\dfrac{x-4}1=\\dfrac y{-3}=\\dfrac{z-10}7$ и $\\dfrac{x+1}{-2}=\\dfrac{y-13}5=\\dfrac{z+19}{-11}$ пересекаются. Найти точку пересечения и составить уравнение плоскости, которой они принадлежат.",
+     "solution": "$4+t=-1-2u$, $-3t=13+5u$, $10+7t=-19-11u$: из первых двух $t=-1$, $u=-2$; третье: $3=3$ — пересекаются в $(3;3;3)$.\n$\\vec s_1\\times\\vec s_2=\\{1,-3,7\\}\\times\\{-2,5,-11\\}=\\{-2,-3,-1\\}$; $2(x-3)+3(y-3)+(z-3)=0$.\n**Ответ:** точка $(3;3;3)$, плоскость $2x+3y+z-18=0$."
     }
    ]
   }
@@ -3276,6 +4311,6 @@ S30S.register({
  "discTitle": "Неточности в конспекте",
  "discNote": "Как в конспекте → как правильно → что писать на РК.",
  "discItem": "Неточность",
- "materialsNote": "Присланные файлы: конспект теории, аксиомы и задачи 416–466. PDF открываются на сайте, всё можно скачать архивом.",
+ "materialsNote": "Присланные файлы: конспект теории, аксиомы, задачи 416–466 и фото слитых билетов. У слитых билетов есть решения: кнопка «Решение» в просмотре фото.",
  "warnLabel": "Неточность в конспекте"
 });

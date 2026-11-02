@@ -340,3 +340,10 @@ main{overflow-x:clip}
 .cv-verdict.bad{color:var(--bad)}
 .cv-note{margin:calc(var(--u)*1.5) 0 0;font-size:15px}
 .cv-legend{margin:var(--u) 0 0;font-size:13px;color:var(--muted)}
+.row.sw .mid{display:flex;gap:var(--u)}
+.cards .row.sw{flex-wrap:nowrap;gap:var(--u)}
+.cards .row.sw .btn{white-space:nowrap}
+@media (max-width:480px){.cards .row.sw .lbl,.cards .row.sw .arr{display:none}.cards .row.sw{gap:6px}.cards .row.sw .mid{gap:6px}.cards .row.sw .btn{padding-left:10px;padding-right:10px;font-size:15px}}
+@media (max-width:350px){.cards .row.sw .btn{padding-left:8px;padding-right:8px;font-size:14px}}
+.sol-acts{display:flex;gap:var(--u);flex:none}
+@media (max-width:520px){.lb-top{gap:var(--u);padding:var(--u)}.lb-top .lb-btn{padding:4px 8px}}

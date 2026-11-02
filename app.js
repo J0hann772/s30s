@@ -344,20 +344,32 @@ function cardCounts() {
 function shuffled(arr) { var q = arr.slice(); for (var i = q.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = q[i]; q[i] = q[j]; q[j] = t; } return q; }
 function startCards(mode) {
   var q = cardPool().filter(function (x) { var s = cardState(x.id); return mode === "all" || (mode === "ok" && s === "ok") || (mode === "new" && s !== "ok"); });
-  CARDS.mode = mode; CARDS.queue = q.map(function (x) { return x.id; }); CARDS.i = 0; CARDS.round = 1; CARDS.flipped = false;
+  CARDS.mode = mode; CARDS.queue = shuffled(q.map(function (x) { return x.id; })); CARDS.hist = []; CARDS.i = 0; CARDS.round = 1; CARDS.flipped = false;
   CARDS.got = 0; CARDS.miss = []; CARDS.total = CARDS.queue.length; CARDS.between = false; CARDS.busy = false;
   renderCards();
 }
 function nextRound() {
-  CARDS.queue = shuffled(CARDS.miss); CARDS.miss = []; CARDS.i = 0; CARDS.round++; CARDS.flipped = false; CARDS.got = 0; CARDS.between = false;
+  CARDS.queue = shuffled(CARDS.miss); CARDS.miss = []; CARDS.hist = []; CARDS.i = 0; CARDS.round++; CARDS.flipped = false; CARDS.got = 0; CARDS.between = false;
   renderCards();
 }
 function answerCard(known) {
   var id = CARDS.queue[CARDS.i];
+  (CARDS.hist = CARDS.hist || []).push({ known: known, prev: lsGet(key("cards:" + id)) });   // для «Назад»
   if (PROGRESS) lsSet(key("cards:" + id), known ? "1" : "0");
   if (known) CARDS.got++; else CARDS.miss.push(id);
   CARDS.i++; CARDS.flipped = false; CARDS.busy = false;
   if (CARDS.i >= CARDS.queue.length) CARDS.between = true;
+  renderCards();
+}
+/* «Назад»: вернуть предыдущую карточку текущего круга и отменить ответ на неё */
+function backCard() {
+  if (!CARDS.hist || !CARDS.hist.length || CARDS.busy) return;
+  var h = CARDS.hist.pop();
+  CARDS.i--;
+  var id = CARDS.queue[CARDS.i];
+  if (h.known) CARDS.got--; else CARDS.miss.pop();
+  if (PROGRESS) lsSet(key("cards:" + id), h.prev);
+  CARDS.flipped = false; CARDS.between = false;
   renderCards();
 }
 function renderCards() {
@@ -371,12 +383,12 @@ function renderCards() {
       '<button class="btn" data-act="start" data-m="ok"' + (c.ok ? "" : " disabled") + ">Только пройденные (<span class=\"ok\">" + c.ok + "</span>)</button></div>" +
       '<div class="row"><button class="btn" data-act="reset">' + (CARDS.resetAsk ? "Точно сбросить весь прогресс?" : "Сбросить прогресс") + "</button>" +
       (CARDS.resetAsk ? '<button class="btn" data-act="resetno">Отмена</button>' : "") + "</div>" +
-      '<p class="meta">Карточку можно перевернуть нажатием или пробелом. Свайп влево (клавиша ←) — знаю, вправо (→) — не знаю. Карточки, которые вы не знали, повторяются в следующем круге в случайном порядке, пока не останется ни одной.</p>';
+      '<p class="meta">Карточку можно перевернуть нажатием или пробелом. Свайп влево (клавиша ←) — знаю, вправо (→) — не знаю, «Назад» (Backspace) — вернуть предыдущую карточку. Порядок карточек каждый раз случайный. Карточки, которые вы не знали, повторяются в следующем круге в случайном порядке, пока не останется ни одной.</p>';
   } else if (CARDS.between || !CARDS.queue.length) {
     var m = CARDS.miss.length;
     h = '<div class="card done">' + (!CARDS.queue.length ? '<p class="cq">В этом режиме карточек нет.</p>' :
       '<p class="cq">' + (m ? "Круг " + CARDS.round + " закончен" : "Всё пройдено") + "</p><p>Знаю: <b class=\"ok\">" + CARDS.got + "</b>, не знаю: <b class=\"bad\">" + m + "</b>.</p>") +
-      '<div class="row">' + (m ? '<button class="btn" data-act="round">Следующий круг (' + m + ")</button>" : "") +
+      '<div class="row">' + (CARDS.queue.length && CARDS.hist && CARDS.hist.length ? '<button class="btn" data-act="back">&#8630; Назад</button>' : "") + (m ? '<button class="btn" data-act="round">Следующий круг (' + m + ")</button>" : "") +
       '<button class="btn" data-act="menu">К выбору режима</button></div></div>';
   } else {
     var q = theoryById(CARDS.queue[CARDS.i]), t = cardText(q.id), st = cardState(q.id), cp = cardParts(t, q);
@@ -389,7 +401,7 @@ function renderCards() {
       '<div class="face front"' + (CARDS.flipped ? " hidden" : "") + '><div class="cid">' + [q.points ? q.points + " б." : esc(qLabel(q)), cp.lect ? esc(cp.lect) : ""].filter(Boolean).join(" · ") + (st === "ok" ? " · раньше: знаю" : st === "bad" ? " · раньше: не знаю" : "") + '</div><p class="cq"><span class="cqt">' + mdInline(cp.text) + '</span></p><div class="tap">Нажмите, чтобы перевернуть</div></div>' +
       '<div class="face back"' + (CARDS.flipped ? "" : " hidden") + '><div class="cid">Ответ</div><div class="ans md">' + md(q.answer) + (q.figure ? figure(q.figure) : "") + "</div>" + (refs ? '<p class="stat">' + refs + "</p>" : "") + "</div>" +
       "</div></div></div>" +
-      '<div class="row sw"><button class="btn" data-act="know">&larr; Знаю</button><button class="btn" data-act="flip">Перевернуть</button><button class="btn" data-act="dont">Не знаю &rarr;</button></div>';
+      '<div class="row sw"><button class="btn" data-act="know"><span class="arr">&larr; </span>Знаю</button><span class="mid"><button class="btn" data-act="back"' + (CARDS.hist && CARDS.hist.length ? "" : " disabled") + ' title="Предыдущая карточка (Backspace)" aria-label="Назад">&#8630;<span class="lbl"> Назад</span></button><button class="btn" data-act="flip">Перевернуть</button></span><button class="btn" data-act="dont">Не знаю<span class="arr"> &rarr;</span></button></div>';
   }
   box.innerHTML = h;
   fitCardMath();
@@ -439,6 +451,7 @@ function bindCards() {
     else if (a === "flip") flipCard();
     else if (a === "know") flyCard(true);
     else if (a === "dont") flyCard(false);
+    else if (a === "back") backCard();
   };
   box.onpointerdown = function (e) {
     var w = e.target.closest && e.target.closest("#cardwrap");
@@ -471,8 +484,10 @@ function bindCards() {
   if (!cardsKeysBound) {
     cardsKeysBound = true;
     document.addEventListener("keydown", function (e) {
-      if (location.hash !== "#/cards" || CARDS.mode === null || CARDS.between || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (location.hash !== "#/cards" || CARDS.mode === null || e.ctrlKey || e.metaKey || e.altKey) return;
       var tg = e.target && e.target.tagName; if (tg === "INPUT" || tg === "TEXTAREA" || tg === "BUTTON" || tg === "A") return;
+      if (e.key === "Backspace") { e.preventDefault(); backCard(); return; }
+      if (CARDS.between) return;
       if (e.key === " " || e.key === "Enter") { e.preventDefault(); flipCard(); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); flyCard(true); }
       else if (e.key === "ArrowRight") { e.preventDefault(); flyCard(false); }
@@ -511,7 +526,7 @@ function solutionsFor(name) {
   return S.items[key].map(function (r) { var p = S.pool[r[1]]; return p ? { n: r[0], c: p.c, s: p.s } : null; }).filter(Boolean);
 }
 function solutionsHtml(list, title) {
-  return '<div class="sol-head"><b>' + esc(title) + '</b><button type="button" class="lb-btn sol-all" data-open="0">Раскрыть все</button></div>' +
+  return '<div class="sol-head"><b>' + esc(title) + '</b><span class="sol-acts"><button type="button" class="lb-btn sol-all" data-open="0">Раскрыть все</button><button type="button" class="lb-btn sol-hide" title="Скрыть решение (S)">Скрыть</button></span></div>' +
     '<p class="sol-note">Разбор не из лекций: сверяй с конспектом и методами на занятиях.</p>' +
     list.map(function (t) {
       return '<section class="sol-t"><div class="sol-q"><span class="sol-n">№' + esc(t.n) + '</span><div class="sol-c">' + mdInline(t.c) + "</div></div>" +
@@ -549,7 +564,7 @@ function openLightbox(list, idx) {
       '<button class="lb-nav lb-prev" id="lbPrev" aria-label="Предыдущее">&#8249;</button><button class="lb-nav lb-next" id="lbNext" aria-label="Следующее">&#8250;</button></div>' +
       '<div class="lb-rs" id="lbRs" role="separator" aria-orientation="vertical" aria-label="Изменить ширину решения" title="Потяните, чтобы изменить ширину; двойной клик — сбросить"></div><div class="lb-sol" id="lbSolP" hidden role="complementary" aria-label="Решение"></div></div>';
     document.body.appendChild(el);
-    LB = { el: el, img: el.querySelector("#lbImg"), stage: el.querySelector("#lbStage"), list: [], i: 0, s: 1, x: 0, y: 0, ptr: {}, pinch: 0, moved: false, startX: 0, lastTap: 0, solOpen: true, sols: null };
+    LB = { el: el, img: el.querySelector("#lbImg"), stage: el.querySelector("#lbStage"), list: [], i: 0, s: 1, x: 0, y: 0, ptr: {}, pinch: 0, moved: false, startX: 0, lastTap: 0, solOpen: lsGet("s30s:solOpen") !== "0", sols: null };
     var L = LB;
     var apply = function (anim) { L.img.style.transition = anim ? "transform .18s ease-out" : "none"; L.img.style.transform = "translate(" + L.x + "px," + L.y + "px) scale(" + L.s + ")"; };
     var clamp = function () {
@@ -575,6 +590,11 @@ function openLightbox(list, idx) {
       if (has) { pan.innerHTML = solutionsHtml(L.sols, name); pan.scrollTop = 0; }
       var open = has && L.solOpen; pan.hidden = !open; el.classList.toggle("sol-open", open);
       btn.classList.toggle("on", open); btn.setAttribute("aria-expanded", String(open));
+      btn.textContent = open ? "Скрыть решение" : "Показать решение"; btn.title = (open ? "Скрыть" : "Показать") + " решение (S)";
+    };
+    L.toggleSol = function () {
+      L.solOpen = !L.solOpen; lsSet("s30s:solOpen", L.solOpen ? null : "0");
+      L.s = 1; L.x = 0; L.y = 0; apply(false); L.syncSol(L.list[L.i].name);
     };
     L.close = function () { el.hidden = true; document.body.classList.remove("lb-open"); L.img.removeAttribute("src"); };
     el.querySelector("#lbX").onclick = L.close;
@@ -592,10 +612,9 @@ function openLightbox(list, idx) {
       rs.addEventListener("pointermove", mv); rs.addEventListener("pointerup", up); rs.addEventListener("pointercancel", up);
     };
     rs.ondblclick = function () { el.style.removeProperty("--solw"); lsSet("s30s:solw", null); };
-    el.querySelector("#lbSol").onclick = function () {
-      L.solOpen = !L.solOpen; L.s = 1; L.x = 0; L.y = 0; apply(false); L.syncSol(L.list[L.i].name);
-    };
+    el.querySelector("#lbSol").onclick = function () { L.toggleSol(); };
     el.querySelector("#lbSolP").onclick = function (e) {
+      if (e.target.closest && e.target.closest(".sol-hide")) { L.toggleSol(); return; }
       var b = e.target.closest && e.target.closest(".sol-all"); if (!b) return;
       var open = b.getAttribute("data-open") !== "1";
       [].forEach.call(el.querySelectorAll("#lbSolP details"), function (x) { x.open = open; });
@@ -635,6 +654,7 @@ function openLightbox(list, idx) {
     document.addEventListener("keydown", function (e) {
       if (L.el.hidden) return;
       if (e.key === "Escape") L.close();
+      else if ((e.key === "s" || e.key === "S" || e.key === "ы" || e.key === "Ы") && L.sols && L.sols.length && !(e.ctrlKey || e.metaKey || e.altKey)) L.toggleSol();
       else if (e.target && e.target.closest && e.target.closest("#lbSolP") && /^Arrow/.test(e.key)) return;
       else if (e.key === "ArrowLeft") L.show(L.i - 1);
       else if (e.key === "ArrowRight") L.show(L.i + 1);
@@ -680,7 +700,7 @@ function pageRK(tab, anchor) {
       var d = ts.filter(function (t) { return flag("task:" + t.id + ":done"); }).length;
       h += "<h2>" + esc(tt.title) + '</h2><div class="stat pg">решено ' + d + " из " + ts.length + "</div>";
       h += ts.map(function (t) {
-        return '<div class="item" id="task-' + t.id + '"><div class="q"><span class="qid">' + t.id + '</span><div class="qtext">' + mdInline(t.q) + "</div></div>" +
+        return '<div class="item" id="task-' + t.id + '"><div class="q"><span class="qid">' + esc(t.label || t.id) + '</span><div class="qtext">' + mdInline(t.q) + "</div></div>" +
           (t.hint ? '<details><summary>подсказка</summary><div class="body md">' + md(t.hint) + "</div></details>" : "") +
           '<details class="solution"><summary>решение</summary><div class="body md">' + md(t.solution) + "</div></details>" +
           '<div class="tools"><label class="chk"><input type="checkbox" data-k="task:' + t.id + ':done"' + (flag("task:" + t.id + ":done") ? " checked" : "") + "> решил сам</label></div></div>";
@@ -811,7 +831,7 @@ function pageSearch(q) {
     res.push('<div class="item"><a href="' + href + '"><b>' + title + '</b></a><div class="stat">…' + snip + "…</div></div>");
   }
   EXAM.exam.theory.forEach(function (x) { add("#/rk/theory/" + x.id, "РК " + esc(qLabel(x)) + ": " + mdInline(x.q), x.q + " " + x.answer); });
-  EXAM.exam.tasks.forEach(function (x) { add("#/rk/tasks/" + x.id, "Задача " + x.id, x.q + " " + x.hint + " " + x.solution); });
+  EXAM.exam.tasks.forEach(function (x) { add("#/rk/tasks/" + x.id, "Задача " + esc(x.label ? "билет " + x.label : x.id), x.q + " " + x.hint + " " + x.solution); });
   EXAM.traps.forEach(function (x) { add("#/traps", "Ловушка " + x.id + ": " + mdInline(x.title), x.title + " " + x.text); });
   EXAM.discrepancies.forEach(function (x) { add("#/disc", esc(txt("discItem", "Расхождение")) + ": " + mdInline(x.title), x.title + " " + x.text); });
   EXAM.topics.forEach(function (t) { add("#/t/" + t.id, "Тема " + esc(t.num) + ": " + mdInline(t.title), t.title + " " + (t.blocks || []).map(blockText).join(" ")); });

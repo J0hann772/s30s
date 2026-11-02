@@ -148,6 +148,7 @@ topic_ids = {t["id"] for t in topics}
 
 # ---------- вопросы РК ----------
 labels = {b["id"]: b.get("label", b["id"]) for b in cfg["blocks"]}
+item_pts = {b["id"]: b.get("itemPoints") for b in cfg["blocks"]}
 theory = []
 th_raw = (NOTES / "90_theory.md").read_text(encoding="utf-8")
 for sec in re.split(r"(?m)^### ", th_raw)[1:]:
@@ -172,7 +173,7 @@ for sec in re.split(r"(?m)^### ", th_raw)[1:]:
     for r in refs:
         if r not in topic_ids: errors.append("вопрос %s%d: нет темы %s" % (blk, n, r))
     item = {"id": "%s%d" % (blk, n), "label": "%s%d" % (labels.get(blk, blk), n), "block": blk, "n": n,
-            "points": None, "q": q, "answer": body, "refs": refs}
+            "points": item_pts.get(blk), "q": q, "answer": body, "refs": refs}
     if fig: item["figure"] = fig
     theory.append(item)
 theory_ids = {q["id"] for q in theory}
@@ -183,7 +184,8 @@ for t in topics:
 # ---------- задачи ----------
 types = {tt["id"]: tt for tt in cfg["taskTypes"]}
 tasks, cur = [], None
-for part in re.split(r"(?m)^# @", (NOTES / "95_tasks.md").read_text(encoding="utf-8"))[1:]:
+task_text = "\n".join((NOTES / f).read_text(encoding="utf-8") for f in cfg.get("taskFiles", ["95_tasks.md"]))
+for part in re.split(r"(?m)^# @", task_text)[1:]:
     tid = part.split(None, 1)[0]
     if tid not in types:
         errors.append("95_tasks.md: неизвестный тип задач @%s" % tid); continue
@@ -193,9 +195,14 @@ for part in re.split(r"(?m)^# @", (NOTES / "95_tasks.md").read_text(encoding="ut
         pre, _, rest = body.partition("<details><summary>")
         sol = rest.split("</summary>", 1)[1].split("</details>")[0].strip() if rest else ""
         if not sol: errors.append("задача %s: нет решения" % m.group(1))
-        tasks.append({"id": m.group(1), "type": tid, "q": m.group(2).strip(), "hint": pre.strip(),
-                      "solution": sol, "refs": types[tid].get("refs", [])})
+        item = {"id": m.group(1), "type": tid, "q": m.group(2).strip(), "hint": pre.strip(),
+                "solution": sol, "refs": types[tid].get("refs", [])}
+        ms = re.match(r"s(\d+)_(\d+)$", m.group(1))          # задача из слитого билета: s<билет>_<номер>
+        if ms: item["label"] = "%s.%s" % (ms.group(1), ms.group(2)); item["ticket"] = int(ms.group(1))
+        if types[tid].get("points"): item["points"] = types[tid]["points"]
+        tasks.append(item)
 task_by = {t["id"]: t for t in tasks}
+if len(task_by) != len(tasks): errors.append("задачи: повторяющиеся номера")
 
 # ---------- ловушки ----------
 traps = []
@@ -231,12 +238,15 @@ if raw:
 rq = cfg.get("rkq", {})
 sections = []
 for b in cfg["blocks"]:
-    items = [{"n": q["n"], "pts": "", "text": q["q"], "to": "theory:" + q["id"]} for q in theory if q["block"] == b["id"]]
+    pt = lambda p: "" if not p else ("%d балл" % p if p == 1 else "%d балла" % p)
+    items = [{"n": q["n"], "pts": pt(q["points"]), "text": q["q"], "to": "theory:" + q["id"]} for q in theory if q["block"] == b["id"]]
     if items: sections.append({"title": b.get("rkqTitle", b["title"]), "items": items})
-if tasks:
-    sections.append({"title": rq.get("tasksTitle", "Задачи"),
-                     "items": [{"n": t["id"], "pts": "", "text": t["q"], "to": "task:" + t["id"]}
-                               for t in sorted(tasks, key=lambda t: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", t["id"])])]})
+def natk(t): return [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", t["id"])]
+for sec in rq.get("taskSections") or [{"title": rq.get("tasksTitle", "Задачи"), "types": list(types)}]:
+    ts = sorted([t for t in tasks if t["type"] in sec["types"]], key=lambda t: (t.get("ticket", 0), natk(t)))
+    if ts:
+        sections.append({"title": sec["title"], "items": [{"n": t.get("label", t["id"]), "pts": ("%d балла" % t["points"] if t.get("points") in (2, 3, 4) else "%d баллов" % t["points"]) if t.get("points") else "",
+                                                          "text": t["q"], "to": "task:" + t["id"]} for t in ts]})
 rkq = {"header": rq.get("header", [cfg["title"], "", "", ""]), "note": rq.get("note"), "sections": sections}
 
 # ---------- вариант ----------
@@ -249,13 +259,38 @@ if v:
     for i, tid in enumerate(v.get("tasks", []), 1):
         if tid not in task_by:
             errors.append("вариант: нет задачи %s" % tid); continue
-        vt.append({"n": i, "points": None, "q": "**%s.** %s" % (tid, task_by[tid]["q"]), "solution": task_by[tid]["solution"]})
+        vt.append({"n": i, "points": task_by[tid].get("points"), "q": task_by[tid]["q"] if v.get("plainTasks") else "**%s.** %s" % (tid, task_by[tid]["q"]),
+                   "solution": task_by[tid]["solution"]})
     variant = {k: v[k] for k in ("title", "minutes", "scoring", "inTasks", "note", "passNote") if k in v}
     variant.update({"theory": v.get("theory", []), "tasks": vt})
 
 for tt in cfg["taskTypes"]:
     for r in tt.get("refs", []):
         if r not in topic_ids: errors.append("тип задач %s: нет темы %s" % (tt["id"], r))
+
+# ---------- решения к фото слитых вариантов (формат solutions/matan-rk1.js) ----------
+sol_js = None
+if cfg.get("slivy"):
+    th_by = {q["id"]: q for q in theory}
+    pool, items = {}, {}
+    for photo, rows in cfg["slivy"].items():
+        items[photo] = []
+        for row in rows:
+            n, ref = row[0], row[1]
+            kind, _, rid = ref.partition(":")
+            key = ref.replace(":", "_")
+            if kind == "task" and rid in task_by:
+                pool[key] = {"c": row[2] if len(row) > 2 else task_by[rid]["q"], "s": task_by[rid]["solution"]}
+            elif kind == "theory" and rid in th_by:
+                q = th_by[rid]
+                pool[key] = {"c": (row[2] if len(row) > 2 else q["q"]) + ("" if not q.get("points") else " (%s)" % ("1 балл" if q["points"] == 1 else "%d балла" % q["points"])),
+                             "s": q["answer"] + ("\n\nПодробно — «%s»." % ", ".join(t["title"] for t in topics if t["id"] in q["refs"]) if q["refs"] else "")}
+            else:
+                errors.append("слив «%s»: нет %s" % (photo, ref)); continue
+            items[photo].append([str(n), key])
+    sol_js = ("/* Сгенерировано tools/build_exam.py из %s/exam.json (slivy) — решения к фото слитых вариантов. */\n"
+              "window.S30S=window.S30S||{};window.S30S.solutions=window.S30S.solutions||{};\n"
+              "window.S30S.solutions[%s]=%s;\n") % (NOTES.as_posix(), json.dumps(cfg["id"]), json.dumps({"pool": pool, "items": items}, ensure_ascii=False, indent=1))
 
 if errors:
     sys.exit("Ошибки сборки:\n  " + "\n  ".join(errors))
@@ -273,5 +308,10 @@ js = "/* Сгенерировано tools/build_exam.py из %s — правьт
 js += "S30S.register(" + json.dumps(data, ensure_ascii=False, indent=1) + ");\n"
 OUT.parent.mkdir(parents=True, exist_ok=True)
 OUT.write_text(js, encoding="utf-8", newline="\n")
+if sol_js:
+    sp = OUT.parent.parent / "solutions" / (cfg["id"] + ".js")
+    sp.parent.mkdir(parents=True, exist_ok=True)
+    sp.write_text(sol_js, encoding="utf-8", newline="\n")
+    print("решения к сливам:", sp.as_posix(), "—", len(cfg["slivy"]), "фото")
 print("%s: тем %d, вопросов %d, задач %d, ловушек %d, неточностей %d, рисунков %d, %d КБ" % (
     cfg["id"], len(topics), len(theory), len(tasks), len(traps), len(discrepancies), len(figs), len(js.encode()) // 1024))
