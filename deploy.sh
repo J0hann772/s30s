@@ -24,7 +24,7 @@ DEPLOY_URL="https://s30s.ru"
 # deploy.conf, сохранённый в Windows (CRLF), оставляет \r в значениях: срезаем
 for _v in DEPLOY_HOST DEPLOY_USER DEPLOY_PATH DEPLOY_BRANCH DEPLOY_URL; do printf -v "$_v" '%s' "${!_v//$'\r'/}"; done
 # скрипт предназначен для запуска на вашем компьютере, а не на сервере
-if [ -d /var/www ] && [ "$(pwd)" = "$DEPLOY_PATH" ]; then echo "Это сервер ($DEPLOY_PATH). Запускайте deploy.sh на своём компьютере; на сервере достаточно: git pull --ff-only" >&2; exit 1; fi
+if [ -d /var/www ] && [ "$(pwd)" = "$DEPLOY_PATH" ]; then echo "Это сервер ($DEPLOY_PATH). Запускайте deploy.sh на своём компьютере; на сервере достаточно: git pull --ff-only && docker compose up -d --build" >&2; exit 1; fi
 
 MSG=""; DRY=0; BUILD=1
 while [ $# -gt 0 ]; do
@@ -76,7 +76,7 @@ fi
 run git push origin "$DEPLOY_BRANCH"
 
 say "3. Сервер $TARGET:$DEPLOY_PATH"
-run ssh "$TARGET" "cd '$DEPLOY_PATH' && git pull --ff-only origin '$DEPLOY_BRANCH' && git rev-parse --short HEAD"
+run ssh "$TARGET" "cd '$DEPLOY_PATH' && git pull --ff-only origin '$DEPLOY_BRANCH' && docker compose up -d --build && git rev-parse --short HEAD"
 echo "Локальный коммит: $(git rev-parse --short HEAD)"
 
 say "4. Проверка $DEPLOY_URL"

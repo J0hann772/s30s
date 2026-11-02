@@ -63,7 +63,7 @@ if ($dirty) {
 Run git @("push", "origin", $conf.DEPLOY_BRANCH)
 
 Say "3. Сервер ${target}:$($conf.DEPLOY_PATH)"
-$remote = "cd '$($conf.DEPLOY_PATH)' && git pull --ff-only origin '$($conf.DEPLOY_BRANCH)' && git rev-parse --short HEAD"
+$remote = "cd '$($conf.DEPLOY_PATH)' && git pull --ff-only origin '$($conf.DEPLOY_BRANCH)' && docker compose up -d --build && git rev-parse --short HEAD"
 Run ssh @($target, $remote)
 Write-Host "Локальный коммит: $((git rev-parse --short HEAD).Trim())"
 
