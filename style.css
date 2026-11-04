@@ -347,3 +347,26 @@ main{overflow-x:clip}
 @media (max-width:350px){.cards .row.sw .btn{padding-left:8px;padding-right:8px;font-size:14px}}
 .sol-acts{display:flex;gap:var(--u);flex:none}
 @media (max-width:520px){.lb-top{gap:var(--u);padding:var(--u)}.lb-top .lb-btn{padding:4px 8px}}
+
+/* Окно «Обновить сохранённые данные» */
+.modal-bg{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:12px;max-width:420px;width:100%;padding:calc(var(--u)*2.5);box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.modal h2{font-size:18px;margin:0 0 calc(var(--u)*1.25)}
+.modal p{margin:0 0 var(--u);font-size:14px;line-height:1.5}
+.modal .upd-sub{color:var(--muted);font-size:13px}
+.modal .upd-sub:empty{display:none}
+.modal-acts{display:flex;justify-content:flex-end;gap:var(--u);margin-top:calc(var(--u)*2)}
+.btn.pri{background:var(--text);color:var(--bg);border-color:var(--text)}
+.btn[disabled]{opacity:.6}
+@media (max-width:480px){ .modal-acts .btn{flex:1;min-height:44px} }
+.modal-bg{overflow-y:auto}
+.modal-wide{max-width:520px;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto}
+.modal h3{font-size:14px;margin:calc(var(--u)*2) 0 calc(var(--u)*.75)}
+.modal ul{margin:0;padding-left:18px;font-size:14px;line-height:1.5}
+.modal li{margin:0 0 calc(var(--u)*.5)}
+.info-st{display:grid;grid-template-columns:auto 1fr;gap:calc(var(--u)*.5) calc(var(--u)*1.5);margin:0;font-size:14px;padding:calc(var(--u)*1.25);border:1px solid var(--line);border-radius:8px}
+.info-st dt{color:var(--muted)}
+.info-st dd{margin:0}
+.info-st dd.ok{color:var(--ok)}
+.info-st dd.bad{color:var(--bad)}
+@media (max-width:480px){ .info-st{font-size:13px;gap:calc(var(--u)*.75) var(--u);padding:var(--u)} .info-st dt{max-width:110px} .modal-wide{padding:calc(var(--u)*2)} }

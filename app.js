@@ -27,8 +27,12 @@ function isDark() { var cur = lsGet("s30s:theme"); return cur ? cur === "dark" :
 function ctrlsHtml() {
   return '<span class="seg" role="group" aria-label="Размер текста"><button class="cbtn zoom" data-z="-1" aria-label="Уменьшить текст">А−</button>' +
     '<button class="cbtn zoom" data-z="1" aria-label="Увеличить текст">А+</button></span>' +
-    themeBtnHtml();
+    themeBtnHtml() + infoBtnHtml() + updBtnHtml();
 }
+var ICO_SYNC = '<svg class="ico" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a6 6 0 0 1-10.4 4.1M4 10a6 6 0 0 1 10.4-4.1"/><path d="M14.6 2.8v3.3h-3.3M5.4 17.2v-3.3h3.3"/></svg>';
+var ICO_INFO = '<svg class="ico" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.2"/><path d="M10 9v4.6"/><circle cx="10" cy="6.4" r=".5" fill="currentColor"/></svg>';
+function infoBtnHtml() { return '<button class="cbtn ibtn info-btn" title="Сохранённый сайт и работа без интернета" aria-label="Информация о сохранённом сайте и работе без интернета">' + ICO_INFO + "</button>"; }
+function updBtnHtml() { return '<button class="cbtn ibtn upd-btn" title="Обновить сохранённые данные сайта" aria-label="Обновить сохранённые данные сайта">' + ICO_SYNC + "</button>"; }
 var ICO_MOON = '<svg class="ico" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 11.8A6.8 6.8 0 0 1 8.2 3.5a6.8 6.8 0 1 0 8.3 8.3z"/></svg>';
 var ICO_BULB = '<svg class="ico" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.2 14.2c0-1.3-1.7-2.2-1.7-4.4a4.5 4.5 0 0 1 9 0c0 2.2-1.7 3.1-1.7 4.4z"/><path d="M7.8 16.5h4.4M8.6 18.3h2.8"/></svg>';
 function themeBtnHtml() {
@@ -976,6 +980,182 @@ function warmOffline() {
     });
   }).catch(function () {});
 }
+/* ===== Обновление сохранённых данных (кнопка ↻ в панели) =====
+   Всё или ничего: свежие файлы качаются мимо кэша во временное хранилище; основная копия
+   заменяется, только если пришли все основные файлы (страница, скрипты, данные, решения, списки материалов).
+   Фото и PDF, которые не скачались, остаются старыми. Прогресс (прочитано/знаю/решено) не трогается. */
+var UPD_HDR = "X-S30S-Refresh";   // sw.js пропускает такие запросы прямо в сеть
+function updFetch(u, ms) {
+  var ctl = window.AbortController ? new AbortController() : null;
+  var t = ctl ? setTimeout(function () { ctl.abort(); }, ms) : 0;
+  var h = {}; h[UPD_HDR] = "1";
+  return fetch(u, { cache: "no-cache", headers: h, signal: ctl ? ctl.signal : undefined })
+    .then(function (r) { clearTimeout(t); return r; }, function (e) { clearTimeout(t); throw e; });
+}
+function updWhen() { var v = +lsGet(OFFLINE_KEY); if (!v) return "ещё не сохранялись"; var d = new Date(v); return d.toLocaleDateString("ru-RU") + " " + d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }); }
+function updModal() {
+  if (document.getElementById("updM")) return;
+  var m = document.createElement("div"); m.className = "modal-bg"; m.id = "updM";
+  m.innerHTML = '<div class="modal" role="dialog" aria-modal="true" aria-labelledby="updT"><h2 id="updT">Обновить сохранённые данные?</h2>' +
+    '<p class="upd-msg">Сайт хранит копию конспектов, данных и материалов в браузере, чтобы работать без интернета. Обновление скачает свежую версию и заменит её. Прогресс и настройки сохранятся.</p>' +
+    '<p class="upd-sub">Последнее сохранение: ' + esc(updWhen()) + '</p>' +
+    '<div class="modal-acts"><button class="btn" data-a="close">Отмена</button><button class="btn pri" data-a="go">Обновить</button></div></div>';
+  document.body.appendChild(m);
+  var close = function () { if (m.dataset.busy) return; m.remove(); document.removeEventListener("keydown", onKey, true); };
+  var onKey = function (e) { if (e.key === "Escape") { e.stopPropagation(); close(); } };
+  document.addEventListener("keydown", onKey, true);
+  m.addEventListener("click", function (e) {
+    if (e.target === m) { close(); return; }
+    var b = e.target.closest("button[data-a]"); if (!b) return;
+    var a = b.getAttribute("data-a");
+    if (a === "close") close();
+    else if (a === "reload") location.reload();
+    else if (a === "go") runUpdate(m);
+  });
+  m.querySelector('[data-a="go"]').focus();
+}
+document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest(".upd-btn")) updModal(); });
+function updState(m, msg, sub, acts) {
+  m.querySelector(".upd-msg").textContent = msg;
+  m.querySelector(".upd-sub").textContent = sub || "";
+  m.querySelector(".modal-acts").innerHTML = acts;
+}
+function runUpdate(m) {
+  var FAIL = "Не удалось обновить. Оставлена сохранённая версия.";
+  var closeBtn = '<button class="btn" data-a="close">Закрыть</button>';
+  if (navigator.onLine === false) { updState(m, FAIL, "Нет подключения к интернету.", closeBtn); return; }
+  m.dataset.busy = "1";
+  updState(m, "Скачиваю свежую версию…", "", '<button class="btn" disabled>Подождите…</button>');
+  var abs = function (u, base) { return new URL(u, base || location.href).href; };
+  var core = {}, media = {}, texts = {};
+  ["index.html", "style.css", "app.js", "manifest.js", "widgets.js", "vendor/katex/katex.min.css", "vendor/katex/katex.min.js"].forEach(function (u) { core[abs(u)] = 1; });
+  var TMP = "s30s-upd-" + Date.now(), tmp, bad = [], mediaFail = 0, done = 0;
+  var get = function (u, isMedia, optional) {
+    return updFetch(u, isMedia ? 90000 : 20000).then(function (r) {
+      if (optional && r.status === 404) { delete core[u]; return null; }
+      if (!r.ok) throw new Error(r.status);
+      var keep = r.clone();
+      return (isMedia ? Promise.resolve() : r.text().then(function (t) { texts[u] = t; }))
+        .then(function () { return tmp.put(u, keep); })
+        .then(function () { done++; updState(m, "Скачиваю свежую версию…", "Файлов: " + done, '<button class="btn" disabled>Подождите…</button>'); });
+    }).catch(function () { if (isMedia) mediaFail++; else bad.push(u); });
+  };
+  var pool = function (list, isMedia) {
+    var i = 0, run = function () { if (i >= list.length) return Promise.resolve(); var u = list[i++]; return get(u, isMedia).then(run); };
+    return Promise.all([run(), run(), run(), run()]);
+  };
+  var finishFail = function (why) {
+    delete m.dataset.busy;
+    caches.delete(TMP).catch(function () {});
+    updState(m, FAIL, why, closeBtn);
+  };
+  if (!window.caches) {   // без кэша браузера: просто перезагрузить мимо HTTP-кэша
+    Promise.all(Object.keys(core).map(function (u) { return updFetch(u, 20000).then(function (r) { if (!r.ok) throw 0; }); }))
+      .then(function () { location.reload(); }, function () { delete m.dataset.busy; updState(m, FAIL, "Сервер недоступен.", closeBtn); });
+    return;
+  }
+  caches.open(TMP).then(function (c) {
+    tmp = c;
+    return pool(Object.keys(core), false);
+  }).then(function () {
+    if (bad.length) throw new Error("core");
+    // этап 2: по свежему manifest.js — данные контрольных, решения, списки материалов
+    var man = texts[abs("manifest.js")] || "", ids = [], second = [];
+    (man.match(/\bdata:\s*"[^"]+"/g) || []).forEach(function (x) { var u = abs(x.replace(/^data:\s*"|"$/g, "")); core[u] = 1; second.push(get(u, false)); });
+    (man.match(/\bid:\s*"[^"]+"/g) || []).forEach(function (x) { ids.push(x.replace(/^id:\s*"|"$/g, "")); });
+    ids.forEach(function (id) {
+      [abs("solutions/" + id + ".js"), abs("materials/" + id + "/index.js")].forEach(function (u) { core[u] = 1; second.push(get(u, false, true)); });
+    });
+    return Promise.all(second).then(function () { return ids; });
+  }).then(function (ids) {
+    if (bad.length) throw new Error("core");
+    // этап 3: фото, PDF, миниатюры из свежих списков материалов
+    ids.forEach(function (id) {
+      var u = abs("materials/" + id + "/index.js"), t = texts[u]; if (!t) return;
+      (t.match(/"(url|thumb)":"[^"]+"/g) || []).forEach(function (x) {
+        var v = x.replace(/^"(url|thumb)":"|"$/g, ""); if (/\/_zip\//.test(v)) return; media[abs(v)] = 1;
+      });
+    });
+    return pool(Object.keys(media), true);
+  }).then(function () {
+    if (bad.length) throw new Error("core");
+    // всё основное пришло: переносим во основной кэш
+    return caches.open(SW_CACHE).then(function (main) {
+      return tmp.keys().then(function (reqs) {
+        return Promise.all(reqs.map(function (r) { return tmp.match(r).then(function (res) { return main.put(r.url, res); }); }));
+      }).then(function () {
+        return main.keys().then(function (reqs) {   // удалить материалы, которых больше нет
+          return Promise.all(reqs.filter(function (r) { return /\/materials\/[^/]+\/(?!index\.js$)/.test(new URL(r.url).pathname) && !media[r.url]; }).map(function (r) { return main.delete(r); }));
+        });
+      });
+    });
+  }).then(function () {
+    caches.delete(TMP).catch(function () {});
+    lsSet(OFFLINE_KEY, String(Date.now()));
+    if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) navigator.serviceWorker.getRegistration().then(function (r) { if (r) r.update().catch(function () {}); }).catch(function () {});
+    delete m.dataset.busy;
+    updState(m, "Данные обновлены.", mediaFail ? "Не скачалось файлов материалов: " + mediaFail + " — для них оставлены сохранённые копии." : "Перезагрузите страницу, чтобы увидеть новую версию.",
+      '<button class="btn pri" data-a="reload">Перезагрузить</button>');
+  }).catch(function () {
+    finishFail(bad.length ? "Не удалось скачать файлов: " + bad.length + ". Проверьте интернет и попробуйте ещё раз." : "Ошибка при сохранении в браузере.");
+  });
+}
+/* ===== Окно «i»: состояние сохранённой копии и работа без интернета ===== */
+function fmtBytes(n) { if (!(n >= 0)) return "—"; if (n < 1024 * 1024) return Math.max(1, Math.round(n / 1024)) + " КБ"; return (n / 1048576).toFixed(n < 10485760 ? 1 : 0).replace(".", ",") + " МБ"; }
+function infoModal() {
+  if (document.getElementById("infoM")) return;
+  var m = document.createElement("div"); m.className = "modal-bg"; m.id = "infoM";
+  var swOk = "serviceWorker" in navigator && !!window.caches;
+  m.innerHTML = '<div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="infoT"><h2 id="infoT">Сохранённый сайт</h2>' +
+    '<dl class="info-st" id="infoSt"><dt>Состояние</dt><dd>Проверяю…</dd></dl>' +
+    '<h3>Как это работает</h3><ul>' +
+    '<li>При первом открытии сайт сам сохраняет в браузер конспекты, вопросы, задачи, решения и материалы (фото, PDF). Ничего нажимать не нужно.</li>' +
+    '<li>Без интернета сайт открывается по тому же адресу: работают конспекты, карточки, задачи, вариант, просмотр материалов и решений.</li>' +
+    '<li>Без интернета не скачиваются архивы материалов (кнопка «скачать всё»), они слишком тяжёлые для хранения.</li>' +
+    '<li>Когда интернет есть, сайт берёт свежие страницы и данные из сети. Если сеть медленная, показывает сохранённую копию.</li>' +
+    '<li>Прогресс (знаю, прочитано, решено), тема и масштаб хранятся только в этом браузере на этом устройстве.</li></ul>' +
+    '<h3>Если не видно обновлений</h3><ul>' +
+    '<li>Нажмите кнопку ↻ рядом: сайт скачает свежую версию целиком. Если что-то не скачается, останется сохранённая копия, ничего не пропадёт.</li>' +
+    '<li>Очистка данных сайта в настройках браузера удалит и копию, и прогресс.</li></ul>' +
+    '<div class="modal-acts"><button class="btn" data-a="close">Закрыть</button><button class="btn pri" data-a="upd">Обновить данные</button></div></div>';
+  document.body.appendChild(m);
+  var close = function () { m.remove(); document.removeEventListener("keydown", onKey, true); };
+  var onKey = function (e) { if (e.key === "Escape") { e.stopPropagation(); close(); } };
+  document.addEventListener("keydown", onKey, true);
+  m.addEventListener("click", function (e) {
+    if (e.target === m) { close(); return; }
+    var b = e.target.closest("button[data-a]"); if (!b) return;
+    if (b.getAttribute("data-a") === "upd") { close(); updModal(); } else close();
+  });
+  m.querySelector('[data-a="close"]').focus();
+  var rows = [];
+  var row = function (k, v, cls) { rows.push("<dt>" + esc(k) + '</dt><dd' + (cls ? ' class="' + cls + '"' : "") + ">" + esc(v) + "</dd>"); };
+  var render = function () { var el = document.getElementById("infoSt"); if (el) el.innerHTML = rows.join(""); };
+  var saved = +lsGet(OFFLINE_KEY);
+  row("Сеть", navigator.onLine === false ? "нет подключения: показывается сохранённая копия" : "есть подключение", navigator.onLine === false ? "bad" : "ok");
+  if (!swOk) { row("Без интернета", "этот браузер не поддерживает сохранение сайта", "bad"); render(); return; }
+  if (location.protocol !== "https:" && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) { row("Без интернета", "сохранение работает только по https", "bad"); render(); return; }
+  row("Без интернета", saved ? "сайт сохранён, работает без сети" : "сохраняется… Оставьте страницу открытой на минуту при интернете", saved ? "ok" : "");
+  row("Сохранено", saved ? updWhen() : "ещё нет");
+  Promise.all([
+    caches.open(SW_CACHE).then(function (c) { return c.keys(); }).then(function (ks) {
+      var mat = ks.filter(function (r) { return /\/materials\/[^/]+\/(?!index\.js$)/.test(new URL(r.url).pathname); }).length;
+      return { all: ks.length, mat: mat };
+    }).catch(function () { return null; }),
+    navigator.storage && navigator.storage.estimate ? navigator.storage.estimate().catch(function () { return null; }) : Promise.resolve(null),
+    navigator.storage && navigator.storage.persisted ? navigator.storage.persisted().catch(function () { return null; }) : Promise.resolve(null),
+    navigator.serviceWorker.getRegistration().then(function (r) { return !!(r && r.active); }).catch(function () { return false; })
+  ]).then(function (res) {
+    var c = res[0], est = res[1], pers = res[2], act = res[3];
+    if (c) row("Файлов в копии", c.all + (c.mat ? " (материалы: " + c.mat + ")" : ""));
+    if (est && est.usage >= 0) row("Занято места", fmtBytes(est.usage) + (est.quota ? " из доступных " + fmtBytes(est.quota) : ""));
+    row("Фоновый помощник", act ? "активен" : "не запущен, перезагрузите страницу", act ? "" : "bad");
+    if (pers !== null) row("Защита от очистки", pers ? "браузер не удалит копию сам" : "браузер может удалить копию при нехватке места или долгом простое");
+    render();
+  });
+  render();
+}
+document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest(".info-btn")) infoModal(); });
 (function start() {
   ensureKatex().then(function () {
     if (!allExams().length) { $view.innerHTML = '<p class="empty">manifest.js пуст.</p>'; return; }

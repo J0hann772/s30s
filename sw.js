@@ -53,6 +53,7 @@ self.addEventListener("fetch", function (e) {
   if (req.method !== "GET") return;
   var u = new URL(req.url);
   if (u.origin !== self.location.origin) return;
+  if (req.headers.has("x-s30s-refresh")) return;                      // кнопка «Обновить сохранённые данные»: только сеть
   if (/\/materials\/_zip\//.test(u.pathname)) return;               // скачивание архивов — напрямую, в том числе по <a download>
   if (u.pathname === new URL("sw.js", self.registration.scope).pathname) return;
 
