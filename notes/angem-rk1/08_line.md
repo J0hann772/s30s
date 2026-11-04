@@ -77,6 +77,13 @@ $$\rho(M_1,L)=\frac{|\overrightarrow{M_0M_1}\times\vec s|}{|\vec s|}.$$
 Приравниваем: $|\vec s|\cdot\rho=|\overrightarrow{M_0M_1}\times\vec s|$. $\blacksquare$
 </details>
 
+**Способ 2 — через скалярное произведение (проекцию).** Разложим $\overrightarrow{M_0M_1}$ на часть вдоль прямой и часть, перпендикулярную ей:
+$$\vec p=\frac{\overrightarrow{M_0M_1}\cdot\vec s}{\vec s\cdot\vec s}\,\vec s,\qquad \vec h=\overrightarrow{M_0M_1}-\vec p,\qquad \rho=|\vec h|,\qquad H=M_0+\vec p.$$
+$\vec p$ — векторная проекция на направление прямой, $\vec h$ — перпендикуляр от прямой к точке, $H$ — его основание. Проверка перпендикулярности: $\vec h\cdot\vec s=\overrightarrow{M_0M_1}\cdot\vec s-\frac{\overrightarrow{M_0M_1}\cdot\vec s}{\vec s\cdot\vec s}(\vec s\cdot\vec s)=0$.
+Если нужно только число, хватит теоремы Пифагора: $\rho^2=|\overrightarrow{M_0M_1}|^2-\dfrac{(\overrightarrow{M_0M_1}\cdot\vec s)^2}{|\vec s|^2}$.
+
+Когда что брать: векторное произведение — короче, если нужно только расстояние (и так формулу пишут на РК); проекция — когда нужна ещё точка $H$ (основание перпендикуляра, симметричная точка $P'=2H-P$) или задача на плоскости, где векторного произведения нет.
+
 ## Расстояние между скрещивающимися прямыми (А30)
 $$\rho(L_1,L_2)=\frac{|\vec s_1\,\vec s_2\,\overrightarrow{M_1M_2}|}{|\vec s_1\times\vec s_2|}.$$
 
@@ -108,6 +115,9 @@ $|\vec s_1\times\vec s_2|\cdot\rho=|\vec s_1\vec s_2\overrightarrow{M_1M_2}|$. $
 $M_0(0,2,-1)$, $\vec s=\{2,1,-1\}$, $\overrightarrow{M_0P}=\{1,-3,3\}$.
 $\overrightarrow{M_0P}\times\vec s=\{(-3)(-1)-3\cdot1,\ 3\cdot2-1\cdot(-1),\ 1\cdot1-(-3)\cdot2\}=\{0,7,7\}$, $\ |\cdot|=7\sqrt2$, $\ |\vec s|=\sqrt6$.
 $\rho=\frac{7\sqrt2}{\sqrt6}=\frac{7}{\sqrt3}$.
+
+Способ 2: $\overrightarrow{M_0P}\cdot\vec s=2-3-3=-4$, $\vec s\cdot\vec s=6$, $\vec p=-\frac23\{2,1,-1\}=\left\{-\frac43,-\frac23,\frac23\right\}$.
+$\vec h=\{1,-3,3\}-\vec p=\left\{\frac73,-\frac73,\frac73\right\}$, $\rho=\frac73\sqrt3=\frac7{\sqrt3}$ — то же. Основание перпендикуляра $H=M_0+\vec p=\left(-\frac43;\frac43;-\frac13\right)$.
 </details>
 
 ## Типичные ошибки

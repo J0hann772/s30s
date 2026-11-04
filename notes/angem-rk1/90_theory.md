@@ -157,6 +157,9 @@ $$\vec s_1\,\vec s_2\,\overrightarrow{M_1M_2}=0.$$
 refs: g08
 $$\rho(M_1,L)=\frac{|\overrightarrow{M_0M_1}\times\vec s|}{|\vec s|}.$$
 {{figure:dist_point_line}}
+**Другой способ — через скалярное произведение.** Вычесть из $\overrightarrow{M_0M_1}$ его проекцию на прямую:
+$$\vec h=\overrightarrow{M_0M_1}-\frac{\overrightarrow{M_0M_1}\cdot\vec s}{\vec s\cdot\vec s}\,\vec s,\qquad \rho=|\vec h|.$$
+Основание перпендикуляра: $H=M_0+t\,\vec s$, где $t=\dfrac{\overrightarrow{M_0M_1}\cdot\vec s}{\vec s\cdot\vec s}$. На вопрос РК пиши формулу через векторное произведение, как в конспекте.
 
 ### A30. Расстояние между скрещивающимися прямыми L₁(M₁, s₁) и L₂(M₂, s₂)
 refs: g08

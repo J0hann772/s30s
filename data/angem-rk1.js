@@ -797,7 +797,7 @@ S30S.register({
     },
     {
      "type": "md",
-     "text": "## Расстояние между скрещивающимися прямыми (А30)\n$$\\rho(L_1,L_2)=\\frac{|\\vec s_1\\,\\vec s_2\\,\\overrightarrow{M_1M_2}|}{|\\vec s_1\\times\\vec s_2|}.$$"
+     "text": "**Способ 2 — через скалярное произведение (проекцию).** Разложим $\\overrightarrow{M_0M_1}$ на часть вдоль прямой и часть, перпендикулярную ей:\n$$\\vec p=\\frac{\\overrightarrow{M_0M_1}\\cdot\\vec s}{\\vec s\\cdot\\vec s}\\,\\vec s,\\qquad \\vec h=\\overrightarrow{M_0M_1}-\\vec p,\\qquad \\rho=|\\vec h|,\\qquad H=M_0+\\vec p.$$\n$\\vec p$ — векторная проекция на направление прямой, $\\vec h$ — перпендикуляр от прямой к точке, $H$ — его основание. Проверка перпендикулярности: $\\vec h\\cdot\\vec s=\\overrightarrow{M_0M_1}\\cdot\\vec s-\\frac{\\overrightarrow{M_0M_1}\\cdot\\vec s}{\\vec s\\cdot\\vec s}(\\vec s\\cdot\\vec s)=0$.\nЕсли нужно только число, хватит теоремы Пифагора: $\\rho^2=|\\overrightarrow{M_0M_1}|^2-\\dfrac{(\\overrightarrow{M_0M_1}\\cdot\\vec s)^2}{|\\vec s|^2}$.\n\nКогда что брать: векторное произведение — короче, если нужно только расстояние (и так формулу пишут на РК); проекция — когда нужна ещё точка $H$ (основание перпендикуляра, симметричная точка $P'=2H-P$) или задача на плоскости, где векторного произведения нет.\n\n## Расстояние между скрещивающимися прямыми (А30)\n$$\\rho(L_1,L_2)=\\frac{|\\vec s_1\\,\\vec s_2\\,\\overrightarrow{M_1M_2}|}{|\\vec s_1\\times\\vec s_2|}.$$"
     },
     {
      "type": "figure",
@@ -825,7 +825,7 @@ S30S.register({
     {
      "type": "example",
      "task": "**Пример.** Расстояние от $P(1,-1,2)$ до прямой $\\frac x2=\\frac{y-2}1=\\frac{z+1}{-1}$ (задача 427).",
-     "solution": "$M_0(0,2,-1)$, $\\vec s=\\{2,1,-1\\}$, $\\overrightarrow{M_0P}=\\{1,-3,3\\}$.\n$\\overrightarrow{M_0P}\\times\\vec s=\\{(-3)(-1)-3\\cdot1,\\ 3\\cdot2-1\\cdot(-1),\\ 1\\cdot1-(-3)\\cdot2\\}=\\{0,7,7\\}$, $\\ |\\cdot|=7\\sqrt2$, $\\ |\\vec s|=\\sqrt6$.\n$\\rho=\\frac{7\\sqrt2}{\\sqrt6}=\\frac{7}{\\sqrt3}$."
+     "solution": "$M_0(0,2,-1)$, $\\vec s=\\{2,1,-1\\}$, $\\overrightarrow{M_0P}=\\{1,-3,3\\}$.\n$\\overrightarrow{M_0P}\\times\\vec s=\\{(-3)(-1)-3\\cdot1,\\ 3\\cdot2-1\\cdot(-1),\\ 1\\cdot1-(-3)\\cdot2\\}=\\{0,7,7\\}$, $\\ |\\cdot|=7\\sqrt2$, $\\ |\\vec s|=\\sqrt6$.\n$\\rho=\\frac{7\\sqrt2}{\\sqrt6}=\\frac{7}{\\sqrt3}$.\n\nСпособ 2: $\\overrightarrow{M_0P}\\cdot\\vec s=2-3-3=-4$, $\\vec s\\cdot\\vec s=6$, $\\vec p=-\\frac23\\{2,1,-1\\}=\\left\\{-\\frac43,-\\frac23,\\frac23\\right\\}$.\n$\\vec h=\\{1,-3,3\\}-\\vec p=\\left\\{\\frac73,-\\frac73,\\frac73\\right\\}$, $\\rho=\\frac73\\sqrt3=\\frac7{\\sqrt3}$ — то же. Основание перпендикуляра $H=M_0+\\vec p=\\left(-\\frac43;\\frac43;-\\frac13\\right)$."
     },
     {
      "type": "md",
@@ -1765,7 +1765,7 @@ S30S.register({
     "n": 29,
     "points": 1,
     "q": "Расстояние от точки M₁ до прямой L(M₀, s)",
-    "answer": "$$\\rho(M_1,L)=\\frac{|\\overrightarrow{M_0M_1}\\times\\vec s|}{|\\vec s|}.$$",
+    "answer": "$$\\rho(M_1,L)=\\frac{|\\overrightarrow{M_0M_1}\\times\\vec s|}{|\\vec s|}.$$\n\n**Другой способ — через скалярное произведение.** Вычесть из $\\overrightarrow{M_0M_1}$ его проекцию на прямую:\n$$\\vec h=\\overrightarrow{M_0M_1}-\\frac{\\overrightarrow{M_0M_1}\\cdot\\vec s}{\\vec s\\cdot\\vec s}\\,\\vec s,\\qquad \\rho=|\\vec h|.$$\nОснование перпендикуляра: $H=M_0+t\\,\\vec s$, где $t=\\dfrac{\\overrightarrow{M_0M_1}\\cdot\\vec s}{\\vec s\\cdot\\vec s}$. На вопрос РК пиши формулу через векторное произведение, как в конспекте.",
     "refs": [
      "g08"
     ],
