@@ -3,7 +3,7 @@ S30S.register({
  "id": "angem-rk1",
  "subject": "angem",
  "title": "Аналитическая геометрия — РК1: векторы, плоскости, прямые",
- "date": "2026-11-05",
+ "date": null,
  "topics": [
   {
    "id": "g01",
