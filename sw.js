@@ -4,16 +4,28 @@
    - vendor/ и материалы (фото, PDF, миниатюры): сначала кэш (быстро и офлайн), недостающее докачивается и сохраняется;
    - архивы /materials/_zip/ не кэшируются (тяжёлые, скачиваются напрямую).
    Имя кэша SW_CACHE должно совпадать с app.js. Если заменить фото материалов под тем же именем, поднимите версию (v1 -> v2). */
-var SW_CACHE = "s30s-v1";
+var SW_CACHE = "s30s-v2";
 var NET_TIMEOUT = 3500;
 var INDEX = new URL("index.html", self.registration.scope).href;
 
 self.addEventListener("install", function () { self.skipWaiting(); });
+/* Новая версия sw.js (другое имя кэша): удалить старую копию и один раз перезагрузить открытые вкладки,
+   чтобы у всех, кто открыл сайт со старой версией, сразу подтянулась новая. При первой установке не перезагружаем. */
 self.addEventListener("activate", function (e) {
   e.waitUntil(
     caches.keys()
-      .then(function (ks) { return Promise.all(ks.filter(function (k) { return /^s30s-/.test(k) && k !== SW_CACHE; }).map(function (k) { return caches.delete(k); })); })
-      .then(function () { return self.clients.claim(); })
+      .then(function (ks) {
+        var old = ks.filter(function (k) { return /^s30s-v/.test(k) && k !== SW_CACHE; });
+        return Promise.all(old.map(function (k) { return caches.delete(k); })).then(function () { return old.length > 0; });
+      })
+      .then(function (upgraded) {
+        return self.clients.claim().then(function () {
+          if (!upgraded) return;
+          return self.clients.matchAll({ type: "window" }).then(function (cs) {
+            return Promise.all(cs.map(function (c) { return c.navigate ? c.navigate(c.url).catch(function () {}) : null; }));
+          });
+        });
+      })
   );
 });
 

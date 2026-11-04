@@ -933,7 +933,7 @@ function openExam(id, then) {
 }
 function ensureKatex() { return Promise.resolve(); }  // KaTeX только локальный (vendor/katex); внешних скриптов нет
 /* ===== Офлайн: service worker (sw.js) + предзагрузка материалов в кэш браузера ===== */
-var SW_CACHE = "s30s-v1";   // совпадает с sw.js
+var SW_CACHE = "s30s-v2";   // совпадает с sw.js
 var OFFLINE_KEY = "s30s:offline";
 function offlineText() { return lsGet(OFFLINE_KEY) ? "Сайт и материалы сохранены в браузере: работают без интернета (кроме скачивания архивов)." : ""; }
 function setupOffline() {
