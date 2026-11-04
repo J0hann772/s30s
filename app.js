@@ -200,12 +200,24 @@ function theoryById(id) { return EXAM.exam.theory.filter(function (q) { return q
 function qLabel(q) { return q.label || q.id; }                 // подпись вопроса («Б3» вместо «B3»)
 function ptsHtml(p) { return p ? ' <span class="stat">(' + p + " б.)</span>" : ""; } // баллы, если известны
 function txt(k, def) { return (EXAM && EXAM[k]) || (EXAM && EXAM.exam && EXAM.exam[k]) || def; } // настраиваемые тексты
-function daysLeft() {
-  if (EXAM_META && EXAM_META.when) return EXAM_META.when;
-  if (!EXAM_META || !EXAM_META.date) return "";
-  var d = Math.ceil((new Date(EXAM_META.date + "T09:00:00") - new Date()) / 864e5);
-  return d > 0 ? "через " + d + " дн." : d === 0 ? "сегодня" : "";
+function dayDiff(d) {   // календарные дни до даты: 0 — сегодня, 1 — завтра, <0 — прошла
+  var t = new Date(d + "T12:00:00"), n = new Date(); if (isNaN(t)) return null;
+  return Math.round((new Date(t.getFullYear(), t.getMonth(), t.getDate()) - new Date(n.getFullYear(), n.getMonth(), n.getDate())) / 864e5);
 }
+function plural(n, a, b, c) { var m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 12 || h > 14) ? b : c; }
+function relDay(d) {
+  var n = dayDiff(d); if (n === null) return "";
+  return n === 0 ? "сегодня" : n === 1 ? "завтра" : n === 2 ? "послезавтра" : n > 0 ? "через " + n + " " + plural(n, "день", "дня", "дней") : "прошла";
+}
+function shortDate(d) { try { return new Date(d + "T12:00:00").toLocaleDateString("ru-RU", { day: "numeric", month: "long" }); } catch (e) { return d || ""; } }
+function examWhen(e) {   // «9–10 неделя · 5 ноября, завтра» / «дата не указана»
+  var parts = [];
+  if (e.when && !(e.date && /не указана/.test(e.when))) parts.push(e.when);
+  if (e.date) parts.push(shortDate(e.date) + (relDay(e.date) ? ", " + relDay(e.date) : ""));
+  return parts.join(" · ") || "дата не указана";
+}
+function examSoon(e) { var n = e.date ? dayDiff(e.date) : null; return n !== null && n >= 0 && n <= 3; }
+function daysLeft() { return EXAM_META ? examWhen(EXAM_META) : ""; }
 function setTitle(t, label) {
   var box = document.getElementById("topTitle"), ex = EXAM_META ? String(EXAM_META.title).split(":")[0] : "";
   box.textContent = "";
@@ -241,8 +253,8 @@ function renderSide(route) {
     return '<button class="sec" data-sec="' + name + '" aria-expanded="' + !closed + '"><span>' + title + "</span></button>";
   }
   function body(name, html) { return '<div class="secbody" id="sb-' + name + '"' + (secClosed(name) ? " hidden" : "") + ">" + html + "</div>"; }
-  var h = '<div class="side-head"><div class="brand">' + logoHtml() + '<span class="blinks">' + themeBtnHtml() + '</span></div>' +
-    '<div class="exam-title">' + esc(EXAM_META.title) + (daysLeft() ? ", " + daysLeft() : "") + "</div></div>" +
+  var h = '<div class="side-head"><div class="brand">' + logoHtml() + '<span class="blinks">' + infoBtnHtml() + updBtnHtml() + themeBtnHtml() + '</span></div>' +
+    '<div class="exam-title"><b>' + esc(EXAM_META.title) + '</b><span' + (examSoon(EXAM_META) ? ' class="soon"' : "") + ">" + esc(daysLeft()) + "</span></div></div>" +
     '<div class="side-scroll" id="sideScroll"><nav>' +
     link("#/rkq", "Список вопросов РК") +
     link("#/rk", "РК: вопросы, задачи, вариант") +
@@ -844,18 +856,19 @@ function pageSearch(q) {
 
 /* ===== Главная: карточки контрольных ===== */
 function fmtDate(d) { try { return new Date(d + "T12:00:00").toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }); } catch (e) { return d || ""; } }
-function daysTo(d) { if (!d) return ""; var n = Math.ceil((new Date(d + "T09:00:00") - new Date()) / 864e5); return n > 0 ? "через " + n + " дн." : n === 0 ? "сегодня" : "прошла"; }
+function daysTo(d) { return relDay(d); }
 function pageHome() {
   setTitle("s30s");
   var h = '<div class="homehead">' + logoHtml(true) + "</div>" +
     '<h1>Контрольные</h1><p class="meta">Выберите контрольную: откроются конспекты, вопросы, задачи и тренировка именно под неё.</p>';
+  h += '<div class="subjects">';
   (window.S30S_MANIFEST || []).forEach(function (s) {
-    h += "<h2>" + esc(s.title) + '</h2><div class="xgrid">' + s.exams.map(function (e) {
-      return '<a class="xcard" href="#/open/' + encodeURIComponent(e.id) + '"><b>' + esc(e.title) + '</b><span class="xd">' + esc(e.when ? e.when : fmtDate(e.date)) +
-        (!e.when && e.date ? " · " + esc(daysTo(e.date)) : "") + "</span>" + (e.description ? '<span class="xs">' + esc(e.description) + "</span>" : "") + "</a>";
-    }).join("") + "</div>";
+    h += '<section class="subj"><h2>' + esc(s.title) + '</h2><div class="xgrid">' + s.exams.map(function (e) {
+      return '<a class="xcard" href="#/open/' + encodeURIComponent(e.id) + '"><span class="xd' + (examSoon(e) ? " soon" : "") + '">' + esc(examWhen(e)) + "</span><b>" + esc(e.title) + "</b>" +
+        (e.description ? '<span class="xs">' + esc(e.description) + "</span>" : "") + '<span class="xgo">Открыть</span></a>';
+    }).join("") + "</div></section>";
   });
-  return h;
+  return h + "</div>";
 }
 
 /* ===== Роутер ===== */

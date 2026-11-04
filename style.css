@@ -370,3 +370,66 @@ main{overflow-x:clip}
 .info-st dd.ok{color:var(--ok)}
 .info-st dd.bad{color:var(--bad)}
 @media (max-width:480px){ .info-st{font-size:13px;gap:calc(var(--u)*.75) var(--u);padding:var(--u)} .info-st dt{max-width:110px} .modal-wide{padding:calc(var(--u)*2)} }
+
+/* ===== Дизайн v2: плотнее списки, главная сеткой, телефонная панель ===== */
+/* Вопросы и задачи: отступ под номер, «ответ / знаю / конспект» одной строкой, тонкие разделители */
+.item:has(>.q){--qi:44px;padding:calc(var(--u)*2) 0 calc(var(--u)*1.75) var(--qi);border-top:1px solid var(--line)}
+.item:has(>.q)+.item{margin-top:0}
+.item:has(>.q) .q{margin-left:calc(-1*var(--qi));gap:0}
+.item:has(>.q) .qid{min-width:var(--qi);color:var(--muted);font-weight:600}
+.item:has(>.q) .qtext{line-height:1.6}
+.item:has(>.q)>details{margin:calc(var(--u)*.75) 0 0}
+.item:has(>.q)>details:not([open]){display:inline-block;margin-right:calc(var(--u)*2.5);vertical-align:middle}
+.item:has(>.q)>details>summary{padding:2px 0;font-size:14px}
+.item:has(>.q)>details[open]>summary{margin-bottom:calc(var(--u)*.75)}
+.item:has(>.q)>details>.body{margin:0 0 calc(var(--u)*.5)}
+.item:has(>.q)>.tools{display:inline-flex;margin-top:calc(var(--u)*.75);vertical-align:middle;gap:calc(var(--u)*2.5);min-height:28px}
+.item:has(>.q)>details[open]~.tools{display:flex}
+details>summary::before{margin-right:calc(var(--u)*.75)}
+.item:has(>.q) .tools a{color:var(--muted)}
+.item:has(>.q) .tools a:hover{color:var(--accent)}
+@media (max-width:860px){ .item:has(>.q){--qi:36px} .item:has(>.q)>.tools{gap:calc(var(--u)*2)} }
+
+/* Главная: предметы рядом, дата плашкой, «Открыть» внизу карточки */
+.wrap .subjects{max-width:var(--tw);margin:calc(var(--u)*4) auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:calc(var(--u)*4) calc(var(--u)*3)}
+.subjects h2{margin:0 0 calc(var(--u)*1.5);font-size:15px;font-weight:600;color:var(--muted)}
+.subjects .xgrid{grid-template-columns:1fr;max-width:none}
+.xcard{border-radius:10px;padding:calc(var(--u)*2.5) calc(var(--u)*2.5) calc(var(--u)*2);gap:var(--u);height:100%;transition:border-color .12s,background .12s}
+.xcard b{font-size:18px}
+.xcard .xd{align-self:flex-start;font-size:12px;line-height:1.4;padding:3px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
+.xcard .xd.soon{color:var(--accent);border-color:var(--accent)}
+.xcard .xs{flex:1}
+.xcard .xgo{font-size:14px;color:var(--accent);margin-top:calc(var(--u)*.5)}
+.xcard .xgo::after{content:" \203A"}
+.xcard:hover .xgo{text-decoration:underline}
+.homehead{margin-bottom:calc(var(--u)*4)}
+
+/* Боковая панель: название контрольной и дата отдельными строками */
+.exam-title{display:flex;flex-direction:column;gap:2px}
+.exam-title b{font-weight:600;color:var(--text);font-size:13px}
+.exam-title .soon{color:var(--accent)}
+.side-head .info-btn,.side-head .upd-btn{display:none}
+/* Телефон: i и ↻ уезжают в выдвижную панель, поиску остаётся место */
+@media (max-width:860px){
+  body:not(.home) .topbar .info-btn,body:not(.home) .topbar .upd-btn{display:none}
+  .side-head .info-btn,.side-head .upd-btn{display:inline-flex}
+  .brand .blinks{gap:var(--u)}
+}
+
+/* Карточки: чуть крупнее вопрос и мягче углы */
+.cards .face{border-radius:10px}
+@media (min-width:861px){ .cards .cq{font-size:20px} }
+
+/* Вкладки и подписи разделов */
+.wrap h2 .stat{font-weight:400}
+.stat.pg{margin-bottom:calc(var(--u)*1)}
+.subjects .subj{display:flex;flex-direction:column;min-width:0}
+.subjects .subj .xgrid{flex:1}
+/* строка под вопросом течёт как текст: на узком экране переносится по словам, а не столбиком */
+.item:has(>.q)>.tools,.item:has(>.q)>details[open]~.tools{display:contents}
+.item:has(>.q)>.tools>*{display:inline-flex;align-items:center;vertical-align:middle;margin:calc(var(--u)*.75) calc(var(--u)*2.5) 0 0;min-height:28px}
+.item:has(>.q)>.tools>span{display:inline}
+.item:has(>.q)>details[open]~.tools>:first-child{margin-left:0}
+@media (max-width:860px){ .item:has(>.q)>.tools>*{margin-right:calc(var(--u)*2)} }
+@media (max-width:860px){ .side-head .logo-word small{display:none} .side-head .logo{flex:1} }
+.wrap .subjects h2,.wrap .subjects .xgrid{margin-left:0;margin-right:0;max-width:none}
