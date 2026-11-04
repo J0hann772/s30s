@@ -436,6 +436,50 @@ h.text((262, 186), "dim 2: P = P₀ + λu + μv", screen=True, size=10.5)
 f.out += g.out + h.out
 FIGS["affine"] = f.svg()
 
+# ---------- 21. прямая на плоскости: нормаль, направляющий вектор, отрезки на осях ----------
+f = Fig(340, 240, ox=58, oy=190, scale=34)
+f.vec((-0.7, 0), (7.6, 0), width=1); f.text(f.p((7.5, -0.45)), "x", screen=True, italic=True)
+f.vec((0, -0.9), (0, 5.0), width=1); f.text(f.p((0.15, 4.9)), "y", screen=True, italic=True)
+f.text(f.p((-0.45, -0.45)), "O", screen=True, italic=True)
+f.line((-0.6, 3.45), (5.6, -1.2))                       # 3x + 4y - 12 = 0
+f.dot((4, 0), "a", off=(4, 14)); f.dot((0, 3), "b", off=(-14, 4))
+M0 = (2.6, 1.05); n = (3 * 0.42, 4 * 0.42); m = (-4 * 0.42, 3 * 0.42)
+f.vec(M0, add(M0, n), "n = {A, B}", accent=True, lpos=1.0, off=(6, 0))
+f.vec(M0, add(M0, m))
+u, v = f.p(add(M0, m)); f.text((u + 8, v - 10), "m = {−B, A}", screen=True, vec=True)
+f.right(M0, add(M0, n), add(M0, m), size=0.28)
+f.dot(M0, "M₀", off=(8, 14))
+f.text((150, 226), "Ax + By + C = 0", screen=True, size=11)
+FIGS["line2d"] = f.svg()
+
+# ---------- 22. расстояние от точки до прямой на плоскости, нормальное уравнение ----------
+f = Fig(340, 240, ox=58, oy=192, scale=34)
+f.vec((-0.7, 0), (7.6, 0), width=1); f.text(f.p((7.5, -0.45)), "x", screen=True, italic=True)
+f.vec((0, -0.9), (0, 5.0), width=1); f.text(f.p((0.15, 4.9)), "y", screen=True, italic=True)
+f.text(f.p((-0.45, -0.45)), "O", screen=True, italic=True)
+f.line((-0.6, 3.45), (5.6, -1.2))
+N = (1.44, 1.92); M0 = (4.2, 3.6); H = (2.4, 1.2)
+f.line((0, 0), N, dash=True); f.right(N, (0, 0), (5.6, -1.2), size=0.22)
+f.text(f.p((0.3, 1.45)), "p", screen=True, italic=True)
+f.line(M0, H, accent=True, width=2.5); f.right(H, M0, (5.6, -1.2), size=0.22)
+f.text(f.p((3.45, 2.15)), "ρ", screen=True, italic=True, accent=True)
+f.dot(M0, "M₀(x₀, y₀)", off=(6, -4)); f.dot(H, "H", off=(-16, 14))
+f.vec((0, 0), (0.6, 0.8), accent=True)
+f.text(f.p((0.72, 0.42)), "n₀", screen=True, vec=True, accent=True)
+f.text((96, 22), "ρ = |Ax₀ + By₀ + C| / √(A² + B²)", screen=True, size=10.5, accent=True)
+FIGS["dist2d"] = f.svg()
+
+# ---------- 23. деление отрезка в отношении p : q ----------
+f = Fig(340, 118, ox=30, oy=66, scale=40)
+f.line((0, 0), (7, 0))
+f.dot((0, 0), "M₁", off=(-8, 20)); f.dot((7, 0), "M₂", off=(-8, 20)); f.dot((3, 0), "M", accent=True, off=(-5, 20))
+for a, b, lab in ((0, 3, "p"), (3, 7, "q")):
+    u0, v0 = f.p((a, 0)); u1, _ = f.p((b, 0))
+    f.out.append('<path d="M%s,%s q0,-10 10,-10 H%s q10,0 10,10" stroke-width="1"/>' % (f.f(u0 + 2), f.f(v0 - 8), f.f(u1 - 12)))
+    f.text(((u0 + u1) / 2 - 3, v0 - 24), lab, screen=True, italic=True)
+f.text((30, 108), "M = (q·M₁ + p·M₂) / (p + q)", screen=True, size=11, accent=True)
+FIGS["segment_div"] = f.svg()
+
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "figs.json"
     with open(out, "w", encoding="utf-8") as fh:

@@ -1,17 +1,17 @@
 # Тема 6. Смешанное и двойное векторное произведение
 
-РК: А18 (определение), А19 (перестановки), А20 (линейность), А21 (вычисление в правом ОНБ), Б6 (доказательство линейности), Б7 (вывод формулы); часть В.3 (двойное векторное произведение).
+РК: А18 (определение), А19 (перестановки), А20 (линейность), А21 (вычисление в правом ОНБ), Б6 (доказательство линейности), Б7 (вывод формулы); часть В.3 (двойное векторное произведение); дополнение из лекций: Г4 (геометрический смысл и критерий компланарности).
 
 ## Суть
 Смешанное произведение $\vec a\vec b\vec c$ — число, по модулю равное **объёму параллелепипеда** на трёх векторах, со знаком «$+$» для правой тройки и «$-$» для левой. Нуль означает компланарность. В координатах это определитель из координат векторов.
 
-## Определение (А18)
+## Определение (А18, опр. 6.1 лекций)
 $$\vec a\vec b\vec c=(\vec a\times\vec b)\cdot\vec c.$$
 Другие обозначения: $(\vec a,\vec b,\vec c)$, $\langle[\vec a;\vec b];\vec c\rangle$.
 
 {{figure:mixed}}
 
-**Геометрический смысл** [не из конспекта, но нужен в задачах]: $|\vec a\times\vec b|$ — площадь основания, $\operatorname{Пр}_{\vec a\times\vec b}\vec c$ — высота со знаком, поэтому
+**Геометрический смысл** (лекции, геометрическое свойство 1): $|\vec a\times\vec b|$ — площадь основания, $\operatorname{Пр}_{\vec a\times\vec b}\vec c$ — высота со знаком, поэтому
 $$\vec a\vec b\vec c=\pm V_{\text{пар}},\qquad V_{\text{пир}}=\tfrac16|\vec a\vec b\vec c|.$$
 Знак $+$, если тройка $(\vec a,\vec b,\vec c)$ правая, $-$ если левая, $0$ если векторы компланарны.
 
@@ -31,11 +31,26 @@ $$(\vec a_1+\vec a_2)\vec b\vec c=\vec a_1\vec b\vec c+\vec a_2\vec b\vec c,\qqu
 2. $(\lambda\vec a)\vec b\vec c=\bigl((\lambda\vec a)\times\vec b\bigr)\cdot\vec c=\bigl(\lambda(\vec a\times\vec b)\bigr)\cdot\vec c=\lambda\bigl((\vec a\times\vec b)\cdot\vec c\bigr)=\lambda(\vec a\vec b\vec c).$
 
 По остальным аргументам — через правило перестановок. $\blacksquare$
+
+Другой способ (в лекциях предложено доказать самостоятельно): по формуле-определителю (А21) координаты $\vec a$ стоят в первой строке, а определитель линеен по строке: $\begin{vmatrix}ka_1&ka_2&ka_3\\\dots\end{vmatrix}=k\begin{vmatrix}a_1&a_2&a_3\\\dots\end{vmatrix}$, и определитель с суммой строк равен сумме определителей.
 </details>
 
-**Компланарность** [не из конспекта]: $\vec a,\vec b,\vec c$ компланарны $\iff\vec a\vec b\vec c=0$.
+<details><summary>Доказательство свойства объёма (лекции)</summary>
 
-## Вычисление в правом ОНБ (А21)
+Если тройка некомпланарна, $\vec a\times\vec b\ne\vec 0$ и
+$$\vec a\vec b\vec c=(\vec a\times\vec b)\cdot\vec c=|\vec a\times\vec b|\cdot\operatorname{Пр}_{\vec a\times\vec b}\vec c=S\cdot(\pm h)=\pm V.$$
+$S$ — площадь параллелограмма на $\vec a,\vec b$ (основание), $h$ — высота параллелепипеда. Проекция положительна, когда $\vec c$ и $\vec a\times\vec b$ лежат по одну сторону от плоскости $\vec a,\vec b$, то есть когда тройка $(\vec a,\vec b,\vec c)$ правая. $\blacksquare$
+</details>
+
+**Критерий компланарности** (теорема 6.1 лекций): $\vec a,\vec b,\vec c$ компланарны $\iff\vec a\vec b\vec c=0$.
+
+<details><summary>Доказательство</summary>
+
+$\Rightarrow$ Если $\vec a\parallel\vec b$, то $\vec a\times\vec b=\vec 0$ и произведение равно нулю. Иначе $\vec a\times\vec b$ перпендикулярен плоскости $\vec a,\vec b$, а $\vec c$ лежит в ней, поэтому $(\vec a\times\vec b)\cdot\vec c=0$.
+$\Leftarrow$ Если $(\vec a\times\vec b)\cdot\vec c=0$, то либо $\vec a\times\vec b=\vec 0$ — тогда $\vec a\parallel\vec b$ и тройка компланарна; либо $\vec c\perp\vec a\times\vec b$, то есть $\vec c$ параллелен плоскости $\vec a,\vec b$. $\blacksquare$
+</details>
+
+## Вычисление в правом ОНБ (А21, теорема 6.2 лекций)
 $$\vec a\vec b\vec c=\begin{vmatrix}x_a&y_a&z_a\\x_b&y_b&z_b\\x_c&y_c&z_c\end{vmatrix}.$$
 
 <details><summary>Вывод (Б7)</summary>

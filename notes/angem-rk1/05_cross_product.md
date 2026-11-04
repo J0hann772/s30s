@@ -13,7 +13,7 @@
 - Циклическая перестановка $(\vec a,\vec b,\vec c)\to(\vec b,\vec c,\vec a)$ ориентацию сохраняет; перестановка двух векторов меняет её на противоположную.
 - Базис $(\vec i,\vec j,\vec k)$ при обычном выборе осей правый.
 
-## Определение (А14)
+## Определение (А14, опр. 5.1 лекций)
 **Векторным произведением** неколлинеарных векторов $\vec a$ и $\vec b$ называется вектор $\vec c=\vec a\times\vec b$ такой, что
 1. $\vec c\perp\vec a$ и $\vec c\perp\vec b$;
 2. $|\vec c|=|\vec a|\,|\vec b|\sin\varphi$ — площадь параллелограмма, построенного на $\vec a$ и $\vec b$;
@@ -28,8 +28,9 @@
 ## Свойства
 1. **Антисимметричность (А15):** $\vec a\times\vec b=-\vec b\times\vec a$ (при перестановке тройка $(\vec b,\vec a,\vec c)$ стала бы левой). В частности, $\vec a\times\vec a=\vec 0$.
 2. **Линейность (А16):** $(\vec a_1+\vec a_2)\times\vec b=\vec a_1\times\vec b+\vec a_2\times\vec b$; $\ (\lambda\vec a)\times\vec b=\lambda(\vec a\times\vec b)$. По второму аргументу — через антисимметричность.
-3. **Коллинеарность:** $\vec a\parallel\vec b\iff\vec a\times\vec b=\vec 0$.
-4. **Не ассоциативно** [не из конспекта]: $(\vec i\times\vec i)\times\vec j=\vec 0$, а $\vec i\times(\vec i\times\vec j)=\vec i\times\vec k=-\vec j$.
+3. **Коллинеарность** (геометрическое свойство 2 в лекциях): два ненулевых вектора коллинеарны $\iff\vec a\times\vec b=\vec 0$.
+4. **Площадь** (геометрическое свойство 1): $|\vec a\times\vec b|=S$ параллелограмма, построенного на $\vec a$ и $\vec b$.
+5. **Не ассоциативно** [не из конспекта]: $(\vec i\times\vec i)\times\vec j=\vec 0$, а $\vec i\times(\vec i\times\vec j)=\vec i\times\vec k=-\vec j$.
 
 Таблица для правого ОНБ:
 $$\vec i\times\vec j=\vec k,\quad \vec j\times\vec k=\vec i,\quad \vec k\times\vec i=\vec j,\qquad \vec j\times\vec i=-\vec k,\ \dots,\qquad \vec i\times\vec i=\vec j\times\vec j=\vec k\times\vec k=\vec 0.$$
